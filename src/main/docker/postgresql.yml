@@ -1,0 +1,11 @@
+version: '2'
+services:
+    referenceservice-postgresql:
+        image: postgres:9.6.2
+        # volumes:
+        #     - ~/volumes/jhipster/referenceservice/postgresql/:/var/lib/postgresql/data/
+        environment:
+            - POSTGRES_USER=referenceservice
+            - POSTGRES_PASSWORD=
+        ports:
+            - 5432:5432

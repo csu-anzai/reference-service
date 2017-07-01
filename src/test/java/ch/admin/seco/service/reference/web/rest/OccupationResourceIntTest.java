@@ -1,0 +1,363 @@
+package ch.admin.seco.service.reference.web.rest;
+
+import ch.admin.seco.service.reference.ReferenceserviceApp;
+
+import ch.admin.seco.service.reference.domain.Occupation;
+import ch.admin.seco.service.reference.repository.OccupationRepository;
+import ch.admin.seco.service.reference.service.OccupationService;
+import ch.admin.seco.service.reference.repository.search.OccupationSearchRepository;
+import ch.admin.seco.service.reference.web.rest.errors.ExceptionTranslator;
+
+import com.google.common.collect.Sets;
+import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+/**
+ * Test class for the OccupationResource REST controller.
+ *
+ * @see OccupationResource
+ */
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = ReferenceserviceApp.class)
+public class OccupationResourceIntTest {
+
+    private static final Integer DEFAULT_CODE = 88888888;
+    private static final Integer UPDATED_CODE = 99999999;
+
+    private static final String DEFAULT_LANGUAGE = "AA";
+    private static final String UPDATED_LANGUAGE = "BB";
+
+    private static final String DEFAULT_NAME = "AAAAAAAAAA";
+    private static final String UPDATED_NAME = "BBBBBBBBBB";
+
+    private static final Set<String> DEFAULT_NAMESYNONYMS = Sets.newHashSet("AAAAAAAAAA");
+    private static final Set<String> UPDATED_NAMESYNONYMS = Sets.newHashSet("BBBBBBBBBB");
+
+    @Autowired
+    private OccupationRepository occupationRepository;
+
+    @Autowired
+    private OccupationService occupationService;
+
+    @Autowired
+    private OccupationSearchRepository occupationSearchRepository;
+
+    @Autowired
+    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
+
+    @Autowired
+    private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
+
+    @Autowired
+    private ExceptionTranslator exceptionTranslator;
+
+    @Autowired
+    private EntityManager em;
+
+    private MockMvc restOccupationMockMvc;
+
+    private Occupation occupation;
+
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+        OccupationResource occupationResource = new OccupationResource(occupationService);
+        this.restOccupationMockMvc = MockMvcBuilders.standaloneSetup(occupationResource)
+            .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setControllerAdvice(exceptionTranslator)
+            .setMessageConverters(jacksonMessageConverter).build();
+    }
+
+    /**
+     * Create an entity for this test.
+     *
+     * This is a static method, as tests for other entities might also need it,
+     * if they test an entity which requires the current entity.
+     */
+    public static Occupation createEntity(EntityManager em) {
+        Occupation occupation = new Occupation()
+            .code(DEFAULT_CODE)
+            .language(DEFAULT_LANGUAGE)
+            .name(DEFAULT_NAME)
+            .namesynonyms(DEFAULT_NAMESYNONYMS);
+        return occupation;
+    }
+
+    @Before
+    public void initTest() {
+        occupationSearchRepository.deleteAll();
+        occupation = createEntity(em);
+    }
+
+    @Test
+    @Transactional
+    public void createOccupation() throws Exception {
+        int databaseSizeBeforeCreate = occupationRepository.findAll().size();
+
+        // Create the Occupation
+        restOccupationMockMvc.perform(post("/api/occupations")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(occupation)))
+            .andExpect(status().isCreated());
+
+        // Validate the Occupation in the database
+        List<Occupation> occupationList = occupationRepository.findAll();
+        assertThat(occupationList).hasSize(databaseSizeBeforeCreate + 1);
+        Occupation testOccupation = occupationList.get(occupationList.size() - 1);
+        assertThat(testOccupation.getCode()).isEqualTo(DEFAULT_CODE);
+        assertThat(testOccupation.getLanguage()).isEqualTo(DEFAULT_LANGUAGE);
+        assertThat(testOccupation.getName()).isEqualTo(DEFAULT_NAME);
+        assertThat(testOccupation.getNamesynonyms()).isEqualTo(DEFAULT_NAMESYNONYMS);
+
+        // Validate the Occupation in Elasticsearch
+        Occupation occupationEs = occupationSearchRepository.findById(testOccupation.getId()).get();
+        assertThat(occupationEs).isEqualToComparingFieldByField(testOccupation);
+    }
+
+    @Test
+    @Transactional
+    public void createOccupationWithExistingId() throws Exception {
+        int databaseSizeBeforeCreate = occupationRepository.findAll().size();
+
+        // Create the Occupation with an existing ID
+        occupation.setId(UUID.randomUUID());
+
+        // An entity with an existing ID cannot be created, so this API call must fail
+        restOccupationMockMvc.perform(post("/api/occupations")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(occupation)))
+            .andExpect(status().isBadRequest());
+
+        // Validate the Alice in the database
+        List<Occupation> occupationList = occupationRepository.findAll();
+        assertThat(occupationList).hasSize(databaseSizeBeforeCreate);
+    }
+
+    @Test
+    @Transactional
+    public void checkCodeIsRequired() throws Exception {
+        int databaseSizeBeforeTest = occupationRepository.findAll().size();
+        // set the field null
+        occupation.setCode(null);
+
+        // Create the Occupation, which fails.
+
+        restOccupationMockMvc.perform(post("/api/occupations")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(occupation)))
+            .andExpect(status().isBadRequest());
+
+        List<Occupation> occupationList = occupationRepository.findAll();
+        assertThat(occupationList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    public void checkLanguageIsRequired() throws Exception {
+        int databaseSizeBeforeTest = occupationRepository.findAll().size();
+        // set the field null
+        occupation.setLanguage(null);
+
+        // Create the Occupation, which fails.
+
+        restOccupationMockMvc.perform(post("/api/occupations")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(occupation)))
+            .andExpect(status().isBadRequest());
+
+        List<Occupation> occupationList = occupationRepository.findAll();
+        assertThat(occupationList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    public void checkNameIsRequired() throws Exception {
+        int databaseSizeBeforeTest = occupationRepository.findAll().size();
+        // set the field null
+        occupation.setName(null);
+
+        // Create the Occupation, which fails.
+
+        restOccupationMockMvc.perform(post("/api/occupations")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(occupation)))
+            .andExpect(status().isBadRequest());
+
+        List<Occupation> occupationList = occupationRepository.findAll();
+        assertThat(occupationList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOccupations() throws Exception {
+        // Initialize the database
+        occupationRepository.saveAndFlush(occupation);
+
+        // Get all the occupationList
+        restOccupationMockMvc.perform(get("/api/occupations?sort=id,desc"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(occupation.getId().toString())))
+            .andExpect(jsonPath("$.[*].code").value(hasItem(DEFAULT_CODE)))
+            .andExpect(jsonPath("$.[*].language").value(hasItem(DEFAULT_LANGUAGE.toString())))
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
+            .andExpect(jsonPath("$.[*].namesynonyms").value(hasItem(contains(DEFAULT_NAMESYNONYMS.toArray()))));
+    }
+
+    @Test
+    @Transactional
+    public void getOccupation() throws Exception {
+        // Initialize the database
+        occupationRepository.saveAndFlush(occupation);
+
+        // Get the occupation
+        restOccupationMockMvc.perform(get("/api/occupations/{id}", occupation.getId()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.id").value(occupation.getId().toString()))
+            .andExpect(jsonPath("$.code").value(DEFAULT_CODE))
+            .andExpect(jsonPath("$.language").value(DEFAULT_LANGUAGE.toString()))
+            .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
+            .andExpect(jsonPath("$.namesynonyms").value(contains(DEFAULT_NAMESYNONYMS.toArray())));
+    }
+
+    @Test
+    @Transactional
+    public void getNonExistingOccupation() throws Exception {
+        // Get the occupation
+        restOccupationMockMvc.perform(get("/api/occupations/{id}", UUID.randomUUID()))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @Transactional
+    public void updateOccupation() throws Exception {
+        // Initialize the database
+        occupationService.save(occupation);
+
+        int databaseSizeBeforeUpdate = occupationRepository.findAll().size();
+
+        // Update the occupation
+        Occupation updatedOccupation = occupationRepository.getOne(occupation.getId());
+        updatedOccupation
+            .code(UPDATED_CODE)
+            .language(UPDATED_LANGUAGE)
+            .name(UPDATED_NAME)
+            .namesynonyms(UPDATED_NAMESYNONYMS);
+
+        restOccupationMockMvc.perform(put("/api/occupations")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(updatedOccupation)))
+            .andExpect(status().isOk());
+
+        // Validate the Occupation in the database
+        List<Occupation> occupationList = occupationRepository.findAll();
+        assertThat(occupationList).hasSize(databaseSizeBeforeUpdate);
+        Occupation testOccupation = occupationList.get(occupationList.size() - 1);
+        assertThat(testOccupation.getCode()).isEqualTo(UPDATED_CODE);
+        assertThat(testOccupation.getLanguage()).isEqualTo(UPDATED_LANGUAGE);
+        assertThat(testOccupation.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(testOccupation.getNamesynonyms()).isEqualTo(UPDATED_NAMESYNONYMS);
+
+        // Validate the Occupation in Elasticsearch
+        Occupation occupationEs = occupationSearchRepository.findById(testOccupation.getId()).get();
+        assertThat(occupationEs).isEqualToComparingFieldByField(testOccupation);
+    }
+
+    @Test
+    @Transactional
+    public void updateNonExistingOccupation() throws Exception {
+        int databaseSizeBeforeUpdate = occupationRepository.findAll().size();
+
+        // Create the Occupation
+
+        // If the entity doesn't have an ID, it will be created instead of just being updated
+        restOccupationMockMvc.perform(put("/api/occupations")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(occupation)))
+            .andExpect(status().isCreated());
+
+        // Validate the Occupation in the database
+        List<Occupation> occupationList = occupationRepository.findAll();
+        assertThat(occupationList).hasSize(databaseSizeBeforeUpdate + 1);
+    }
+
+    @Test
+    @Transactional
+    public void deleteOccupation() throws Exception {
+        // Initialize the database
+        occupationService.save(occupation);
+
+        int databaseSizeBeforeDelete = occupationRepository.findAll().size();
+
+        // Get the occupation
+        restOccupationMockMvc.perform(delete("/api/occupations/{id}", occupation.getId())
+            .accept(TestUtil.APPLICATION_JSON_UTF8))
+            .andExpect(status().isOk());
+
+        // Validate Elasticsearch is empty
+        boolean occupationExistsInEs = occupationSearchRepository.existsById(occupation.getId());
+        assertThat(occupationExistsInEs).isFalse();
+
+        // Validate the database is empty
+        List<Occupation> occupationList = occupationRepository.findAll();
+        assertThat(occupationList).hasSize(databaseSizeBeforeDelete - 1);
+    }
+
+    @Test
+    @Transactional
+    public void searchOccupation() throws Exception {
+        // Initialize the database
+        occupationService.save(occupation);
+
+        // Search the occupation
+        restOccupationMockMvc.perform(get("/api/_search/occupations?query=id:" + occupation.getId()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(occupation.getId().toString())))
+            .andExpect(jsonPath("$.[*].code").value(hasItem(DEFAULT_CODE)))
+            .andExpect(jsonPath("$.[*].language").value(hasItem(DEFAULT_LANGUAGE.toString())))
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
+            .andExpect(jsonPath("$.[*].namesynonyms").value(hasItem(contains(DEFAULT_NAMESYNONYMS.toArray()))));
+    }
+
+    @Test
+    @Transactional
+    public void equalsVerifier() throws Exception {
+        TestUtil.equalsVerifier(Occupation.class);
+        Occupation occupation1 = new Occupation();
+        occupation1.setId(UUID.randomUUID());
+        Occupation occupation2 = new Occupation();
+        occupation2.setId(occupation1.getId());
+        assertThat(occupation1).isEqualTo(occupation2);
+        occupation2.setId(UUID.randomUUID());
+        assertThat(occupation1).isNotEqualTo(occupation2);
+        occupation1.setId(null);
+        assertThat(occupation1).isNotEqualTo(occupation2);
+    }
+}

@@ -1,0 +1,7 @@
+{
+  "devDependencies": {
+    "generator-jhipster-postgresuuid-converter": "0.1.0",
+    "generator-jhipster-elasticsearch-reindexer": "0.3.0",
+    "generator-jhipster": "4.5.6"
+  }
+}

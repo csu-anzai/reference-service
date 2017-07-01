@@ -1,0 +1,17 @@
+entity Occupation {
+	code						Integer min(8) max(8) required
+    language					String minlength(2) maxlength(2) required
+    name						String minlength(3) maxlength(50) required
+    name_synonyms				String minlength(3) maxlength(50)
+}
+
+// Set pagination options
+paginate Occupation with infinite-scroll
+
+// dto * with mapstruct
+
+// Set service options to all except few
+service all with serviceImpl
+
+// Set an angular suffix
+angularSuffix * with occupation
