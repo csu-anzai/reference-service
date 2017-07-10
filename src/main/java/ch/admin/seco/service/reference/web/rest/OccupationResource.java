@@ -1,12 +1,14 @@
 package ch.admin.seco.service.reference.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
+import ch.admin.seco.service.reference.domain.Language;
 import ch.admin.seco.service.reference.domain.Occupation;
 import ch.admin.seco.service.reference.service.OccupationService;
+import ch.admin.seco.service.reference.service.dto.OccupationSuggestionDto;
 import ch.admin.seco.service.reference.web.rest.util.HeaderUtil;
 import ch.admin.seco.service.reference.web.rest.util.PaginationUtil;
-import io.swagger.annotations.ApiParam;
+import com.codahale.metrics.annotation.Timed;
 import io.github.jhipster.web.util.ResponseUtil;
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -19,13 +21,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.StreamSupport;
-
-import static org.elasticsearch.index.query.QueryBuilders.*;
 
 /**
  * REST controller for managing Occupation.
@@ -34,10 +32,8 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 @RequestMapping("/api")
 public class OccupationResource {
 
-    private final Logger log = LoggerFactory.getLogger(OccupationResource.class);
-
     private static final String ENTITY_NAME = "occupation";
-
+    private final Logger log = LoggerFactory.getLogger(OccupationResource.class);
     private final OccupationService occupationService;
 
     public OccupationResource(OccupationService occupationService) {
@@ -133,17 +129,18 @@ public class OccupationResource {
      * SEARCH  /_search/occupations?query=:query : search for the occupation corresponding
      * to the query.
      *
-     * @param query the query of the occupation search
-     * @param pageable the pagination information
+     * @param prefix       the query of the occupation search
+     * @param language     the language information
+     * @param responseSize the responseSize information
      * @return the result of the search
      */
     @GetMapping("/_search/occupations")
     @Timed
-    public ResponseEntity<List<Occupation>> searchOccupations(@RequestParam String query, @ApiParam Pageable pageable) {
-        log.debug("REST request to search for a page of Occupations for query {}", query);
-        Page<Occupation> page = occupationService.search(query, pageable);
-        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/occupations");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    public ResponseEntity<List<OccupationSuggestionDto>> searchOccupations(
+        @RequestParam String prefix, @RequestParam Language language, @RequestParam int responseSize) {
+        log.debug("REST request to search for a page of Occupations for query {}", prefix);
+        List<OccupationSuggestionDto> result = occupationService.suggestOccupations(prefix, language, responseSize);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
 }

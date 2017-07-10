@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <databaseChangeLog
-    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd
-                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
     <property name="now" value="now()" dbms="h2"/>
 
@@ -29,12 +27,8 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="name" type="varchar(50)">
+            <column name="name" type="varchar(70)">
                 <constraints nullable="false"/>
-            </column>
-
-            <column name="namesynonyms" type="varchar(50)">
-                <constraints nullable="true"/>
             </column>
 
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
@@ -45,12 +39,12 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="namesynonyms" type="varchar(50)">
+            <column name="name_synonyms" type="varchar(70)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
 
-        <addPrimaryKey columnNames="occupation_id, namesynonyms"
+        <addPrimaryKey columnNames="occupation_id, name_synonyms"
                        constraintName="pk_occupation_id_namesynonyms"
                        tableName="occupation_namesynonyms"/>
 

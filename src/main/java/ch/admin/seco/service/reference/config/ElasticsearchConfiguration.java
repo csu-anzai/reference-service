@@ -3,7 +3,7 @@ package ch.admin.seco.service.reference.config;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.elasticsearch.client.Client;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.data.elasticsearch.ElasticsearchProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -30,7 +30,7 @@ public class ElasticsearchConfiguration {
         return new ElasticsearchTemplate(client, new CustomEntityMapper(jackson2ObjectMapperBuilder.createXmlMapper(false).build()));
     }
 
-    @ConditionalOnProperty(prefix = "spring.data.elasticsearch", name = "cluster-nodes", matchIfMissing = true)
+    @ConditionalOnExpression("'${spring.data.elasticsearch.properties.path.data:}'.length() > 0 && '${spring.data.elasticsearch.cluster-nodes:}'.length() == 0")
     @Bean
     public NodeClientFactoryBean nodeClient() throws Exception {
         NodeClientFactoryBean factory = new NodeClientFactoryBean(true);

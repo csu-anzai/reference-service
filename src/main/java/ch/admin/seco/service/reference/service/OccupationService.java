@@ -1,9 +1,12 @@
 package ch.admin.seco.service.reference.service;
 
+import ch.admin.seco.service.reference.domain.Language;
 import ch.admin.seco.service.reference.domain.Occupation;
+import ch.admin.seco.service.reference.service.dto.OccupationSuggestionDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -21,35 +24,35 @@ public interface OccupationService {
     Occupation save(Occupation occupation);
 
     /**
-     *  Get all the occupations.
+     * Get all the occupations.
      *
-     *  @param pageable the pagination information
-     *  @return the list of entities
+     * @param pageable the pagination information
+     * @return the list of entities
      */
     Page<Occupation> findAll(Pageable pageable);
 
     /**
-     *  Get the "id" occupation.
+     * Get the "id" occupation.
      *
-     *  @param id the id of the entity
-     *  @return the entity
+     * @param id the id of the entity
+     * @return the entity
      */
     Optional<Occupation> findOne(UUID id);
 
     /**
-     *  Delete the "id" occupation.
+     * Delete the "id" occupation.
      *
-     *  @param id the id of the entity
+     * @param id the id of the entity
      */
     void delete(UUID id);
 
     /**
      * Search for the occupation corresponding to the query.
      *
-     *  @param query the query of the search
-     *
-     *  @param pageable the pagination information
-     *  @return the list of entities
+     * @param prefix     the query of the search
+     * @param language   the language of the search
+     * @param resultSize the pagination information
+     * @return the list of entities
      */
-    Page<Occupation> search(String query, Pageable pageable);
+    public List<OccupationSuggestionDto> suggestOccupations(String prefix, Language language, int resultSize);
 }

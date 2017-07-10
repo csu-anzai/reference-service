@@ -3,12 +3,13 @@ package ch.admin.seco.service.reference.domain;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
@@ -19,7 +20,6 @@ import java.util.UUID;
 @Entity
 @Table(name = "occupation")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-@Document(indexName = "reference", type = "occupation")
 public class Occupation implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -37,16 +37,16 @@ public class Occupation implements Serializable {
     private Integer code;
 
     @NotNull
-    @Size(min = 2, max = 2)
     @Column(name = "language", length = 2, nullable = false)
-    private String language;
+    @Enumerated(EnumType.STRING)
+    private Language language;
 
     @NotNull
-    @Size(min = 3, max = 50)
-    @Column(name = "name", length = 50, nullable = false)
+    @Size(min = 2, max = 70)
+    @Column(name = "name", length = 70, nullable = false)
     private String name;
 
-    @Column(name = "namesynonyms", length = 50)
+    @Column(name = "name_synonyms", length = 70)
     @ElementCollection
     private Set<String> namesynonyms;
 
@@ -62,30 +62,34 @@ public class Occupation implements Serializable {
         return code;
     }
 
+    public void setCode(Integer code) {
+        this.code = code;
+    }
+
     public Occupation code(Integer code) {
         this.code = code;
         return this;
     }
 
-    public void setCode(Integer code) {
-        this.code = code;
-    }
-
-    public String getLanguage() {
+    public Language getLanguage() {
         return language;
     }
 
-    public Occupation language(String language) {
+    public void setLanguage(Language language) {
+        this.language = language;
+    }
+
+    public Occupation language(Language language) {
         this.language = language;
         return this;
     }
 
-    public void setLanguage(String language) {
-        this.language = language;
-    }
-
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Occupation name(String name) {
@@ -93,12 +97,12 @@ public class Occupation implements Serializable {
         return this;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public Set<String> getNamesynonyms() {
         return namesynonyms;
+    }
+
+    public void setNamesynonyms(Set<String> namesynonyms) {
+        this.namesynonyms = namesynonyms;
     }
 
     public Occupation namesynonyms(Set<String> namesynonyms) {
@@ -106,8 +110,9 @@ public class Occupation implements Serializable {
         return this;
     }
 
-    public void setNamesynonyms(Set<String> namesynonyms) {
-        this.namesynonyms = namesynonyms;
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getId());
     }
 
     @Override
@@ -126,17 +131,12 @@ public class Occupation implements Serializable {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hashCode(getId());
-    }
-
-    @Override
     public String toString() {
-        return "Occupation{" +
+        return "Occupation2{" +
             "id=" + getId() +
             ", code='" + getCode() + "'" +
             ", language='" + getLanguage() + "'" +
-            ", name='" + getName() + "'" +
+            ", occupation='" + getName() + "'" +
             ", namesynonyms='" + getNamesynonyms() + "'" +
             "}";
     }

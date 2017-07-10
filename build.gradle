@@ -142,7 +142,7 @@ repositories {
     mavenCentral()
     jcenter()
     maven { url 'http://repo.spring.io/milestone' }
-    maven { url 'https://alvch.jfrog.io/alvch/libs-snapshots-local' }
+    maven { url 'https://alvch.jfrog.io/alvch/libs-releases' }
     maven { url 'http://repo.spring.io/snapshot' }
     maven { url 'https://repository.jboss.org/nexus/content/repositories/releases' }
     maven { url 'https://oss.sonatype.org/content/repositories/releases' }
@@ -188,8 +188,10 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-logging"
     compile "org.springframework.boot:spring-boot-starter-aop"
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
-    compile "org.springframework.boot:spring-boot-starter-data-elasticsearch"
-    compile "org.springframework.data:spring-data-elasticsearch:3.0.0.BUILD-SNAPSHOT:DATAES-363"
+    compile ("org.springframework.boot:spring-boot-starter-data-elasticsearch:") {
+        exclude(group: 'org.springframework.data', module: 'spring-data-elasticsearch')
+    }
+    compile "org.springframework.data:spring-data-elasticsearch:3.0.0.M4-DATAES-363"
     // needed to get around elasticsearch stacktrace about jna not found
     // https://github.com/elastic/elasticsearch/issues/13245
 //    compile "net.java.dev.jna:jna"
@@ -254,7 +256,7 @@ task wrapper(type: Wrapper) {
     gradleVersion = '3.5'
 }
 
-task stage(dependsOn: 'bootRepackage') {
+task stage(dependsOn: 'bootJar') {
 }
 
 compileJava.dependsOn processResources
