@@ -6,6 +6,7 @@ import ch.admin.seco.service.reference.domain.search.OccupationSynonym;
 import ch.admin.seco.service.reference.repository.OccupationRepository;
 import ch.admin.seco.service.reference.repository.search.OccupationSearchRepository;
 import ch.admin.seco.service.reference.service.OccupationService;
+import ch.admin.seco.service.reference.service.dto.OccupationAutocompleteDto;
 import ch.admin.seco.service.reference.service.dto.OccupationSuggestionDto;
 import org.elasticsearch.action.admin.indices.analyze.AnalyzeRequest;
 import org.elasticsearch.action.admin.indices.analyze.AnalyzeResponse;
@@ -115,7 +116,7 @@ public class OccupationServiceImpl implements OccupationService {
      */
     @Override
     @Transactional(readOnly = true)
-    public List<OccupationSuggestionDto> suggestOccupations(String prefix, Language language, int resultSize) {
+    public OccupationAutocompleteDto suggestOccupations(String prefix, Language language, int resultSize) {
         log.debug("Request to search for a page of Occupations for query {}", prefix);
 
         SuggestionBuilder completionSuggestionFuzzyBuilder =
@@ -129,10 +130,12 @@ public class OccupationServiceImpl implements OccupationService {
             .addSuggestion("occupations", completionSuggestionFuzzyBuilder), OccupationSynonym.class);
 
         CompletionSuggestion completionSuggestion = suggestResponse.getSuggest().getSuggestion("occupations");
-        return completionSuggestion.getEntries().stream()
+        List<OccupationSuggestionDto> occupations = completionSuggestion.getEntries().stream()
             .flatMap(item -> item.getOptions().stream())
             .map(this::convertOccupationSuggestion)
             .collect(Collectors.toList());
+
+        return new OccupationAutocompleteDto(occupations, null);
     }
 
     private Collection<OccupationSynonym> createSuggestionLists(Occupation occupation) {

@@ -3,7 +3,7 @@ package ch.admin.seco.service.reference.web.rest;
 import ch.admin.seco.service.reference.domain.Language;
 import ch.admin.seco.service.reference.domain.Occupation;
 import ch.admin.seco.service.reference.service.OccupationService;
-import ch.admin.seco.service.reference.service.dto.OccupationSuggestionDto;
+import ch.admin.seco.service.reference.service.dto.OccupationAutocompleteDto;
 import ch.admin.seco.service.reference.web.rest.util.HeaderUtil;
 import ch.admin.seco.service.reference.web.rest.util.PaginationUtil;
 import com.codahale.metrics.annotation.Timed;
@@ -136,10 +136,10 @@ public class OccupationResource {
      */
     @GetMapping("/_search/occupations")
     @Timed
-    public ResponseEntity<List<OccupationSuggestionDto>> searchOccupations(
+    public ResponseEntity<OccupationAutocompleteDto> searchOccupations(
         @RequestParam String prefix, @RequestParam Language language, @RequestParam int responseSize) {
         log.debug("REST request to search for a page of Occupations for query {}", prefix);
-        List<OccupationSuggestionDto> result = occupationService.suggestOccupations(prefix, language, responseSize);
+        OccupationAutocompleteDto result = occupationService.suggestOccupations(prefix, language, responseSize);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

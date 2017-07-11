@@ -336,8 +336,8 @@ public class OccupationResourceIntTest {
         restOccupationMockMvc.perform(get("/api/_search/occupations?prefix=Gaert&language=de&responseSize=10"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].code").value(hasItem(DEFAULT_CODE)))
-            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)));
+            .andExpect(jsonPath("$.occupations.[*].code").value(hasItem(DEFAULT_CODE)))
+            .andExpect(jsonPath("$.occupations.[*].name").value(hasItem(DEFAULT_NAME)));
     }
 
     @Test

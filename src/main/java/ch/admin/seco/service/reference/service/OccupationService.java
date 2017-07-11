@@ -2,11 +2,10 @@ package ch.admin.seco.service.reference.service;
 
 import ch.admin.seco.service.reference.domain.Language;
 import ch.admin.seco.service.reference.domain.Occupation;
-import ch.admin.seco.service.reference.service.dto.OccupationSuggestionDto;
+import ch.admin.seco.service.reference.service.dto.OccupationAutocompleteDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -52,7 +51,7 @@ public interface OccupationService {
      * @param prefix     the query of the search
      * @param language   the language of the search
      * @param resultSize the pagination information
-     * @return the list of entities
+     * @return the lists of occupations and classifications
      */
-    public List<OccupationSuggestionDto> suggestOccupations(String prefix, Language language, int resultSize);
+    public OccupationAutocompleteDto suggestOccupations(String prefix, Language language, int resultSize);
 }
