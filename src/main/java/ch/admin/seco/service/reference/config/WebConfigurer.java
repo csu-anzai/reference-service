@@ -1,5 +1,13 @@
 package ch.admin.seco.service.reference.config;
 
+import java.util.EnumSet;
+
+import javax.servlet.DispatcherType;
+import javax.servlet.FilterRegistration;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRegistration;
+
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.servlet.InstrumentedFilter;
 import com.codahale.metrics.servlets.MetricsServlet;
@@ -9,6 +17,7 @@ import io.github.jhipster.config.JHipsterProperties;
 import io.undertow.UndertowOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.embedded.undertow.UndertowServletWebServerFactory;
 import org.springframework.boot.web.server.MimeMappings;
@@ -21,9 +30,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
-
-import javax.servlet.*;
-import java.util.EnumSet;
 
 /**
  * Configuration of web application with Servlet 3.0 APIs.
@@ -105,7 +111,7 @@ public class WebConfigurer implements ServletContextInitializer, WebServerFactor
         this.metricRegistry = metricRegistry;
     }
 
-    /**
+    /*
      * Initializes Metrics.
      */
     private void initMetrics(ServletContext servletContext, EnumSet<DispatcherType> disps) {
@@ -131,7 +137,7 @@ public class WebConfigurer implements ServletContextInitializer, WebServerFactor
         metricsAdminServlet.setLoadOnStartup(2);
     }
 
-    /**
+    /*
      * Initializes H2 console.
      */
     private void initH2Console(ServletContext servletContext) {

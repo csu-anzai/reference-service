@@ -7,10 +7,10 @@ import java.util.UUID;
 
 import javax.persistence.Id;
 
-import ch.admin.seco.service.reference.domain.Language;
-
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Mapping;
+
+import ch.admin.seco.service.reference.domain.Language;
 
 /**
  * A Occupation2.

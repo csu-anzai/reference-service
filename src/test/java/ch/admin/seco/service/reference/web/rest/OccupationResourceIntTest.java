@@ -1,18 +1,20 @@
 package ch.admin.seco.service.reference.web.rest;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.EntityManager;
 
-import ch.admin.seco.service.reference.ReferenceserviceApp;
-import ch.admin.seco.service.reference.domain.Language;
-import ch.admin.seco.service.reference.domain.Occupation;
-import ch.admin.seco.service.reference.domain.search.OccupationSynonym;
-import ch.admin.seco.service.reference.repository.OccupationRepository;
-import ch.admin.seco.service.reference.repository.search.OccupationSearchRepository;
-import ch.admin.seco.service.reference.service.OccupationService;
-import ch.admin.seco.service.reference.web.rest.errors.ExceptionTranslator;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,10 +30,14 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import ch.admin.seco.service.reference.ReferenceserviceApp;
+import ch.admin.seco.service.reference.domain.Language;
+import ch.admin.seco.service.reference.domain.Occupation;
+import ch.admin.seco.service.reference.domain.search.OccupationSynonym;
+import ch.admin.seco.service.reference.repository.OccupationRepository;
+import ch.admin.seco.service.reference.repository.search.OccupationSearchRepository;
+import ch.admin.seco.service.reference.service.OccupationService;
+import ch.admin.seco.service.reference.web.rest.errors.ExceptionTranslator;
 
 /**
  * Test class for the OccupationResource REST controller.
@@ -207,6 +213,7 @@ public class OccupationResourceIntTest {
     @Transactional
     public void getAllOccupations() throws Exception {
         // Initialize the database
+        occupationRepository.deleteAll();
         occupationRepository.saveAndFlush(occupation);
 
         // Get all the occupationList
@@ -308,7 +315,7 @@ public class OccupationResourceIntTest {
             .andExpect(status().isOk());
 
         // Validate Elasticsearch is empty
-        boolean occupationExistsInEs = occupationSearchRepository.findAllByCodeEquals(occupation.getCode()).isEmpty();
+        boolean occupationExistsInEs = occupationSearchRepository.findById(occupation.getId()).isPresent();
         assertThat(occupationExistsInEs).isFalse();
 
         // Validate the database is empty

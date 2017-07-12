@@ -1,13 +1,14 @@
 package ch.admin.seco.service.reference.service;
 
-import ch.admin.seco.service.reference.domain.Language;
-import ch.admin.seco.service.reference.domain.Occupation;
-import ch.admin.seco.service.reference.service.dto.OccupationAutocompleteDto;
+import java.util.Optional;
+import java.util.UUID;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.Optional;
-import java.util.UUID;
+import ch.admin.seco.service.reference.domain.Language;
+import ch.admin.seco.service.reference.domain.Occupation;
+import ch.admin.seco.service.reference.service.dto.OccupationAutocompleteDto;
 
 /**
  * Service Interface for managing Occupation.
@@ -53,5 +54,5 @@ public interface OccupationService {
      * @param resultSize the pagination information
      * @return the lists of occupations and classifications
      */
-    public OccupationAutocompleteDto suggestOccupations(String prefix, Language language, int resultSize);
+    OccupationAutocompleteDto suggestOccupations(String prefix, Language language, int resultSize);
 }

@@ -1,11 +1,5 @@
 package ch.admin.seco.service.reference.web.rest;
 
-import java.net.URISyntaxException;
-
-import ch.admin.seco.service.reference.security.AuthoritiesConstants;
-import ch.admin.seco.service.reference.security.SecurityUtils;
-import ch.admin.seco.service.reference.service.ElasticsearchIndexService;
-import ch.admin.seco.service.reference.web.rest.util.HeaderUtil;
 import com.codahale.metrics.annotation.Timed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +10,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import ch.admin.seco.service.reference.security.AuthoritiesConstants;
+import ch.admin.seco.service.reference.security.SecurityUtils;
+import ch.admin.seco.service.reference.service.ElasticsearchIndexService;
+import ch.admin.seco.service.reference.web.rest.util.HeaderUtil;
 
 /**
  * REST controller for managing Elasticsearch index.
@@ -32,7 +31,7 @@ public class ElasticsearchIndexResource {
         this.elasticsearchIndexService = elasticsearchIndexService;
     }
 
-    /**
+    /*
      * POST  /elasticsearch/index -> Reindex all Elasticsearch documents
      */
     @RequestMapping(value = "/elasticsearch/index",
@@ -40,7 +39,7 @@ public class ElasticsearchIndexResource {
         produces = MediaType.TEXT_PLAIN_VALUE)
     @Timed
     @PreAuthorize("hasAuthority('" + AuthoritiesConstants.ADMIN + "')")
-    public ResponseEntity<Void> reindexAll() throws URISyntaxException {
+    public ResponseEntity<Void> reindexAll() {
         log.info("REST request to reindex Elasticsearch by user : {}", SecurityUtils.getCurrentUserLogin());
         elasticsearchIndexService.reindexAll();
         return ResponseEntity.accepted()

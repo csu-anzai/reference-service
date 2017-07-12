@@ -1,8 +1,9 @@
 package ch.admin.seco.service.reference;
 
-import ch.admin.seco.service.reference.config.DefaultProfileUtil;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+
+import ch.admin.seco.service.reference.config.DefaultProfileUtil;
 
 /**
  * This is a helper Java class that provides an alternative to creating a web.xml.

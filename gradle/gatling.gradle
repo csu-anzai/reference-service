@@ -9,18 +9,20 @@ sourceSets {
     }
 }
 
-task manifestJar(dependsOn:'compileTestScala',type: Jar) {
+task manifestJar(dependsOn: 'compileTestScala', type: Jar) {
     dependsOn configurations.testCompile
     archiveName 'gatlingBooter.jar'
     doFirst {
         manifest {
             // uri is just needed for Windows-compatibility
-            attributes 'Class-Path': configurations.testCompile.files.collect{ project.uri(it) }.join(' ')
+            attributes 'Class-Path': configurations.testCompile.files.collect {
+                project.uri(it)
+            }.join(' ')
         }
     }
 }
 
-task gatlingRun(dependsOn:'manifestJar') {
+task gatlingRun(dependsOn: 'manifestJar') {
     group = 'gatling'
     description = 'Run a single Gatling simulation. You must write the name of your Gatling simulation.'
 
@@ -41,7 +43,7 @@ task gatlingRunAll(dependsOn: 'manifestJar') {
     doLast {
         FileTree tree = fileTree(dir: './src/test/gatling/simulations')
         tree.include '**/*.scala'
-        tree.each {File file ->
+        tree.each { File file ->
             def simulationClassName = file.name.replaceFirst(".scala", "")
             createGatlingRunTask(simulationClassName).dependsOn('manifestJar').execute();
         }
@@ -63,7 +65,7 @@ def createGatlingRunTask(def gatlingSimulationClassName) {
         classpath sourceSet.output + files(manifestJar.archivePath) + files("src/test/gatling/conf")
         main = "io.gatling.app.Gatling"
 
-        environment GATLING_HOME:''
+        environment GATLING_HOME: ''
 
         args '-df', gatlingDataFolder
         args '-rf', gatlingReportsFolder

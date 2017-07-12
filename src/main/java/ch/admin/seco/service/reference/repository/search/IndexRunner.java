@@ -1,9 +1,9 @@
 package ch.admin.seco.service.reference.repository.search;
 
-import ch.admin.seco.service.reference.service.ElasticsearchIndexService;
-
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+
+import ch.admin.seco.service.reference.service.ElasticsearchIndexService;
 
 @Component
 public class IndexRunner implements CommandLineRunner {

@@ -1,15 +1,17 @@
 package ch.admin.seco.service.reference.web.rest;
 
-import ch.admin.seco.service.reference.config.DefaultProfileUtil;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import io.github.jhipster.config.JHipsterProperties;
 
 import org.springframework.core.env.Environment;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import ch.admin.seco.service.reference.config.DefaultProfileUtil;
 
 /**
  * Resource to return information about the currently running Spring profiles.

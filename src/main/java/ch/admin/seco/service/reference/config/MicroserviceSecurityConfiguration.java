@@ -1,9 +1,5 @@
 package ch.admin.seco.service.reference.config;
 
-import ch.admin.seco.service.reference.security.AuthoritiesConstants;
-import ch.admin.seco.service.reference.security.jwt.JWTConfigurer;
-import ch.admin.seco.service.reference.security.jwt.TokenProvider;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -14,6 +10,10 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.data.repository.query.SecurityEvaluationContextExtension;
+
+import ch.admin.seco.service.reference.security.AuthoritiesConstants;
+import ch.admin.seco.service.reference.security.jwt.JWTConfigurer;
+import ch.admin.seco.service.reference.security.jwt.TokenProvider;
 
 @Configuration
 @EnableWebSecurity
@@ -47,26 +47,26 @@ public class MicroserviceSecurityConfiguration extends WebSecurityConfigurerAdap
             .headers()
             .frameOptions()
             .disable()
-        .and()
+            .and()
             .sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        .and()
+            .and()
             .authorizeRequests()
             .antMatchers(HttpMethod.GET, "/api/**").permitAll()
             .antMatchers("/api/**").authenticated()
             .antMatchers("/management/health").permitAll()
             .antMatchers("/management/**").hasAuthority(AuthoritiesConstants.ADMIN)
             .antMatchers("/swagger-resources/configuration/ui").permitAll()
-        .and()
+            .and()
             .apply(securityConfigurerAdapter());
-    }
-
-    private JWTConfigurer securityConfigurerAdapter() {
-        return new JWTConfigurer(tokenProvider);
     }
 
     @Bean
     public SecurityEvaluationContextExtension securityEvaluationContextExtension() {
         return new SecurityEvaluationContextExtension();
+    }
+
+    private JWTConfigurer securityConfigurerAdapter() {
+        return new JWTConfigurer(tokenProvider);
     }
 }

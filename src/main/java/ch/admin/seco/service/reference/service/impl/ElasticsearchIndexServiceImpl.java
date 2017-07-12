@@ -67,7 +67,7 @@ public class ElasticsearchIndexServiceImpl implements ch.admin.seco.service.refe
     }
 
     private <T, ID extends Serializable> void reindexForClass(Class<T> entityClass, JpaRepository<T, ID> jpaRepository,
-                                                              ElasticsearchRepository<T, ID> elasticsearchRepository) {
+        ElasticsearchRepository<T, ID> elasticsearchRepository) {
         elasticsearchTemplate.deleteIndex(entityClass);
         elasticsearchTemplate.createIndex(entityClass);
         elasticsearchTemplate.putMapping(entityClass);
