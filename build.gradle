@@ -99,11 +99,13 @@ task testReport(type: TestReport) {
 
 cucumberTest.finalizedBy(testReport)
 
+apply from: 'gradle/checkstyle.gradle'
 apply from: 'gradle/sonar.gradle'
 apply from: 'gradle/liquibase.gradle'
 apply from: 'gradle/gatling.gradle'
 apply from: 'gradle/mapstruct.gradle'
 apply from: 'gradle/docker.gradle'
+apply from: 'gradle/maven-publish.gradle'
 //jhipster-needle-gradle-apply-from - JHipster will add additional gradle scripts to be applied here
 
 if (project.hasProperty('prod')) {

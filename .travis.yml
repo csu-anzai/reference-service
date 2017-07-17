@@ -32,8 +32,17 @@ install:
   - yarn install
 script:
   - chmod +x gradlew
-  - ./gradlew clean test
+  - ./gradlew clean test sonarqube
   - ./gradlew bootJar -Pprod -x test
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+deploy:
+  skip_cleanup: true
+  provider: script
+  script: ./gradlew publish
+  on:
+    branch: develop
+    branch: /^release.*$/
 notifications:
   webhooks:
     on_success: change  # options: [always|never|change] default: always
