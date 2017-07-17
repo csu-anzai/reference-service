@@ -41,7 +41,7 @@ deploy:
   provider: script
   script: ./gradlew publish
   on:
-    branch: /^(develop|release.*)$/
+    branch: develop
 notifications:
   webhooks:
     on_success: change  # options: [always|never|change] default: always
