@@ -1,5 +1,10 @@
 package ch.admin.seco.service.reference.web.rest;
 
+import java.util.List;
+import java.util.UUID;
+
+import javax.persistence.EntityManager;
+
 import ch.admin.seco.service.reference.ReferenceserviceApp;
 import ch.admin.seco.service.reference.domain.Language;
 import ch.admin.seco.service.reference.domain.Occupation;
@@ -8,11 +13,11 @@ import ch.admin.seco.service.reference.repository.OccupationRepository;
 import ch.admin.seco.service.reference.repository.search.OccupationSearchRepository;
 import ch.admin.seco.service.reference.service.OccupationService;
 import ch.admin.seco.service.reference.web.rest.errors.ExceptionTranslator;
-import com.google.common.collect.Sets;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
@@ -23,13 +28,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -50,10 +49,7 @@ public class OccupationResourceIntTest {
     private static final Language UPDATED_LANGUAGE = Language.fr;
 
     private static final String DEFAULT_NAME = "Gärtner";
-    private static final String UPDATED_NAME = "BBBBBBBBBB";
-
-    private static final Set<String> DEFAULT_NAMESYNONYMS = Sets.newHashSet("Gärtner", "Stadtgärtner", "Obstgärtner");
-    private static final Set<String> UPDATED_NAMESYNONYMS = Sets.newHashSet("BBBBBBBBBB", "BCCCCCCC", "CCDDDEEF", "DEFFGGHH");
+    private static final String UPDATED_NAME = "Java Informatiker";
 
     @Autowired
     private OccupationRepository occupationRepository;
@@ -90,8 +86,7 @@ public class OccupationResourceIntTest {
         Occupation occupation = new Occupation()
             .code(DEFAULT_CODE)
             .language(DEFAULT_LANGUAGE)
-            .name(DEFAULT_NAME)
-            .namesynonyms(DEFAULT_NAMESYNONYMS);
+            .name(DEFAULT_NAME);
         return occupation;
     }
 
@@ -129,11 +124,10 @@ public class OccupationResourceIntTest {
         assertThat(testOccupation.getCode()).isEqualTo(DEFAULT_CODE);
         assertThat(testOccupation.getLanguage()).isEqualTo(DEFAULT_LANGUAGE);
         assertThat(testOccupation.getName()).isEqualTo(DEFAULT_NAME);
-        assertThat(testOccupation.getNamesynonyms()).isEqualTo(DEFAULT_NAMESYNONYMS);
 
         // Validate the Occupation in Elasticsearch
         List<OccupationSynonym> occupationSynonym = occupationSearchRepository.findAllByCodeEquals(testOccupation.getCode());
-        assertThat(occupationSynonym).hasSize(testOccupation.getNamesynonyms().size());
+        assertThat(occupationSynonym).hasSize(1);
     }
 
     @Test
@@ -160,7 +154,7 @@ public class OccupationResourceIntTest {
     public void checkCodeIsRequired() throws Exception {
         int databaseSizeBeforeTest = occupationRepository.findAll().size();
         // set the field null
-        occupation.setCode(null);
+        occupation.setCode(-1);
 
         // Create the Occupation, which fails.
 
@@ -222,8 +216,7 @@ public class OccupationResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(occupation.getId().toString())))
             .andExpect(jsonPath("$.[*].code").value(hasItem(DEFAULT_CODE)))
             .andExpect(jsonPath("$.[*].language").value(hasItem(DEFAULT_LANGUAGE.toString())))
-            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
-            .andExpect(jsonPath("$.[*].namesynonyms").value(hasItem(contains(DEFAULT_NAMESYNONYMS.toArray()))));
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())));
     }
 
     @Test
@@ -239,8 +232,7 @@ public class OccupationResourceIntTest {
             .andExpect(jsonPath("$.id").value(occupation.getId().toString()))
             .andExpect(jsonPath("$.code").value(DEFAULT_CODE))
             .andExpect(jsonPath("$.language").value(DEFAULT_LANGUAGE.toString()))
-            .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
-            .andExpect(jsonPath("$.namesynonyms").value(contains(DEFAULT_NAMESYNONYMS.toArray())));
+            .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()));
     }
 
     @Test
@@ -264,8 +256,7 @@ public class OccupationResourceIntTest {
         updatedOccupation
             .code(UPDATED_CODE)
             .language(UPDATED_LANGUAGE)
-            .name(UPDATED_NAME)
-            .namesynonyms(UPDATED_NAMESYNONYMS);
+            .name(UPDATED_NAME);
 
         restOccupationMockMvc.perform(put("/api/occupations")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -279,11 +270,10 @@ public class OccupationResourceIntTest {
         assertThat(testOccupation.getCode()).isEqualTo(UPDATED_CODE);
         assertThat(testOccupation.getLanguage()).isEqualTo(UPDATED_LANGUAGE);
         assertThat(testOccupation.getName()).isEqualTo(UPDATED_NAME);
-        assertThat(testOccupation.getNamesynonyms()).isEqualTo(UPDATED_NAMESYNONYMS);
 
         // Validate the Occupation in Elasticsearch
         List<OccupationSynonym> occupationSynonym = occupationSearchRepository.findAllByCodeEquals(testOccupation.getCode());
-        assertThat(occupationSynonym).hasSize(testOccupation.getNamesynonyms().size());
+        assertThat(occupationSynonym).hasSize(1);
     }
 
     @Test

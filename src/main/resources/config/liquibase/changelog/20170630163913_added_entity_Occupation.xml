@@ -27,32 +27,18 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="name" type="varchar(70)">
+            <column name="name" type="varchar(100)">
                 <constraints nullable="false"/>
             </column>
 
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
+    </changeSet>
 
-        <createTable tableName="occupation_namesynonyms">
-            <column name="occupation_id" type="uuid">
-                <constraints nullable="false"/>
-            </column>
-
-            <column name="name_synonyms" type="varchar(70)">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-
-        <addPrimaryKey columnNames="occupation_id, name_synonyms"
-                       constraintName="pk_occupation_id_namesynonyms"
-                       tableName="occupation_namesynonyms"/>
-
-        <addForeignKeyConstraint baseColumnNames="occupation_id"
-                                 baseTableName="occupation_namesynonyms"
-                                 constraintName="fk_namesynonyms_occupation_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="occupation"/>
-
+    <changeSet id="20170630163913-2" author="mwirth" context="!test">
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/changelog/data/REFERENCESERVICE_PUBLIC_OCCUPATION.csv"
+                  tableName="occupation">
+        </loadData>
     </changeSet>
 </databaseChangeLog>

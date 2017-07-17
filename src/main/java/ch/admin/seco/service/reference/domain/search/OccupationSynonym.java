@@ -1,13 +1,16 @@
 package ch.admin.seco.service.reference.domain.search;
 
-import ch.admin.seco.service.reference.domain.Language;
-import org.springframework.data.elasticsearch.annotations.Document;
-import org.springframework.data.elasticsearch.annotations.Mapping;
-
-import javax.persistence.Id;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
+
+import javax.persistence.Id;
+
+import ch.admin.seco.service.reference.domain.Language;
+
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Mapping;
 
 /**
  * A Occupation2.
@@ -19,7 +22,7 @@ public class OccupationSynonym implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    private String id;
+    private UUID id;
 
     private int code;
 
@@ -29,15 +32,15 @@ public class OccupationSynonym implements Serializable {
 
     private Set<String> occupationSuggestions;
 
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
-    public OccupationSynonym id(String id) {
+    public OccupationSynonym id(UUID id) {
         setId(id);
         return this;
     }

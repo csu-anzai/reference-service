@@ -1,15 +1,13 @@
 package ch.admin.seco.service.reference.service.impl;
 
-import ch.admin.seco.service.reference.domain.Language;
-import ch.admin.seco.service.reference.domain.Occupation;
-import ch.admin.seco.service.reference.domain.search.OccupationSynonym;
-import ch.admin.seco.service.reference.repository.OccupationRepository;
-import ch.admin.seco.service.reference.repository.search.OccupationSearchRepository;
-import ch.admin.seco.service.reference.service.OccupationService;
-import ch.admin.seco.service.reference.service.dto.OccupationAutocompleteDto;
-import ch.admin.seco.service.reference.service.dto.OccupationSuggestionDto;
-import org.elasticsearch.action.admin.indices.analyze.AnalyzeRequest;
-import org.elasticsearch.action.admin.indices.analyze.AnalyzeResponse;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import javax.annotation.PostConstruct;
+
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.search.suggest.SuggestBuilder;
@@ -19,14 +17,23 @@ import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
 import org.elasticsearch.search.suggest.completion.context.CategoryQueryContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import ch.admin.seco.service.reference.domain.Language;
+import ch.admin.seco.service.reference.domain.Occupation;
+import ch.admin.seco.service.reference.domain.search.OccupationSynonym;
+import ch.admin.seco.service.reference.repository.OccupationRepository;
+import ch.admin.seco.service.reference.repository.search.OccupationSearchRepository;
+import ch.admin.seco.service.reference.service.OccupationService;
+import ch.admin.seco.service.reference.service.dto.OccupationAutocompleteDto;
+import ch.admin.seco.service.reference.service.dto.OccupationSuggestionDto;
 
 /**
  * Service Implementation for managing Occupation.
@@ -36,17 +43,19 @@ import java.util.stream.Collectors;
 public class OccupationServiceImpl implements OccupationService {
 
     private final Logger log = LoggerFactory.getLogger(OccupationServiceImpl.class);
-
+    private final ApplicationContext applicationContext;
     private final OccupationRepository occupationRepository;
-
     private final OccupationSearchRepository occupationSearchRepository;
-
     private final ElasticsearchTemplate elasticsearchTemplate;
+    private final OccupationMapper occupationMapper;
+    private OccupationServiceImpl occupationServiceImpl;
 
-    public OccupationServiceImpl(OccupationRepository occupationRepository, OccupationSearchRepository occupationSearchRepository, ElasticsearchTemplate elasticsearchTemplate) {
+    public OccupationServiceImpl(ApplicationContext applicationContext, OccupationRepository occupationRepository, OccupationSearchRepository occupationSearchRepository, ElasticsearchTemplate elasticsearchTemplate, OccupationMapper occupationMapper) {
+        this.applicationContext = applicationContext;
         this.occupationRepository = occupationRepository;
         this.occupationSearchRepository = occupationSearchRepository;
         this.elasticsearchTemplate = elasticsearchTemplate;
+        this.occupationMapper = occupationMapper;
     }
 
     /**
@@ -59,9 +68,7 @@ public class OccupationServiceImpl implements OccupationService {
     public Occupation save(Occupation occupation) {
         log.debug("Request to save Occupation : {}", occupation);
         Occupation result = occupationRepository.save(occupation);
-
-        occupationSearchRepository.deleteAllByCodeEquals(occupation.getCode());
-        occupationSearchRepository.saveAll(createSuggestionLists(result));
+        occupationServiceImpl.index(result);
         return result;
     }
 
@@ -132,41 +139,20 @@ public class OccupationServiceImpl implements OccupationService {
         CompletionSuggestion completionSuggestion = suggestResponse.getSuggest().getSuggestion("occupations");
         List<OccupationSuggestionDto> occupations = completionSuggestion.getEntries().stream()
             .flatMap(item -> item.getOptions().stream())
-            .map(this::convertOccupationSuggestion)
+            .map(occupationMapper::convertOccupationSuggestion)
             .collect(Collectors.toList());
 
         return new OccupationAutocompleteDto(occupations, null);
     }
 
-    private Collection<OccupationSynonym> createSuggestionLists(Occupation occupation) {
-        return occupation.getNamesynonyms().stream()
-            .map(name -> new OccupationSynonym()
-                .code(occupation.getCode())
-                .language(occupation.getLanguage())
-                .occupation(name)
-                .occupationSuggestions(createSuggestions(name))
-
-            )
-            .collect(Collectors.toList());
+    @Async
+    void index(Occupation occupation) {
+        occupationSearchRepository.save(occupationMapper.toOccupationSynonym(occupation));
     }
 
-    private Set<String> createSuggestions(String name) {
-        Set<String> suggestions =
-            elasticsearchTemplate.getClient()
-                .admin()
-                .indices()
-                .analyze(new AnalyzeRequest().text(name).analyzer("simple"))
-                .actionGet()
-                .getTokens()
-                .stream()
-                .map(AnalyzeResponse.AnalyzeToken::getTerm)
-                .collect(Collectors.toSet());
-        suggestions.add(name);
-        return suggestions;
+    @PostConstruct
+    private void init() {
+        occupationServiceImpl = applicationContext.getBean(OccupationServiceImpl.class);
     }
 
-    private OccupationSuggestionDto convertOccupationSuggestion(CompletionSuggestion.Entry.Option option) {
-        Map<String, Object> source = option.getHit().getSourceAsMap();
-        return new OccupationSuggestionDto(String.class.cast(source.get("occupation")), Integer.class.cast(source.get("code")));
-    }
 }

@@ -1,18 +1,18 @@
 package ch.admin.seco.service.reference.domain;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.GenericGenerator;
+import java.io.Serializable;
+import java.util.Objects;
+import java.util.UUID;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.GenericGenerator;
 
 /**
  * A Occupation.
@@ -34,7 +34,7 @@ public class Occupation implements Serializable {
     @Min(value = 10000000)
     @Max(value = 99999999)
     @Column(name = "code", nullable = false)
-    private Integer code;
+    private int code;
 
     @NotNull
     @Column(name = "language", length = 2, nullable = false)
@@ -42,13 +42,9 @@ public class Occupation implements Serializable {
     private Language language;
 
     @NotNull
-    @Size(min = 2, max = 70)
-    @Column(name = "name", length = 70, nullable = false)
+    @Size(min = 2, max = 100)
+    @Column(name = "name", length = 100, nullable = false)
     private String name;
-
-    @Column(name = "name_synonyms", length = 70)
-    @ElementCollection
-    private Set<String> namesynonyms;
 
     public UUID getId() {
         return id;
@@ -58,15 +54,15 @@ public class Occupation implements Serializable {
         this.id = id;
     }
 
-    public Integer getCode() {
+    public int getCode() {
         return code;
     }
 
-    public void setCode(Integer code) {
+    public void setCode(int code) {
         this.code = code;
     }
 
-    public Occupation code(Integer code) {
+    public Occupation code(int code) {
         this.code = code;
         return this;
     }
@@ -97,19 +93,6 @@ public class Occupation implements Serializable {
         return this;
     }
 
-    public Set<String> getNamesynonyms() {
-        return namesynonyms;
-    }
-
-    public void setNamesynonyms(Set<String> namesynonyms) {
-        this.namesynonyms = namesynonyms;
-    }
-
-    public Occupation namesynonyms(Set<String> namesynonyms) {
-        this.namesynonyms = namesynonyms;
-        return this;
-    }
-
     @Override
     public int hashCode() {
         return Objects.hashCode(getId());
@@ -132,12 +115,11 @@ public class Occupation implements Serializable {
 
     @Override
     public String toString() {
-        return "Occupation2{" +
+        return "Occupation{" +
             "id=" + getId() +
             ", code='" + getCode() + "'" +
             ", language='" + getLanguage() + "'" +
             ", occupation='" + getName() + "'" +
-            ", namesynonyms='" + getNamesynonyms() + "'" +
             "}";
     }
 }
