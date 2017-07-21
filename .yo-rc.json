@@ -1,53 +1,53 @@
 {
-    "generator-jhipster": {
-        "promptValues": {
-            "packageName": "ch.admin.seco.service.reference",
-            "nativeLanguage": "de"
-        },
-        "jhipsterVersion": "4.5.6",
-        "baseName": "referenceservice",
-        "packageName": "ch.admin.seco.service.reference",
-        "packageFolder": "ch/admin/seco/service/reference",
-        "serverPort": "8082",
-        "authenticationType": "jwt",
-        "hibernateCache": "hazelcast",
-        "clusteredHttpSession": false,
-        "websocket": false,
-        "databaseType": "sql",
-        "devDatabaseType": "h2Disk",
-        "prodDatabaseType": "postgresql",
-        "searchEngine": "elasticsearch",
-        "messageBroker": false,
-        "serviceDiscoveryType": "eureka",
-        "buildTool": "gradle",
-        "enableSocialSignIn": false,
-        "jwtSecretKey": "037355a4178fa18deab527e6568ab3c684357447",
-        "enableTranslation": true,
-        "applicationType": "microservice",
-        "testFrameworks": [
-            "gatling",
-            "cucumber"
-        ],
-        "jhiPrefix": "jhi",
-        "otherModules": [
-            {
-                "name": "generator-jhipster-postgresuuid-converter",
-                "version": "0.1.0"
-            },
-            {
-                "name": "generator-jhipster-elasticsearch-reindexer",
-                "version": "0.3.0"
-            }
-        ],
-        "skipClient": true,
-        "skipUserManagement": true,
-        "nativeLanguage": "de",
-        "languages": [
-            "de",
-            "en",
-            "fr",
-            "it"
-        ],
-        "clientPackageManager": "yarn"
-    }
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "ch.admin.seco.service.reference",
+      "nativeLanguage": "de"
+    },
+    "jhipsterVersion": "4.5.6",
+    "baseName": "referenceservice",
+    "packageName": "ch.admin.seco.service.reference",
+    "packageFolder": "ch/admin/seco/service/reference",
+    "serverPort": "8082",
+    "authenticationType": "jwt",
+    "hibernateCache": "hazelcast",
+    "clusteredHttpSession": false,
+    "websocket": false,
+    "databaseType": "sql",
+    "devDatabaseType": "h2Disk",
+    "prodDatabaseType": "postgresql",
+    "searchEngine": "elasticsearch",
+    "messageBroker": false,
+    "serviceDiscoveryType": "eureka",
+    "buildTool": "gradle",
+    "enableSocialSignIn": false,
+    "jwtSecretKey": "037355a4178fa18deab527e6568ab3c684357447",
+    "enableTranslation": true,
+    "applicationType": "microservice",
+    "testFrameworks": [
+      "gatling",
+      "cucumber"
+    ],
+    "jhiPrefix": "jhi",
+    "otherModules": [
+      {
+        "name": "generator-jhipster-postgresuuid-converter",
+        "version": "0.1.0"
+      },
+      {
+        "name": "generator-jhipster-elasticsearch-reindexer",
+        "version": "0.3.0"
+      }
+    ],
+    "skipClient": true,
+    "skipUserManagement": true,
+    "nativeLanguage": "de",
+    "languages": [
+      "de",
+      "en",
+      "fr",
+      "it"
+    ],
+    "clientPackageManager": "yarn"
+  }
 }

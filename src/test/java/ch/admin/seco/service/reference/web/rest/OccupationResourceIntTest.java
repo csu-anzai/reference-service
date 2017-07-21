@@ -31,11 +31,13 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import ch.admin.seco.service.reference.ReferenceserviceApp;
+import ch.admin.seco.service.reference.domain.Classification;
 import ch.admin.seco.service.reference.domain.Language;
 import ch.admin.seco.service.reference.domain.Occupation;
 import ch.admin.seco.service.reference.domain.search.OccupationSynonym;
 import ch.admin.seco.service.reference.repository.OccupationRepository;
 import ch.admin.seco.service.reference.repository.search.OccupationSearchRepository;
+import ch.admin.seco.service.reference.service.ClassificationService;
 import ch.admin.seco.service.reference.service.OccupationService;
 import ch.admin.seco.service.reference.web.rest.errors.ExceptionTranslator;
 
@@ -49,12 +51,14 @@ import ch.admin.seco.service.reference.web.rest.errors.ExceptionTranslator;
 public class OccupationResourceIntTest {
 
     private static final Integer DEFAULT_CODE = 88888888;
+    private static final Integer DEFAULT_CODE_2 = 77777777;
     private static final Integer UPDATED_CODE = 99999999;
 
     private static final Language DEFAULT_LANGUAGE = Language.de;
     private static final Language UPDATED_LANGUAGE = Language.fr;
 
     private static final String DEFAULT_NAME = "Gärtner";
+    private static final String DEFAULT_NAME_2 = "Gärtner/innen und verwandte Berufe";
     private static final String UPDATED_NAME = "Java Informatiker";
 
     @Autowired
@@ -62,6 +66,9 @@ public class OccupationResourceIntTest {
 
     @Autowired
     private OccupationService occupationService;
+
+    @Autowired
+    private ClassificationService classificationService;
 
     @Autowired
     private OccupationSearchRepository occupationSearchRepository;
@@ -328,13 +335,21 @@ public class OccupationResourceIntTest {
     public void searchOccupation() throws Exception {
         // Initialize the database
         occupationService.save(occupation);
+        classificationService.save(
+            new Classification()
+                .code(DEFAULT_CODE_2)
+                .name(DEFAULT_NAME_2)
+                .language(DEFAULT_LANGUAGE)
+        );
 
         // Search the occupation
         restOccupationMockMvc.perform(get("/api/_search/occupations?prefix=Gaert&language=de&responseSize=10"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.occupations.[*].code").value(hasItem(DEFAULT_CODE)))
-            .andExpect(jsonPath("$.occupations.[*].name").value(hasItem(DEFAULT_NAME)));
+            .andExpect(jsonPath("$.occupations.[*].name").value(hasItem(DEFAULT_NAME)))
+            .andExpect(jsonPath("$.classifications.[*].code").value(hasItem(DEFAULT_CODE_2)))
+            .andExpect(jsonPath("$.classifications.[*].name").value(hasItem(DEFAULT_NAME_2)));
     }
 
     @Test

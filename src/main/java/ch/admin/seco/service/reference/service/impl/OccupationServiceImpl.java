@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
@@ -32,6 +33,7 @@ import ch.admin.seco.service.reference.domain.search.OccupationSynonym;
 import ch.admin.seco.service.reference.repository.OccupationRepository;
 import ch.admin.seco.service.reference.repository.search.OccupationSearchRepository;
 import ch.admin.seco.service.reference.service.OccupationService;
+import ch.admin.seco.service.reference.service.dto.ClassificationSuggestionDto;
 import ch.admin.seco.service.reference.service.dto.OccupationAutocompleteDto;
 import ch.admin.seco.service.reference.service.dto.OccupationSuggestionDto;
 
@@ -47,10 +49,15 @@ public class OccupationServiceImpl implements OccupationService {
     private final OccupationRepository occupationRepository;
     private final OccupationSearchRepository occupationSearchRepository;
     private final ElasticsearchTemplate elasticsearchTemplate;
-    private final OccupationMapper occupationMapper;
+    private final EntityToSynonymMapper occupationMapper;
     private OccupationServiceImpl occupationServiceImpl;
 
-    public OccupationServiceImpl(ApplicationContext applicationContext, OccupationRepository occupationRepository, OccupationSearchRepository occupationSearchRepository, ElasticsearchTemplate elasticsearchTemplate, OccupationMapper occupationMapper) {
+    public OccupationServiceImpl(ApplicationContext applicationContext,
+        OccupationRepository occupationRepository,
+        OccupationSearchRepository occupationSearchRepository,
+        ElasticsearchTemplate elasticsearchTemplate,
+        EntityToSynonymMapper occupationMapper) {
+
         this.applicationContext = applicationContext;
         this.occupationRepository = occupationRepository;
         this.occupationSearchRepository = occupationSearchRepository;
@@ -126,33 +133,40 @@ public class OccupationServiceImpl implements OccupationService {
     public OccupationAutocompleteDto suggestOccupations(String prefix, Language language, int resultSize) {
         log.debug("Request to search for a page of Occupations for query {}", prefix);
 
-        SuggestionBuilder completionSuggestionFuzzyBuilder =
-            SuggestBuilders.completionSuggestion("occupationSuggestions." + language.name())
+        Function<String, SuggestionBuilder> createSuggestionBuilder = (String field) ->
+            SuggestBuilders.completionSuggestion(field + "." + language.name())
                 .prefix(prefix, Fuzziness.AUTO)
                 .size(resultSize)
                 .contexts(Collections.singletonMap("lang",
                     Collections.singletonList(CategoryQueryContext.builder().setCategory(language.name()).build())));
 
         SearchResponse suggestResponse = elasticsearchTemplate.suggest(new SuggestBuilder()
-            .addSuggestion("occupations", completionSuggestionFuzzyBuilder), OccupationSynonym.class);
+            .addSuggestion("occupations", createSuggestionBuilder.apply("occupationSuggestions"))
+            .addSuggestion("classifications", createSuggestionBuilder.apply("classificationSuggestions")),
+            OccupationSynonym.class);
 
-        CompletionSuggestion completionSuggestion = suggestResponse.getSuggest().getSuggestion("occupations");
-        List<OccupationSuggestionDto> occupations = completionSuggestion.getEntries().stream()
+        List<OccupationSuggestionDto> occupations = suggestResponse.getSuggest()
+            .<CompletionSuggestion>getSuggestion("occupations").getEntries().stream()
             .flatMap(item -> item.getOptions().stream())
             .map(occupationMapper::convertOccupationSuggestion)
             .collect(Collectors.toList());
 
-        return new OccupationAutocompleteDto(occupations, null);
+        List<ClassificationSuggestionDto> classifications = suggestResponse.getSuggest()
+            .<CompletionSuggestion>getSuggestion("classifications").getEntries().stream()
+            .flatMap(item -> item.getOptions().stream())
+            .map(occupationMapper::convertClassificationSuggestion)
+            .collect(Collectors.toList());
+
+        return new OccupationAutocompleteDto(occupations, classifications);
     }
 
     @Async
     void index(Occupation occupation) {
-        occupationSearchRepository.save(occupationMapper.toOccupationSynonym(occupation));
+        occupationSearchRepository.save(occupationMapper.toSynonym(occupation));
     }
 
     @PostConstruct
     private void init() {
         occupationServiceImpl = applicationContext.getBean(OccupationServiceImpl.class);
     }
-
 }

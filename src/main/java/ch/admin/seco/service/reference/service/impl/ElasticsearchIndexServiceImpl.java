@@ -20,28 +20,38 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ch.admin.seco.service.reference.domain.search.ClassificationSynonym;
 import ch.admin.seco.service.reference.domain.search.OccupationSynonym;
+import ch.admin.seco.service.reference.repository.ClassificationRepository;
 import ch.admin.seco.service.reference.repository.OccupationRepository;
+import ch.admin.seco.service.reference.repository.search.ClassificationSearchRepository;
 import ch.admin.seco.service.reference.repository.search.OccupationSearchRepository;
 
 @Service
 public class ElasticsearchIndexServiceImpl implements ch.admin.seco.service.reference.service.ElasticsearchIndexService {
 
     private final Logger log = LoggerFactory.getLogger(ElasticsearchIndexServiceImpl.class);
+    private final ClassificationRepository classificationRepository;
+    private final ClassificationSearchRepository classificationSearchRepository;
     private final OccupationRepository occupationRepository;
     private final OccupationSearchRepository occupationSearchRepository;
     private final ElasticsearchTemplate elasticsearchTemplate;
-    private final OccupationMapper occupationMapper;
+    private final EntityToSynonymMapper entityToSynonymMapper;
 
     public ElasticsearchIndexServiceImpl(
+        ClassificationRepository classificationRepository,
+        ClassificationSearchRepository classificationSearchRepository,
         OccupationRepository occupationRepository,
         OccupationSearchRepository occupationSearchRepository,
         ElasticsearchTemplate elasticsearchTemplate,
-        OccupationMapper occupationMapper) {
+        EntityToSynonymMapper entityToSynonymMapper) {
+
+        this.classificationRepository = classificationRepository;
+        this.classificationSearchRepository = classificationSearchRepository;
         this.occupationRepository = occupationRepository;
         this.occupationSearchRepository = occupationSearchRepository;
         this.elasticsearchTemplate = elasticsearchTemplate;
-        this.occupationMapper = occupationMapper;
+        this.entityToSynonymMapper = entityToSynonymMapper;
     }
 
     @Override
@@ -49,8 +59,22 @@ public class ElasticsearchIndexServiceImpl implements ch.admin.seco.service.refe
     @Timed
     @Transactional(readOnly = true)
     public void reindexAll() {
+        reindexClassification();
         reindexOccupaton();
         log.info("Elasticsearch: Successfully performed reindexing");
+    }
+
+    private void reindexClassification() {
+        Flux.fromStream(classificationRepository.streamAll())
+            .map(classification -> new ClassificationSynonym()
+                .id(classification.getId())
+                .code(classification.getCode())
+                .language(classification.getLanguage())
+                .classification(classification.getName())
+                .classificationSuggestions(entityToSynonymMapper.extractSuggestionList(classification.getName()))
+            )
+            .buffer(100)
+            .subscribe(classificationSearchRepository::saveAll);
     }
 
     private void reindexOccupaton() {
@@ -60,7 +84,7 @@ public class ElasticsearchIndexServiceImpl implements ch.admin.seco.service.refe
                 .code(occupation.getCode())
                 .language(occupation.getLanguage())
                 .occupation(occupation.getName())
-                .occupationSuggestions(occupationMapper.extractSuggestionList(occupation.getName()))
+                .occupationSuggestions(entityToSynonymMapper.extractSuggestionList(occupation.getName()))
             )
             .buffer(100)
             .subscribe(occupationSearchRepository::saveAll);
@@ -79,7 +103,7 @@ public class ElasticsearchIndexServiceImpl implements ch.admin.seco.service.refe
                 reindexWithPageable(jpaRepository, elasticsearchRepository);
             }
         }
-        log.info("Elasticsearch: Indexed {} of {} rows for {}", occupationSearchRepository.count(), occupationRepository.count(), entityClass.getSimpleName());
+        log.info("Elasticsearch: Indexed {} of {} rows for {}", elasticsearchRepository.count(), jpaRepository.count(), entityClass.getSimpleName());
     }
 
     private <T, ID extends Serializable> void reindexWithStream(JpaRepository<T, ID> jpaRepository, ElasticsearchRepository<T, ID> elasticsearchRepository) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {

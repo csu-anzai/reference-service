@@ -1,0 +1,70 @@
+{
+    "classifications": {
+        "properties": {
+            "code": {
+                "type": "keyword"
+            },
+            "language": {
+                "type": "text",
+                "fields": {
+                    "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 2
+                    }
+                }
+            },
+            "classification": {
+                "type": "text"
+            },
+            "classificationSuggestions": {
+                "type": "text",
+                "fields": {
+                    "de": {
+                        "type": "completion",
+                        "analyzer": "german",
+                        "contexts": [
+                            {
+                                "name": "lang",
+                                "type": "CATEGORY",
+                                "path": "language"
+                            }
+                        ]
+                    },
+                    "fr": {
+                        "type": "completion",
+                        "analyzer": "french",
+                        "contexts": [
+                            {
+                                "name": "lang",
+                                "type": "CATEGORY",
+                                "path": "language"
+                            }
+                        ]
+                    },
+                    "it": {
+                        "type": "completion",
+                        "analyzer": "italian",
+                        "contexts": [
+                            {
+                                "name": "lang",
+                                "type": "CATEGORY",
+                                "path": "language"
+                            }
+                        ]
+                    },
+                    "en": {
+                        "type": "completion",
+                        "analyzer": "english",
+                        "contexts": [
+                            {
+                                "name": "lang",
+                                "type": "CATEGORY",
+                                "path": "language"
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    }
+}

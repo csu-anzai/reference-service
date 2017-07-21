@@ -11,26 +11,38 @@ import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.stereotype.Component;
 
+import ch.admin.seco.service.reference.domain.Classification;
 import ch.admin.seco.service.reference.domain.Occupation;
+import ch.admin.seco.service.reference.domain.search.ClassificationSynonym;
 import ch.admin.seco.service.reference.domain.search.OccupationSynonym;
+import ch.admin.seco.service.reference.service.dto.ClassificationSuggestionDto;
 import ch.admin.seco.service.reference.service.dto.OccupationSuggestionDto;
 
 @Component
-public class OccupationMapper {
+public class EntityToSynonymMapper {
 
     private final ElasticsearchTemplate elasticsearchTemplate;
 
-    OccupationMapper(ElasticsearchTemplate elasticsearchTemplate) {
+    EntityToSynonymMapper(ElasticsearchTemplate elasticsearchTemplate) {
         this.elasticsearchTemplate = elasticsearchTemplate;
     }
 
-    OccupationSynonym toOccupationSynonym(Occupation occupation) {
+    OccupationSynonym toSynonym(Occupation occupation) {
         return new OccupationSynonym()
             .id(occupation.getId())
             .code(occupation.getCode())
             .language(occupation.getLanguage())
             .occupation(occupation.getName())
             .occupationSuggestions(extractSuggestionList(occupation.getName()));
+    }
+
+    ClassificationSynonym toSynonym(Classification classification) {
+        return new ClassificationSynonym()
+            .id(classification.getId())
+            .code(classification.getCode())
+            .language(classification.getLanguage())
+            .classification(classification.getName())
+            .classificationSuggestions(extractSuggestionList(classification.getName()));
     }
 
     Set<String> extractSuggestionList(String name) {
@@ -51,5 +63,10 @@ public class OccupationMapper {
     OccupationSuggestionDto convertOccupationSuggestion(CompletionSuggestion.Entry.Option option) {
         Map<String, Object> source = option.getHit().getSourceAsMap();
         return new OccupationSuggestionDto(String.class.cast(source.get("occupation")), Integer.class.cast(source.get("code")));
+    }
+
+    ClassificationSuggestionDto convertClassificationSuggestion(CompletionSuggestion.Entry.Option option) {
+        Map<String, Object> source = option.getHit().getSourceAsMap();
+        return new ClassificationSuggestionDto(String.class.cast(source.get("classification")), Integer.class.cast(source.get("code")));
     }
 }
