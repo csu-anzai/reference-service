@@ -16,6 +16,7 @@ buildscript {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${spring_boot_version}"
         classpath "org.springframework.build.gradle:propdeps-plugin:0.0.7"
         classpath "io.spring.gradle:dependency-management-plugin:1.0.3.RELEASE"
+        classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.4.16"
         //jhipster-needle-gradle-buildscript-dependency - JHipster will add additional gradle build script plugins here
     }
 }
@@ -28,6 +29,7 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'war'
 apply plugin: 'propdeps'
 apply plugin: 'io.spring.dependency-management'
+apply plugin: 'com.gorylenko.gradle-git-properties'
 apply plugin: 'checkstyle'
 dependencyManagement {
     imports {
