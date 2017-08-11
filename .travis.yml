@@ -9,8 +9,8 @@ jdk:
 sudo: false
 cache:
   directories:
-  - $HOME/.gradle/wrapper
-  - $HOME/.gradle/caches/modules-2/files-2.1
+  - "$HOME/.gradle/wrapper"
+  - "$HOME/.gradle/caches/modules-2/files-2.1"
 env:
   global:
   - NODE_VERSION=6.11.0
@@ -19,6 +19,7 @@ env:
   - secure: aWdKwjUBDHQ60juupSFcsPiH40xtmDL34+VjEl5+xJA/DmXExSb6BhZ+Sx/fsPbgiIp8806eoKhPgWCJJKpl9wkM1Ry583JZTf8pe9YSM8b9DkvVLsh8E+gb67bPhreS7F7EE4Qmy9Om8+pzv270BTek4Eiy0QbEt+iaWm3O+j6L6kHyxnddl4D/3TA8X1m1eUyrrMNlqA88WQzePMzAXZkimmq+jijmgt/F997I9ylcP4CKc9uM1cOAc0lpEbcnqIGXueWu5cvdCdH1LfqD/Y1EIMVNaE5VsKhJq3gRtXhtMUkgtYUsIGsAW1zZupHedUbOwuyoLnEXDhn+zGZrjWyJ+FXf35+Y7+HTb6Vnn8l4Sn3+iCi9byKJ/Vlv6g3kuXgofn/Rl1zvAzVDCiiUpAXMyW+D0mYTMnTF7zkZID+1BzYRlWfCBMd91gxO6+dlsZBwT9AwaMJwO+88FwsadTa1M+zdJcEnfYg5cktIRdUnmpE/Zryq9+BreuEPsWbxkCEHZyddhTacKCymXCJCOWWd0x/OMitFllepGbAk7NX+xj2VM+Io8lUXkxcVjX9SBDmhwXQF3jGTenv2XdqrF7bWiH1td+hFE4HCMHFTlRZZeqMOMjl1g0DIx3M3UocuYlzN5E7z2vdXgZd3rcZHpAgpaGfBo70EwJYHXy7/soo=
   - secure: F2yVj6Nn5ZHrLRiE0+UILipdD8XWFpBA7EaZvmd6R7ZNopcM09/TBFYfTLFpLIhQBbzZVA6Py2KuNcDrgV2mdVjkY311ituynhvVVfwAax2hsdE/Qhf0qwgDQ2waJo9yUDAcTo9ZrFmVwKaemCi1xOtN5/m2EpOU8OYcT1oL4AV1N6SGke/oyDoOKkHj+hkMsbTwbCMB0/vQH0L4cBIJAvGqgvMoWOoAvbznT9V7zzpyK6PUwU9FXzyykt96hwldoEtktBro4V+wBQidF4DFNHaBFvEYqfPaOd0aWFogjBkmDUHSrFhj9U6osxyQFzcvEbewJKIiNW2xD+zPHgKisQ56rRzj0BhNMfaHM6IaA4aaAg36J2bdoFY/YZAgaEcqntmJtsKs0JMnc/WWNd7kLcg37wVzQzIKv5tVfVuQ5bMlIYXRVN7D2UVx6QpPF/Hx4kOBBeuqKFcJUpCdr5oIc3jriY8dSemc7vP1SQb7dXA5p8nwqCabxP8ilsC/92BMkGUCOd0Qqt+DYSc8TIWgHoRzehLSjdaUF2zBmr45KMjFp5GN4OFHjKkRLpNsp1ustafEKKF/oEVzSrt4KmfY2rnSZG/NjylbB7e1DuxQ/1YsYC9y4C71n4sRTJlZO+ut/NcW3Niad84H2EwqWrAwY8j1qf5NFfr0JixRtnDW430=
   - secure: a3QYLTh1OivrrjmbECbsy5wQ7eVqGej1GM8TTwI8q5EAe7+r12kyZGdRjDf7MoADbG/XUtQNbofV3ss1oJ89ddGTtNZyJy89AvQq1zY0tdrmJEeAaWLLc3v4W44XF8/x2rcQyMu6mhQXSqJRXfD1vpffb+3zNLjzLB3izFBIWAWFSs4ATXPi+FQLXyopUL1QH5O0pA16DZo9LAcLlMMPUeqR3MxLrFBb5pz3o9Uawd3bfD6nSvGvUEAAgbP/58hw1WCze/HAjOZDbL66ZkYer2x7wxZ/IU5SqdGLajpQDAZeSnEPntWclHNnvPGclyWe0sYodhgZyjUAKEhND34dI+G0szJEryLbspw9teBE9UxqCXSRnmSX/bVuUEX9P2nZcdn9iqoQSl//Lnuwycb7Sh9OgO1ay5ziuEBiYyftFeseDyxjBHlUPp0XkkXmVIa4Qn2AGX8n6ilGBuIAJJSyTLFKwBygaxsXIENgUw58nSeLAZY2cuokzcxWw955puWuYpPLuVDTbicgScTb5xc9SYiGdmNtt2GOlYzd4JTRO9CmchIw+nPYUqa/W9yjXny9la+qoU6JEUzZfV3/NwTq41S7vD2LOAwG7H4QNHYaklMwFtIOT9RGNgwEcZrB1Ow+ZIT59zt9uQXk5MXSKGS8qXqDqA+8e0wjnBkqFbszMEY=
+  - secure: jPYBxb+b+ZgA2qgsODFSR6CtsvlW6A/QnuBLh+xm6Knqa5443xUlC3eHiwTgkRSYsLpz8Z00t8xoECQD7H803HPSmzWDN53jj6F9bEy6y2AoJZHuOYjP0NLHyeeYMjVnw/Bc7YNmtiA4/ASH0fNQY1Ky/zn0sorjD+40T+RvU3aRB5K0WtQTvoEWty3p6nDCjn/QBfG8/rQPMGtRS8nP+hMMhsiwhkB75MJ9P9CCEdjmheK/MiZRkSqWrYv9rnVIzy+wNgWAIF9zuBvqjfIDYnBsN7RYDuzhPYsRD8Fj+/d14q5illATh6IQW/8dlmO9wdj4nfbK/GadXRwyzvkTLsBQtgx/+TwD00SKNTsvOgaEbyITW3II+F39Fpu8n9pu6YvIuy3jaiNTl0PdiDwveVzsBbulJmHrqR1t4rd7Z9GIN1lxilEIWvL92Fwi7IpHQKwSD56HVJdNs4wOBGmJzI8sOnOoZtV89MVIWWUR2KSFY3c6QTfC/OJkQpRnZXFBQgYPn5X//3bZ1gw5ZtoWACUiFA9XQcmnmzal0CFbTNHO6ja32dI4SxSbFjpDQjbhJIEXw8RgcbUsAuMNi0a/lq76dXyCIb0dwotB1v7+Sb0uMj7cTbXLnzgMAciXtP+tIh1hlUsPzkb+RI/+H1luXqDJx5ZgURKRm812S8h972E=
 addons:
   ssh_known_hosts:
   - 159.100.254.166
@@ -27,21 +28,21 @@ before_install:
 - jdk_switcher use oraclejdk8
 - java -version
 script:
-- ./gradlew clean test sonarqube --stacktrace
+- "./gradlew clean test sonarqube --stacktrace"
 after_success:
 - bash <(curl -s https://codecov.io/bash)
 before_deploy:
-- ./gradlew bootJar publish -Pprod -Pgraphite -Pprometheus -x test --stacktrace
+- "./gradlew bootJar publish -Pprod -Pgraphite -Pprometheus -x test --stacktrace"
 - chmod +x .travis/deploy.sh
 deploy:
 - provider: script
   skip_cleanup: true
-  script: .travis/deploy.sh
+  script: ".travis/deploy.sh"
   on:
     branch: develop
 - provider: script
   skip_cleanup: true
-  script: .travis/deploy.sh
+  script: ".travis/deploy.sh"
   on:
     all_branches: true
     condition: "$TRAVIS_BRANCH =~ ^release.*$"
