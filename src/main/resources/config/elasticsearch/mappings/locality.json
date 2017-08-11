@@ -1,0 +1,15 @@
+{
+    "localities": {
+        "properties": {
+            "city": {
+                "type": "text"
+            },
+            "cantonCode": {
+                "type": "keyword"
+            },
+            "geoPoint": {
+                "type": "geo_point"
+            }
+        }
+    }
+}

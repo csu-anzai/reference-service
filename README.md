@@ -1,4 +1,9 @@
 # referenceservice
+
+[![Build Status](https://api.travis-ci.org/alv-ch/reference-service.svg)](https://travis-ci.org/alv-ch/reference-service)
+[![Coverage Status](https://codecov.io/github/alv-ch/reference-service/coverage.svg?branch=develop)](https://codecov.io/github/alv-ch/reference-service?branch=develop)
+[![Quality Gate](https://sonarqube.com/api/badges/gate?key=ch.admin.seco.service.reference%3Areferenceservice)](https://sonarcloud.io/dashboard?id=ch.admin.seco.service.reference%3Areferenceservice)
+
 This application was generated using JHipster 4.5.6, you can find documentation and help at [https://jhipster.github.io/documentation-archive/v4.5.6](https://jhipster.github.io/documentation-archive/v4.5.6).
 
 This is a "microservice" application intended to be part of a microservice architecture, please refer to the [Doing microservices with JHipster][] page of the documentation for more information.

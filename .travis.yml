@@ -28,7 +28,7 @@ before_install:
 - jdk_switcher use oraclejdk8
 - java -version
 script:
-- "./gradlew clean test sonarqube --stacktrace"
+- ./gradlew clean check jacocoTestReport sonarqube --stacktrace
 after_success:
 - bash <(curl -s https://codecov.io/bash)
 before_deploy:

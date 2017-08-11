@@ -20,11 +20,14 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ch.admin.seco.service.reference.domain.Locality;
 import ch.admin.seco.service.reference.domain.search.ClassificationSynonym;
 import ch.admin.seco.service.reference.domain.search.OccupationSynonym;
 import ch.admin.seco.service.reference.repository.ClassificationRepository;
+import ch.admin.seco.service.reference.repository.LocalityRepository;
 import ch.admin.seco.service.reference.repository.OccupationRepository;
 import ch.admin.seco.service.reference.repository.search.ClassificationSearchRepository;
+import ch.admin.seco.service.reference.repository.search.LocalitySearchRepository;
 import ch.admin.seco.service.reference.repository.search.OccupationSearchRepository;
 
 @Service
@@ -35,6 +38,8 @@ public class ElasticsearchIndexServiceImpl implements ch.admin.seco.service.refe
     private final ClassificationSearchRepository classificationSearchRepository;
     private final OccupationRepository occupationRepository;
     private final OccupationSearchRepository occupationSearchRepository;
+    private final LocalityRepository localityRepository;
+    private final LocalitySearchRepository localitySearchRepository;
     private final ElasticsearchTemplate elasticsearchTemplate;
     private final EntityToSynonymMapper entityToSynonymMapper;
 
@@ -43,6 +48,8 @@ public class ElasticsearchIndexServiceImpl implements ch.admin.seco.service.refe
         ClassificationSearchRepository classificationSearchRepository,
         OccupationRepository occupationRepository,
         OccupationSearchRepository occupationSearchRepository,
+        LocalityRepository localityRepository,
+        LocalitySearchRepository localitySearchRepository,
         ElasticsearchTemplate elasticsearchTemplate,
         EntityToSynonymMapper entityToSynonymMapper) {
 
@@ -50,6 +57,8 @@ public class ElasticsearchIndexServiceImpl implements ch.admin.seco.service.refe
         this.classificationSearchRepository = classificationSearchRepository;
         this.occupationRepository = occupationRepository;
         this.occupationSearchRepository = occupationSearchRepository;
+        this.localityRepository = localityRepository;
+        this.localitySearchRepository = localitySearchRepository;
         this.elasticsearchTemplate = elasticsearchTemplate;
         this.entityToSynonymMapper = entityToSynonymMapper;
     }
@@ -61,6 +70,7 @@ public class ElasticsearchIndexServiceImpl implements ch.admin.seco.service.refe
     public void reindexAll() {
         reindexClassification();
         reindexOccupaton();
+        reindexForClass(Locality.class, localityRepository, localitySearchRepository);
         log.info("Elasticsearch: Successfully performed reindexing");
     }
 
