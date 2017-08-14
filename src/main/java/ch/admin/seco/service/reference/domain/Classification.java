@@ -41,8 +41,8 @@ public class Classification implements Serializable {
     private UUID id;
 
     @NotNull
-    @Min(10000000)
-    @Max(99999999)
+    @Min(100)
+    @Max(999)
     @Column(name = "code", nullable = false)
     private int code;
 

@@ -48,8 +48,8 @@ import ch.admin.seco.service.reference.web.rest.errors.ExceptionTranslator;
 @SpringBootTest(classes = ReferenceserviceApp.class)
 public class ClassificationResourceIntTest {
 
-    private static final Integer DEFAULT_CODE = 10000000;
-    private static final Integer UPDATED_CODE = 10000001;
+    private static final Integer DEFAULT_CODE = 100;
+    private static final Integer UPDATED_CODE = 101;
 
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";

@@ -5,19 +5,21 @@ import io.gatling.http.Predef._
 import org.slf4j.LoggerFactory
 
 import scala.concurrent.duration._
+import scala.util.Random
 
 /**
  * Performance test for the Occupation entity.
  */
 class OccupationGatlingTest extends Simulation {
 
+    val PAUSE = 2
     val context: LoggerContext = LoggerFactory.getILoggerFactory.asInstanceOf[LoggerContext]
     // Log all HTTP requests
     //context.getLogger("io.gatling.http").setLevel(Level.valueOf("TRACE"))
     // Log failed HTTP requests
     //context.getLogger("io.gatling.http").setLevel(Level.valueOf("DEBUG"))
 
-    val baseURL = Option(System.getProperty("baseURL")) getOrElse """http://127.0.0.1:8080"""
+    val baseURL = Option(System.getProperty("baseURL")) orElse Option(System.getenv("baseURL")) getOrElse """http://127.0.0.1:8080"""
 
     val httpConf = http
         .baseURL(baseURL)
@@ -42,12 +44,23 @@ class OccupationGatlingTest extends Simulation {
         "Authorization" -> "${access_token}"
     )
 
+    // Define an infinite feeder which calculates random numbers
+    val occupationFeed = Iterator.continually(
+        // Random number will be accessible in session under variable "OrderRef"
+        Map(
+            "occupationCodes" -> (90000000 + Random.nextInt(100000)).toString,
+            "occupationNames" -> Random.alphanumeric.take(Random.nextInt(20)).mkString
+        )
+    )
+
+
     val scn = scenario("Test the Occupation entity")
+        .feed(occupationFeed) // attaching feeder to session
         .exec(http("First unauthenticated request")
         .get("/api/account")
         .headers(headers_http)
         .check(status.is(401))).exitHereIfFailed
-        .pause(10)
+        .pause(PAUSE)
         .exec(http("Authentication")
         .post("/api/authenticate")
         .headers(headers_http_authentication)
@@ -58,30 +71,30 @@ class OccupationGatlingTest extends Simulation {
         .get("/api/account")
         .headers(headers_http_authenticated)
         .check(status.is(200)))
-        .pause(10)
+        .pause(PAUSE)
         .repeat(2) {
             exec(http("Get all occupations")
             .get("/referenceservice/api/occupations")
             .headers(headers_http_authenticated)
             .check(status.is(200)))
-            .pause(10 seconds, 20 seconds)
+                .pause(PAUSE seconds, 5 seconds)
             .exec(http("Create new occupation")
             .post("/referenceservice/api/occupations")
             .headers(headers_http_authenticated)
-            .body(StringBody("""{"id":null, "code":"0", "language":"SAMPLE_TEXT", "name":"SAMPLE_TEXT", "namesynonyms":"SAMPLE_TEXT"}""")).asJSON
+                .body(StringBody("""{"code":${occupationCodes}, "language":"de", "name":"${occupationNames}"}""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_occupation_url"))).exitHereIfFailed
-            .pause(10)
+                .pause(PAUSE)
             .repeat(5) {
                 exec(http("Get created occupation")
                 .get("/referenceservice${new_occupation_url}")
                 .headers(headers_http_authenticated))
-                .pause(10)
+                    .pause(PAUSE)
             }
             .exec(http("Delete created occupation")
             .delete("/referenceservice${new_occupation_url}")
             .headers(headers_http_authenticated))
-            .pause(10)
+                .pause(PAUSE)
         }
 
     val users = scenario("Users").exec(scn)

@@ -37,11 +37,11 @@ will generate few files:
 
 To optimize the referenceservice application for production, run:
 
-    ./gradlew -Pprod clean bootRepackage
+    ./gradlew -Pprod clean bootJar
 
 To ensure everything worked, run:
 
-    java -jar build/libs/*.war
+    java -jar build/libs/*.jar
 
 
 Refer to [Using JHipster in production][] for more details.
@@ -53,9 +53,14 @@ To launch your application's tests, run:
     ./gradlew test
 ### Other tests
 
-Performance tests are run by [Gatling][] and written in Scala. They're located in [src/test/gatling](src/test/gatling) and can be run with:
+Performance tests are run against the DEV enviroment by [Gatling][] and written in Scala. They're located in [src/test/gatling](src/test/gatling) and can be run with:
 
-    ./gradlew gatlingRun
+    baseURL=http://159.100.254.166:8080 ./gradlew -b e2e.gradle gatlingRunAll
+    
+or run individual test
+    
+    baseURL=http://159.100.254.166:8080 ./gradlew -b e2e.gradle gatlingRun -PgatlingSimulationClass=LocalityGatlingTest
+
 
 For more information, refer to the [Running tests page][].
 
@@ -73,7 +78,7 @@ To stop it and remove the container, run:
 You can also fully dockerize your application and all the services that it depends on.
 To achieve this, first build a docker image of your app by running:
 
-    ./gradlew bootRepackage -Pprod buildDocker
+    ./gradlew bootJar -Pprod buildDocker
 
 Then run:
 

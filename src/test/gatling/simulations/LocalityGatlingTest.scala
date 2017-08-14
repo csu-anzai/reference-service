@@ -1,23 +1,25 @@
 import _root_.io.gatling.core.scenario.Simulation
-import ch.qos.logback.classic.LoggerContext
+import ch.qos.logback.classic.{Level, LoggerContext}
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import org.slf4j.LoggerFactory
 
 import scala.concurrent.duration._
+import scala.util.Random
 
 /**
  * Performance test for the Locality entity.
  */
 class LocalityGatlingTest extends Simulation {
 
+    val PAUSE = 2
     val context: LoggerContext = LoggerFactory.getILoggerFactory.asInstanceOf[LoggerContext]
     // Log all HTTP requests
     //context.getLogger("io.gatling.http").setLevel(Level.valueOf("TRACE"))
     // Log failed HTTP requests
     //context.getLogger("io.gatling.http").setLevel(Level.valueOf("DEBUG"))
 
-    val baseURL = Option(System.getProperty("baseURL")) getOrElse """http://127.0.0.1:8080"""
+    val baseURL = Option(System.getProperty("baseURL")) orElse Option(System.getenv("baseURL")) getOrElse """http://127.0.0.1:8080"""
 
     val httpConf = http
         .baseURL(baseURL)
@@ -42,12 +44,23 @@ class LocalityGatlingTest extends Simulation {
         "Authorization" -> "${access_token}"
     )
 
+    // Define an infinite feeder which calculates random numbers
+    val localityFeed = Iterator.continually(
+        // Random number will be accessible in session under variable "OrderRef"
+        Map(
+            "zipCodes" -> (1000 + Random.nextInt(1000)).toString,
+            "communalCodes" -> Random.nextInt(1000).toString,
+            "cityNames" -> Random.alphanumeric.take(Random.nextInt(20)).mkString
+        )
+    )
+
     val scn = scenario("Test the Locality entity")
+        .feed(localityFeed)
         .exec(http("First unauthenticated request")
         .get("/api/account")
         .headers(headers_http)
         .check(status.is(401))).exitHereIfFailed
-        .pause(10)
+        .pause(PAUSE)
         .exec(http("Authentication")
         .post("/api/authenticate")
         .headers(headers_http_authentication)
@@ -58,30 +71,30 @@ class LocalityGatlingTest extends Simulation {
         .get("/api/account")
         .headers(headers_http_authenticated)
         .check(status.is(200)))
-        .pause(10)
+        .pause(PAUSE)
         .repeat(2) {
             exec(http("Get all localities")
             .get("/referenceservice/api/localities")
             .headers(headers_http_authenticated)
             .check(status.is(200)))
-            .pause(10 seconds, 20 seconds)
+                .pause(PAUSE seconds, 5 seconds)
             .exec(http("Create new locality")
             .post("/referenceservice/api/localities")
             .headers(headers_http_authenticated)
-                .body(StringBody("""{"id":null, "city":"SAMPLE_TEXT", "zipCode":"SAMPLE_TEXT", "communalCode":"0", "cantonCode":"SAMPLE_TEXT", "geoPoint":{"latitude":1, "longitude":1}}""")).asJSON
+                .body(StringBody("""{"city":"${cityNames}", "zipCode":"${zipCodes}", "communalCode":${communalCodes}, "cantonCode":"ZH", "geoPoint":{"lat":1, "lon":1}}""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_locality_url"))).exitHereIfFailed
-            .pause(10)
+                .pause(PAUSE)
             .repeat(5) {
                 exec(http("Get created locality")
                 .get("/referenceservice${new_locality_url}")
                 .headers(headers_http_authenticated))
-                .pause(10)
+                    .pause(PAUSE)
             }
             .exec(http("Delete created locality")
             .delete("/referenceservice${new_locality_url}")
             .headers(headers_http_authenticated))
-            .pause(10)
+                .pause(PAUSE)
         }
 
     val users = scenario("Users").exec(scn)
