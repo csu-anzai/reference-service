@@ -1,4 +1,4 @@
-entity Occupation {
+entity OccupationSynonym {
 	code						Integer min(8) max(8) required
     language					String minlength(2) maxlength(2) required
     name						String minlength(3) maxlength(50) required
@@ -14,4 +14,4 @@ paginate Occupation with infinite-scroll
 service all with serviceImpl
 
 // Set an angular suffix
-angularSuffix * with occupation
+angularSuffix * with occupationSynonym

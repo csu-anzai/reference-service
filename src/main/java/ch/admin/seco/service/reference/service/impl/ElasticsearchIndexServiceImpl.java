@@ -25,10 +25,10 @@ import ch.admin.seco.service.reference.domain.search.ClassificationSynonym;
 import ch.admin.seco.service.reference.domain.search.OccupationSynonym;
 import ch.admin.seco.service.reference.repository.ClassificationRepository;
 import ch.admin.seco.service.reference.repository.LocalityRepository;
-import ch.admin.seco.service.reference.repository.OccupationRepository;
+import ch.admin.seco.service.reference.repository.OccupationSynonymRepository;
 import ch.admin.seco.service.reference.repository.search.ClassificationSearchRepository;
 import ch.admin.seco.service.reference.repository.search.LocalitySearchRepository;
-import ch.admin.seco.service.reference.repository.search.OccupationSearchRepository;
+import ch.admin.seco.service.reference.repository.search.OccupationSynonymSearchRepository;
 
 @Service
 public class ElasticsearchIndexServiceImpl implements ch.admin.seco.service.reference.service.ElasticsearchIndexService {
@@ -36,8 +36,8 @@ public class ElasticsearchIndexServiceImpl implements ch.admin.seco.service.refe
     private final Logger log = LoggerFactory.getLogger(ElasticsearchIndexServiceImpl.class);
     private final ClassificationRepository classificationRepository;
     private final ClassificationSearchRepository classificationSearchRepository;
-    private final OccupationRepository occupationRepository;
-    private final OccupationSearchRepository occupationSearchRepository;
+    private final OccupationSynonymRepository occupationSynonymRepository;
+    private final OccupationSynonymSearchRepository occupationSynonymSearchRepository;
     private final LocalityRepository localityRepository;
     private final LocalitySearchRepository localitySearchRepository;
     private final ElasticsearchTemplate elasticsearchTemplate;
@@ -46,8 +46,8 @@ public class ElasticsearchIndexServiceImpl implements ch.admin.seco.service.refe
     public ElasticsearchIndexServiceImpl(
         ClassificationRepository classificationRepository,
         ClassificationSearchRepository classificationSearchRepository,
-        OccupationRepository occupationRepository,
-        OccupationSearchRepository occupationSearchRepository,
+        OccupationSynonymRepository occupationSynonymRepository,
+        OccupationSynonymSearchRepository occupationSynonymSearchRepository,
         LocalityRepository localityRepository,
         LocalitySearchRepository localitySearchRepository,
         ElasticsearchTemplate elasticsearchTemplate,
@@ -55,8 +55,8 @@ public class ElasticsearchIndexServiceImpl implements ch.admin.seco.service.refe
 
         this.classificationRepository = classificationRepository;
         this.classificationSearchRepository = classificationSearchRepository;
-        this.occupationRepository = occupationRepository;
-        this.occupationSearchRepository = occupationSearchRepository;
+        this.occupationSynonymRepository = occupationSynonymRepository;
+        this.occupationSynonymSearchRepository = occupationSynonymSearchRepository;
         this.localityRepository = localityRepository;
         this.localitySearchRepository = localitySearchRepository;
         this.elasticsearchTemplate = elasticsearchTemplate;
@@ -69,7 +69,7 @@ public class ElasticsearchIndexServiceImpl implements ch.admin.seco.service.refe
     @Transactional(readOnly = true)
     public void reindexAll() {
         reindexClassification();
-        reindexOccupaton();
+        reindexOccupationSynonym();
         reindexForClass(Locality.class, localityRepository, localitySearchRepository);
         log.info("Elasticsearch: Successfully performed reindexing");
     }
@@ -87,17 +87,17 @@ public class ElasticsearchIndexServiceImpl implements ch.admin.seco.service.refe
             .subscribe(classificationSearchRepository::saveAll);
     }
 
-    private void reindexOccupaton() {
-        Flux.fromStream(occupationRepository.streamAll())
-            .map(occupation -> new OccupationSynonym()
-                .id(occupation.getId())
-                .code(occupation.getCode())
-                .language(occupation.getLanguage())
-                .occupation(occupation.getName())
-                .occupationSuggestions(entityToSynonymMapper.extractSuggestionList(occupation.getName()))
+    private void reindexOccupationSynonym() {
+        Flux.fromStream(occupationSynonymRepository.streamAll())
+            .map(occupationSynonym -> new OccupationSynonym()
+                .id(occupationSynonym.getId())
+                .code(occupationSynonym.getCode())
+                .language(occupationSynonym.getLanguage())
+                .occupation(occupationSynonym.getName())
+                .occupationSuggestions(entityToSynonymMapper.extractSuggestionList(occupationSynonym.getName()))
             )
             .buffer(100)
-            .subscribe(occupationSearchRepository::saveAll);
+            .subscribe(occupationSynonymSearchRepository::saveAll);
     }
 
     private <T, ID extends Serializable> void reindexForClass(Class<T> entityClass, JpaRepository<T, ID> jpaRepository,

@@ -191,10 +191,10 @@ public class LocalityResourceIntTest {
 
     @Test
     @Transactional
-    public void checkCommunalCodeIsRequired() throws Exception {
+    public void checkCommunalCodeShouldBeGreaterThanZero() throws Exception {
         int databaseSizeBeforeTest = localityRepository.findAll().size();
-        // set the field null
-        locality.setCommunalCode(null);
+        // set the field to 0
+        locality.setCommunalCode(0);
 
         // Create the Locality, which fails.
 

@@ -12,9 +12,8 @@ import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.stereotype.Component;
 
 import ch.admin.seco.service.reference.domain.Classification;
-import ch.admin.seco.service.reference.domain.Occupation;
+import ch.admin.seco.service.reference.domain.OccupationSynonym;
 import ch.admin.seco.service.reference.domain.search.ClassificationSynonym;
-import ch.admin.seco.service.reference.domain.search.OccupationSynonym;
 import ch.admin.seco.service.reference.service.dto.ClassificationSuggestionDto;
 import ch.admin.seco.service.reference.service.dto.OccupationSuggestionDto;
 
@@ -27,13 +26,13 @@ public class EntityToSynonymMapper {
         this.elasticsearchTemplate = elasticsearchTemplate;
     }
 
-    OccupationSynonym toSynonym(Occupation occupation) {
-        return new OccupationSynonym()
-            .id(occupation.getId())
-            .code(occupation.getCode())
-            .language(occupation.getLanguage())
-            .occupation(occupation.getName())
-            .occupationSuggestions(extractSuggestionList(occupation.getName()));
+    ch.admin.seco.service.reference.domain.search.OccupationSynonym toSynonym(OccupationSynonym occupationSynonym) {
+        return new ch.admin.seco.service.reference.domain.search.OccupationSynonym()
+            .id(occupationSynonym.getId())
+            .code(occupationSynonym.getCode())
+            .language(occupationSynonym.getLanguage())
+            .occupation(occupationSynonym.getName())
+            .occupationSuggestions(extractSuggestionList(occupationSynonym.getName()));
     }
 
     ClassificationSynonym toSynonym(Classification classification) {

@@ -29,9 +29,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ch.admin.seco.service.reference.domain.Language;
 import ch.admin.seco.service.reference.domain.Occupation;
-import ch.admin.seco.service.reference.domain.search.OccupationSynonym;
+import ch.admin.seco.service.reference.domain.OccupationMapping;
+import ch.admin.seco.service.reference.domain.OccupationSynonym;
+import ch.admin.seco.service.reference.repository.OccupationMappingRepository;
 import ch.admin.seco.service.reference.repository.OccupationRepository;
-import ch.admin.seco.service.reference.repository.search.OccupationSearchRepository;
+import ch.admin.seco.service.reference.repository.OccupationSynonymRepository;
+import ch.admin.seco.service.reference.repository.search.OccupationSynonymSearchRepository;
 import ch.admin.seco.service.reference.service.OccupationService;
 import ch.admin.seco.service.reference.service.dto.ClassificationSuggestionDto;
 import ch.admin.seco.service.reference.service.dto.OccupationAutocompleteDto;
@@ -46,83 +49,92 @@ public class OccupationServiceImpl implements OccupationService {
 
     private final Logger log = LoggerFactory.getLogger(OccupationServiceImpl.class);
     private final ApplicationContext applicationContext;
-    private final OccupationRepository occupationRepository;
-    private final OccupationSearchRepository occupationSearchRepository;
+    private final OccupationSynonymRepository occupationSynonymRepository;
+    private final OccupationSynonymSearchRepository occupationSynonymSearchRepository;
     private final ElasticsearchTemplate elasticsearchTemplate;
-    private final EntityToSynonymMapper occupationMapper;
+    private final EntityToSynonymMapper occupationSynonymMapper;
+    private final OccupationMappingRepository occupationMappingRepository;
+    private final OccupationRepository occupationRepository;
+    private final Function<OccupationMapping, Optional<Occupation>> occupationMappingToOccupation;
     private OccupationServiceImpl occupationServiceImpl;
 
     public OccupationServiceImpl(ApplicationContext applicationContext,
-        OccupationRepository occupationRepository,
-        OccupationSearchRepository occupationSearchRepository,
+        OccupationSynonymRepository occupationSynonymRepository,
+        OccupationSynonymSearchRepository occupationSynonymSearchRepository,
         ElasticsearchTemplate elasticsearchTemplate,
-        EntityToSynonymMapper occupationMapper) {
+        EntityToSynonymMapper occupationSynonymMapper,
+        OccupationMappingRepository occupationMappingRepository,
+        OccupationRepository occupationRepository) {
 
         this.applicationContext = applicationContext;
-        this.occupationRepository = occupationRepository;
-        this.occupationSearchRepository = occupationSearchRepository;
+        this.occupationSynonymRepository = occupationSynonymRepository;
+        this.occupationSynonymSearchRepository = occupationSynonymSearchRepository;
         this.elasticsearchTemplate = elasticsearchTemplate;
-        this.occupationMapper = occupationMapper;
+        this.occupationSynonymMapper = occupationSynonymMapper;
+        this.occupationMappingRepository = occupationMappingRepository;
+        this.occupationRepository = occupationRepository;
+
+        this.occupationMappingToOccupation = mapping -> occupationRepository.findOneByCode(mapping.getCode());
     }
 
     /**
-     * Save a occupation.
+     * Save a occupationSynonym.
      *
-     * @param occupation the entity to save
+     * @param occupationSynonym the entity to save
      * @return the persisted entity
      */
     @Override
-    public Occupation save(Occupation occupation) {
-        log.debug("Request to save Occupation : {}", occupation);
-        Occupation result = occupationRepository.save(occupation);
+    public OccupationSynonym save(OccupationSynonym occupationSynonym) {
+        log.debug("Request to save OccupationSynonym : {}", occupationSynonym);
+        OccupationSynonym result = occupationSynonymRepository.save(occupationSynonym);
         occupationServiceImpl.index(result);
         return result;
     }
 
     /**
-     * Get all the occupations.
+     * Get all the occupationSynonyms.
      *
      * @param pageable the pagination information
      * @return the list of entities
      */
     @Override
     @Transactional(readOnly = true)
-    public Page<Occupation> findAll(Pageable pageable) {
-        log.debug("Request to get all Occupations");
-        return occupationRepository.findAll(pageable);
+    public Page<OccupationSynonym> findAll(Pageable pageable) {
+        log.debug("Request to get all OccupationSynonyms");
+        return occupationSynonymRepository.findAll(pageable);
     }
 
     /**
-     * Get one occupation by id.
+     * Get one occupationSynonym by id.
      *
      * @param id the id of the entity
      * @return the entity
      */
     @Override
     @Transactional(readOnly = true)
-    public Optional<Occupation> findOne(UUID id) {
-        log.debug("Request to get Occupation : {}", id);
-        return occupationRepository.findById(id);
+    public Optional<OccupationSynonym> findOne(UUID id) {
+        log.debug("Request to get OccupationSynonym : {}", id);
+        return occupationSynonymRepository.findById(id);
     }
 
     /**
-     * Delete the  occupation by id.
+     * Delete the occupationSynonym by id.
      *
      * @param id the id of the entity
      */
     @Override
     public void delete(UUID id) {
-        log.debug("Request to delete Occupation : {}", id);
-        occupationRepository.findById(id).ifPresent(
+        log.debug("Request to delete OccupationSynonym : {}", id);
+        occupationSynonymRepository.findById(id).ifPresent(
             occupation -> {
-                occupationRepository.delete(occupation);
-                occupationSearchRepository.deleteAllByCodeEquals(occupation.getCode());
+                occupationSynonymRepository.delete(occupation);
+                occupationSynonymSearchRepository.deleteAllByCodeEquals(occupation.getCode());
             }
         );
     }
 
     /**
-     * Search for the occupation corresponding to the query.
+     * Search for the occupation synonym corresponding to the query.
      *
      * @param prefix   the query of the search
      * @param language the pagination information
@@ -130,7 +142,7 @@ public class OccupationServiceImpl implements OccupationService {
      */
     @Override
     @Transactional(readOnly = true)
-    public OccupationAutocompleteDto suggestOccupations(String prefix, Language language, int resultSize) {
+    public OccupationAutocompleteDto suggestOccupationSynonyms(String prefix, Language language, int resultSize) {
         log.debug("Request to search for a page of Occupations for query {}", prefix);
 
         Function<String, SuggestionBuilder> createSuggestionBuilder = (String field) ->
@@ -141,28 +153,79 @@ public class OccupationServiceImpl implements OccupationService {
                     Collections.singletonList(CategoryQueryContext.builder().setCategory(language.name()).build())));
 
         SearchResponse suggestResponse = elasticsearchTemplate.suggest(new SuggestBuilder()
-            .addSuggestion("occupations", createSuggestionBuilder.apply("occupationSuggestions"))
-            .addSuggestion("classifications", createSuggestionBuilder.apply("classificationSuggestions")),
-            OccupationSynonym.class);
+                .addSuggestion("occupations", createSuggestionBuilder.apply("occupationSuggestions"))
+                .addSuggestion("classifications", createSuggestionBuilder.apply("classificationSuggestions")),
+            ch.admin.seco.service.reference.domain.search.OccupationSynonym.class);
 
         List<OccupationSuggestionDto> occupations = suggestResponse.getSuggest()
             .<CompletionSuggestion>getSuggestion("occupations").getEntries().stream()
             .flatMap(item -> item.getOptions().stream())
-            .map(occupationMapper::convertOccupationSuggestion)
+            .map(occupationSynonymMapper::convertOccupationSuggestion)
             .collect(Collectors.toList());
 
         List<ClassificationSuggestionDto> classifications = suggestResponse.getSuggest()
             .<CompletionSuggestion>getSuggestion("classifications").getEntries().stream()
             .flatMap(item -> item.getOptions().stream())
-            .map(occupationMapper::convertClassificationSuggestion)
+            .map(occupationSynonymMapper::convertClassificationSuggestion)
             .collect(Collectors.toList());
 
         return new OccupationAutocompleteDto(occupations, classifications);
     }
 
+    /**
+     * Get one occupationMapping by id.
+     *
+     * @param id the id of the entity
+     * @return the entity
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<OccupationMapping> findOneOccupationMapping(UUID id) {
+        log.debug("Request to get OccupationMapping : {}", id);
+        return occupationMappingRepository.findById(id);
+    }
+
+    /**
+     * Get all the occupationMappings.
+     *
+     * @param pageable the pagination information
+     * @return the list of entities
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Page<OccupationMapping> findAllOccupationMappings(Pageable pageable) {
+        log.debug("Request to get all OccupationMappings");
+        return occupationMappingRepository.findAll(pageable);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<Occupation> findOneOccupationByCode(int code) {
+        log.debug("Request to get OccupationMapping : code:{}", code);
+        return occupationRepository.findOneByCode(code);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<Occupation> findOneOccupationByAvamCode(int avamCode) {
+        log.debug("Request to get OccupationMapping : avamCode:{}", avamCode);
+        return occupationMappingRepository.findByAvamCode(avamCode)
+            .stream()
+            .findFirst()
+            .flatMap(occupationMappingToOccupation);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<Occupation> findOneOccupationByX28Code(int x28Code) {
+        log.debug("Request to get OccupationMapping : x28Code:{}", x28Code);
+        return occupationMappingRepository.findByX28Code(x28Code)
+            .flatMap(occupationMappingToOccupation);
+    }
+
     @Async
-    void index(Occupation occupation) {
-        occupationSearchRepository.save(occupationMapper.toSynonym(occupation));
+    void index(OccupationSynonym occupationSynonym) {
+        occupationSynonymSearchRepository.save(occupationSynonymMapper.toSynonym(occupationSynonym));
     }
 
     @PostConstruct

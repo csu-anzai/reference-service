@@ -6,16 +6,12 @@ import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -37,21 +33,27 @@ public class Occupation implements Serializable {
     @GenericGenerator(name = "UUIDGenerator", strategy = "uuid2")
     private UUID id;
 
-    @NotNull
     @Min(10000000)
     @Max(99999999)
-    @Column(name = "code", nullable = false)
+    @Column(name = "code", nullable = false, unique = true)
     private int code;
 
-    @NotNull
-    @Column(name = "language", length = 2, nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Language language;
+    @Min(100)
+    @Max(999)
+    @Column(name = "classification_code", nullable = false)
+    private int classificationCode;
 
-    @NotNull
-    @Size(min = 2, max = 100)
-    @Column(name = "name", length = 100, nullable = false)
-    private String name;
+    @Column(name = "label_de")
+    private String labelDe;
+
+    @Column(name = "label_fr")
+    private String labelFr;
+
+    @Column(name = "label_it")
+    private String labelIt;
+
+    @Column(name = "label_en")
+    private String labelEn;
 
     public UUID getId() {
         return id;
@@ -74,35 +76,74 @@ public class Occupation implements Serializable {
         return this;
     }
 
-    public Language getLanguage() {
-        return language;
+    public int getClassificationCode() {
+        return classificationCode;
     }
 
-    public void setLanguage(Language language) {
-        this.language = language;
+    public void setClassificationCode(int classificationCode) {
+        this.classificationCode = classificationCode;
     }
 
-    public Occupation language(Language language) {
-        this.language = language;
+    public Occupation classificationCode(int classificationCode) {
+        this.classificationCode = classificationCode;
         return this;
     }
 
-    public String getName() {
-        return name;
+    public String getLabelDe() {
+        return labelDe;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setLabelDe(String labelDe) {
+        this.labelDe = labelDe;
     }
 
-    public Occupation name(String name) {
-        this.name = name;
+    public Occupation labelDe(String labelDe) {
+        this.labelDe = labelDe;
+        return this;
+    }
+
+    public String getLabelFr() {
+        return labelFr;
+    }
+
+    public void setLabelFr(String labelFr) {
+        this.labelFr = labelFr;
+    }
+
+    public Occupation labelFr(String labelFr) {
+        this.labelFr = labelFr;
+        return this;
+    }
+
+    public String getLabelIt() {
+        return labelIt;
+    }
+
+    public void setLabelIt(String labelIt) {
+        this.labelIt = labelIt;
+    }
+
+    public Occupation labelIt(String labelIt) {
+        this.labelIt = labelIt;
+        return this;
+    }
+
+    public String getLabelEn() {
+        return labelEn;
+    }
+
+    public void setLabelEn(String labelEn) {
+        this.labelEn = labelEn;
+    }
+
+    public Occupation labelEn(String labelEn) {
+        this.labelEn = labelEn;
         return this;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return Objects.hash(id, code, classificationCode);
     }
 
     @Override
@@ -113,20 +154,22 @@ public class Occupation implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Occupation occupation = (Occupation) o;
-        if (occupation.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), occupation.getId());
+        Occupation that = (Occupation) o;
+        return code == that.code &&
+            classificationCode == that.classificationCode &&
+            Objects.equals(id, that.id);
     }
 
     @Override
     public String toString() {
         return "Occupation{" +
-            "id=" + getId() +
-            ", code='" + getCode() + "'" +
-            ", language='" + getLanguage() + "'" +
-            ", occupation='" + getName() + "'" +
-            "}";
+            "id=" + id +
+            ", code=" + code +
+            ", classificationCode=" + classificationCode +
+            ", labelDe='" + labelDe + '\'' +
+            ", labelFr='" + labelFr + '\'' +
+            ", labelIt='" + labelIt + '\'' +
+            ", labelEn='" + labelEn + '\'' +
+            '}';
     }
 }

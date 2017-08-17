@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -56,8 +57,9 @@ public class Locality implements Serializable {
 
     @NotNull
     @Max(9999)
+    @Min(1)
     @Column(name = "communal_code", nullable = false)
-    private Integer communalCode;
+    private int communalCode;
 
     @NotNull
     @Size(max = 2)
@@ -103,17 +105,17 @@ public class Locality implements Serializable {
         this.zipCode = zipCode;
     }
 
-    public Integer getCommunalCode() {
+    public int getCommunalCode() {
         return communalCode;
     }
 
-    public Locality communalCode(Integer communalCode) {
+    public void setCommunalCode(int communalCode) {
         this.communalCode = communalCode;
-        return this;
     }
 
-    public void setCommunalCode(Integer communalCode) {
+    public Locality communalCode(int communalCode) {
         this.communalCode = communalCode;
+        return this;
     }
 
     public String getCantonCode() {
