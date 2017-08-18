@@ -1,5 +1,5 @@
 import _root_.io.gatling.core.scenario.Simulation
-import ch.qos.logback.classic.{Level, LoggerContext}
+import ch.qos.logback.classic.LoggerContext
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import org.slf4j.LoggerFactory
@@ -8,8 +8,8 @@ import scala.concurrent.duration._
 import scala.util.Random
 
 /**
- * Performance test for the Classification entity.
- */
+  * Performance test for the Classification entity.
+  */
 class ClassificationGatlingTest extends Simulation {
 
     val PAUSE = 2
@@ -56,43 +56,43 @@ class ClassificationGatlingTest extends Simulation {
     val scn = scenario("Test the Classification entity")
         .feed(classificationFeed)
         .exec(http("First unauthenticated request")
-        .get("/api/account")
-        .headers(headers_http)
-        .check(status.is(401))).exitHereIfFailed
+            .get("/api/account")
+            .headers(headers_http)
+            .check(status.is(401))).exitHereIfFailed
         .pause(PAUSE)
         .exec(http("Authentication")
-        .post("/api/authenticate")
-        .headers(headers_http_authentication)
-        .body(StringBody("""{"username":"admin", "password":"admin"}""")).asJSON
-        .check(header.get("Authorization").saveAs("access_token"))).exitHereIfFailed
+            .post("/api/authenticate")
+            .headers(headers_http_authentication)
+            .body(StringBody("""{"username":"admin", "password":"admin"}""")).asJSON
+            .check(header.get("Authorization").saveAs("access_token"))).exitHereIfFailed
         .pause(1)
         .exec(http("Authenticated request")
-        .get("/api/account")
-        .headers(headers_http_authenticated)
-        .check(status.is(200)))
+            .get("/api/account")
+            .headers(headers_http_authenticated)
+            .check(status.is(200)))
         .pause(PAUSE)
         .repeat(2) {
             exec(http("Get all classifications")
-            .get("/referenceservice/api/classifications")
-            .headers(headers_http_authenticated)
-            .check(status.is(200)))
+                .get("/referenceservice/api/classifications")
+                .headers(headers_http_authenticated)
+                .check(status.is(200)))
                 .pause(PAUSE seconds, 5 seconds)
-            .exec(http("Create new classification")
-            .post("/referenceservice/api/classifications")
-            .headers(headers_http_authenticated)
-                .body(StringBody("""{"code":${classificationCodes}, "name":"${classificationNames}", "language":"de"}""")).asJSON
-            .check(status.is(201))
-            .check(headerRegex("Location", "(.*)").saveAs("new_classification_url"))).exitHereIfFailed
+                .exec(http("Create new classification")
+                    .post("/referenceservice/api/classifications")
+                    .headers(headers_http_authenticated)
+                    .body(StringBody("""{"code":${classificationCodes}, "name":"${classificationNames}", "language":"de"}""")).asJSON
+                    .check(status.is(201))
+                    .check(headerRegex("Location", "(.*)").saveAs("new_classification_url"))).exitHereIfFailed
                 .pause(PAUSE)
-            .repeat(5) {
-                exec(http("Get created classification")
-                .get("/referenceservice${new_classification_url}")
-                .headers(headers_http_authenticated))
-                    .pause(PAUSE)
-            }
-            .exec(http("Delete created classification")
-            .delete("/referenceservice${new_classification_url}")
-            .headers(headers_http_authenticated))
+                .repeat(5) {
+                    exec(http("Get created classification")
+                        .get("/referenceservice${new_classification_url}")
+                        .headers(headers_http_authenticated))
+                        .pause(PAUSE)
+                }
+                .exec(http("Delete created classification")
+                    .delete("/referenceservice${new_classification_url}")
+                    .headers(headers_http_authenticated))
                 .pause(PAUSE)
         }
 

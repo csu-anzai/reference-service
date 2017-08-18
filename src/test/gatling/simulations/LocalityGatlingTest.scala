@@ -1,5 +1,5 @@
 import _root_.io.gatling.core.scenario.Simulation
-import ch.qos.logback.classic.{Level, LoggerContext}
+import ch.qos.logback.classic.LoggerContext
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import org.slf4j.LoggerFactory
@@ -8,8 +8,8 @@ import scala.concurrent.duration._
 import scala.util.Random
 
 /**
- * Performance test for the Locality entity.
- */
+  * Performance test for the Locality entity.
+  */
 class LocalityGatlingTest extends Simulation {
 
     val PAUSE = 2
@@ -57,43 +57,43 @@ class LocalityGatlingTest extends Simulation {
     val scn = scenario("Test the Locality entity")
         .feed(localityFeed)
         .exec(http("First unauthenticated request")
-        .get("/api/account")
-        .headers(headers_http)
-        .check(status.is(401))).exitHereIfFailed
+            .get("/api/account")
+            .headers(headers_http)
+            .check(status.is(401))).exitHereIfFailed
         .pause(PAUSE)
         .exec(http("Authentication")
-        .post("/api/authenticate")
-        .headers(headers_http_authentication)
-        .body(StringBody("""{"username":"admin", "password":"admin"}""")).asJSON
-        .check(header.get("Authorization").saveAs("access_token"))).exitHereIfFailed
-        .pause(1)
+            .post("/api/authenticate")
+            .headers(headers_http_authentication)
+            .body(StringBody("""{"username":"admin", "password":"admin"}""")).asJSON
+            .check(header.get("Authorization").saveAs("access_token"))).exitHereIfFailed
+        .pause(PAUSE)
         .exec(http("Authenticated request")
-        .get("/api/account")
-        .headers(headers_http_authenticated)
-        .check(status.is(200)))
+            .get("/api/account")
+            .headers(headers_http_authenticated)
+            .check(status.is(200)))
         .pause(PAUSE)
         .repeat(2) {
             exec(http("Get all localities")
-            .get("/referenceservice/api/localities")
-            .headers(headers_http_authenticated)
-            .check(status.is(200)))
+                .get("/referenceservice/api/localities")
+                .headers(headers_http_authenticated)
+                .check(status.is(200)))
                 .pause(PAUSE seconds, 5 seconds)
-            .exec(http("Create new locality")
-            .post("/referenceservice/api/localities")
-            .headers(headers_http_authenticated)
-                .body(StringBody("""{"city":"${cityNames}", "zipCode":"${zipCodes}", "communalCode":${communalCodes}, "cantonCode":"ZH", "geoPoint":{"lat":1, "lon":1}}""")).asJSON
-            .check(status.is(201))
-            .check(headerRegex("Location", "(.*)").saveAs("new_locality_url"))).exitHereIfFailed
+                .exec(http("Create new locality")
+                    .post("/referenceservice/api/localities")
+                    .headers(headers_http_authenticated)
+                    .body(StringBody("""{"city":"${cityNames}", "zipCode":"${zipCodes}", "communalCode":${communalCodes}, "cantonCode":"ZH", "geoPoint":{"lat":1, "lon":1}}""")).asJSON
+                    .check(status.is(201))
+                    .check(headerRegex("Location", "(.*)").saveAs("new_locality_url"))).exitHereIfFailed
                 .pause(PAUSE)
-            .repeat(5) {
-                exec(http("Get created locality")
-                .get("/referenceservice${new_locality_url}")
-                .headers(headers_http_authenticated))
-                    .pause(PAUSE)
-            }
-            .exec(http("Delete created locality")
-            .delete("/referenceservice${new_locality_url}")
-            .headers(headers_http_authenticated))
+                .repeat(5) {
+                    exec(http("Get created locality")
+                        .get("/referenceservice${new_locality_url}")
+                        .headers(headers_http_authenticated))
+                        .pause(PAUSE)
+                }
+                .exec(http("Delete created locality")
+                    .delete("/referenceservice${new_locality_url}")
+                    .headers(headers_http_authenticated))
                 .pause(PAUSE)
         }
 

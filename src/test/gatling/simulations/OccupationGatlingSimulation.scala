@@ -4,21 +4,13 @@ import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import org.slf4j.LoggerFactory
 
-import scala.concurrent.duration._
 
-/**
-  * Performance test for the OccupationMapping entity.
-  */
-class OccupationMappingGatlingTest extends Simulation {
+class OccupationGatlingSimulation extends Simulation {
 
     val PAUSE = 2
     val context: LoggerContext = LoggerFactory.getILoggerFactory.asInstanceOf[LoggerContext]
-    // Log all HTTP requests
-    //context.getLogger("io.gatling.http").setLevel(Level.valueOf("TRACE"))
-    // Log failed HTTP requests
-    //context.getLogger("io.gatling.http").setLevel(Level.valueOf("DEBUG"))
 
-    val baseURL = Option(System.getProperty("baseURL")) orElse Option(System.getenv("baseURL")) getOrElse """http://127.0.0.1:8080"""
+    val baseURL: String = Option(System.getProperty("baseURL")) orElse Option(System.getenv("baseURL")) getOrElse """http://127.0.0.1:8080"""
 
     val httpConf = http
         .baseURL(baseURL)
@@ -43,7 +35,16 @@ class OccupationMappingGatlingTest extends Simulation {
         "Authorization" -> "${access_token}"
     )
 
-    val scn = scenario("Test the OccupationMapping entity")
+    def findOccupation(requestName: String, filter: String) = {
+        http(requestName)
+            .get(s"/referenceservice/api/occupations?$filter")
+            .headers(headers_http_authenticated)
+            .check(status.is(200))
+    }
+
+    val feeder = csv("occupation_mapping.csv").random
+    val scn = scenario("Test the Locality entity")
+        .feed(feeder)
         .exec(http("First unauthenticated request")
             .get("/api/account")
             .headers(headers_http)
@@ -61,11 +62,9 @@ class OccupationMappingGatlingTest extends Simulation {
             .check(status.is(200)))
         .pause(PAUSE)
         .repeat(2) {
-            exec(http("Get all occupationMappings")
-                .get("/referenceservice/api/occupations/mapping")
-                .headers(headers_http_authenticated)
-                .check(status.is(200)))
-                .pause(10 seconds, 20 seconds)
+            exec(findOccupation("Occupation by x28Code", "x28Code=${x28_code}"))
+                .exec(findOccupation("Occupation by avamCode", "avamCode=${avam_code}"))
+                .exec(findOccupation("Occupation by code", "code=${code}"))
         }
 
     val users = scenario("Users").exec(scn)

@@ -1,4 +1,7 @@
+import _root_.io.gatling.core.scenario.Simulation
 import ch.qos.logback.classic.LoggerContext
+import io.gatling.core.Predef._
+import io.gatling.http.Predef._
 import org.slf4j.LoggerFactory
 
 import scala.concurrent.duration._
@@ -63,7 +66,7 @@ class OccupationSynonymGatlingTest extends Simulation {
             .headers(headers_http_authentication)
             .body(StringBody("""{"username":"admin", "password":"admin"}""")).asJSON
             .check(header.get("Authorization").saveAs("access_token"))).exitHereIfFailed
-        .pause(1)
+        .pause(PAUSE)
         .exec(http("Authenticated request")
             .get("/api/account")
             .headers(headers_http_authenticated)

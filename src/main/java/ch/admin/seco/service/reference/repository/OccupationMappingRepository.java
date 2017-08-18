@@ -13,11 +13,8 @@ import ch.admin.seco.service.reference.domain.OccupationMapping;
 /**
  * Spring Data JPA repository for the OccupationMapping entity.
  */
-@SuppressWarnings("unused")
 @Repository
 public interface OccupationMappingRepository extends JpaRepository<OccupationMapping, UUID> {
-
-    List<OccupationMapping> findByCode(int code);
 
     List<OccupationMapping> findByAvamCode(int avamCode);
 
