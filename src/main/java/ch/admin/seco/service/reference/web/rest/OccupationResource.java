@@ -1,5 +1,7 @@
 package ch.admin.seco.service.reference.web.rest;
 
+import static java.util.Objects.isNull;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -48,6 +50,7 @@ public class OccupationResource {
     private static final String OCCUPATION_SYNONYM_ENTITY = "occupationSynonym";
     private static final String OCCUPATION_SYNONYM_PATH = "/occupations/synonym";
     private static final String OCCUPATION_MAPPING_PATH = "/occupations/mapping";
+    private static final String OCCUPATION_SEARCH_PATH = "/_search" + OCCUPATION_SYNONYM_PATH;
 
     private final Logger log = LoggerFactory.getLogger(OccupationResource.class);
     private final OccupationService occupationService;
@@ -89,9 +92,17 @@ public class OccupationResource {
     @Timed
     public ResponseEntity<OccupationSynonym> updateOccupationSynonym(@Valid @RequestBody OccupationSynonym occupationSynonym) throws URISyntaxException {
         log.debug("REST request to update OccupationSynonym : {}", occupationSynonym);
-        if (occupationSynonym.getId() == null) {
-            return createOccupationSynonym(occupationSynonym);
+
+        if (isNull(occupationSynonym.getId())) {
+            if (!occupationService.findOneOccupationSynonymByExternalId(occupationSynonym.getExternalId())
+                .map(item -> {
+                    occupationSynonym.setId(item.getId());
+                    return occupationSynonym;
+                }).isPresent()) {
+                return createOccupationSynonym(occupationSynonym);
+            }
         }
+
         OccupationSynonym result = occupationService.save(occupationSynonym);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(OCCUPATION_SYNONYM_ENTITY, occupationSynonym.getId().toString()))
@@ -150,7 +161,7 @@ public class OccupationResource {
      * @param responseSize the responseSize information
      * @return the result of the search
      */
-    @GetMapping("/_search" + OCCUPATION_SYNONYM_PATH)
+    @GetMapping(OCCUPATION_SEARCH_PATH)
     @Timed
     public ResponseEntity<OccupationAutocompleteDto> searchOccupations(
         @RequestParam String prefix, @RequestParam Language language, @RequestParam int responseSize) {
@@ -189,18 +200,21 @@ public class OccupationResource {
     }
 
     @GetMapping(value = "/occupations", params = "code")
+    @Timed
     public ResponseEntity<Occupation> getOccupationByCode(@RequestParam int code) {
         return ResponseUtil.wrapOrNotFound(
             occupationService.findOneOccupationByCode(code));
     }
 
     @GetMapping(value = "/occupations", params = "avamCode")
+    @Timed
     public ResponseEntity<Occupation> getOccupationByAvamCode(@RequestParam int avamCode) {
         return ResponseUtil.wrapOrNotFound(
             occupationService.findOneOccupationByAvamCode(avamCode));
     }
 
     @GetMapping(value = "/occupations", params = "x28Code")
+    @Timed
     public ResponseEntity<Occupation> getOccupationByX28Code(@RequestParam int x28Code) {
         return ResponseUtil.wrapOrNotFound(
             occupationService.findOneOccupationByX28Code(x28Code));

@@ -53,6 +53,12 @@ public class OccupationSynonym implements Serializable {
     @Column(name = "name", length = 100, nullable = false)
     private String name;
 
+    @NotNull
+    @Min(10000000)
+    @Max(99999999)
+    @Column(name = "external_id", nullable = false)
+    private int externalId;
+
     public UUID getId() {
         return id;
     }
@@ -100,6 +106,19 @@ public class OccupationSynonym implements Serializable {
         return this;
     }
 
+    public int getExternalId() {
+        return externalId;
+    }
+
+    public void setExternalId(int externalId) {
+        this.externalId = externalId;
+    }
+
+    public OccupationSynonym externalId(int externalId) {
+        this.externalId = externalId;
+        return this;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hashCode(getId());
@@ -127,6 +146,7 @@ public class OccupationSynonym implements Serializable {
             ", code='" + getCode() + "'" +
             ", language='" + getLanguage() + "'" +
             ", occupation='" + getName() + "'" +
+            ", externalId='" + getExternalId() + "'" +
             "}";
     }
 }

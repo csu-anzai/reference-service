@@ -104,12 +104,6 @@ public class OccupationServiceImpl implements OccupationService {
         return occupationSynonymRepository.findAll(pageable);
     }
 
-    /**
-     * Get one occupationSynonym by id.
-     *
-     * @param id the id of the entity
-     * @return the entity
-     */
     @Override
     @Transactional(readOnly = true)
     public Optional<OccupationSynonym> findOne(UUID id) {
@@ -221,6 +215,19 @@ public class OccupationServiceImpl implements OccupationService {
         log.debug("Request to get OccupationMapping : x28Code:{}", x28Code);
         return occupationMappingRepository.findByX28Code(x28Code)
             .flatMap(occupationMappingToOccupation);
+    }
+
+    /**
+     * Get one occupationSynonym by id.
+     *
+     * @param externalId the externalId of the entity
+     * @return the entity
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<OccupationSynonym> findOneOccupationSynonymByExternalId(int externalId) {
+        log.debug("Request to get OccupationSynonym : {}", externalId);
+        return occupationSynonymRepository.findByExternalId(externalId);
     }
 
     @Async

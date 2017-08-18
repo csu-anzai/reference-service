@@ -326,7 +326,7 @@ public class LocalityResourceIntTest {
         localityService.save(locality);
 
         // Search the locality
-        restLocalityMockMvc.perform(get("/api/_search/localities?query=id:" + locality.getId()))
+        restLocalityMockMvc.perform(get("/api/_search/localities?query=city:" + (locality.getCity().substring(0, 3) + '*')))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(locality.getId().toString())))

@@ -2,6 +2,7 @@ package ch.admin.seco.service.reference.repository;
 
 import static org.hibernate.jpa.QueryHints.HINT_FETCH_SIZE;
 
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -24,4 +25,6 @@ public interface OccupationSynonymRepository extends JpaRepository<OccupationSyn
     @QueryHints(@QueryHint(name = HINT_FETCH_SIZE, value = "" + Integer.MAX_VALUE))
     @Query("select o from OccupationSynonym o")
     Stream<OccupationSynonym> streamAll();
+
+    Optional<OccupationSynonym> findByExternalId(int externalId);
 }

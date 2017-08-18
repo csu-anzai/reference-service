@@ -2,7 +2,25 @@
     "localities": {
         "properties": {
             "city": {
-                "type": "text"
+                "type": "text",
+                "fields": {
+                    "de": {
+                        "type": "text",
+                        "analyzer": "german"
+                    },
+                    "fr": {
+                        "type": "text",
+                        "analyzer": "french"
+                    },
+                    "it": {
+                        "type": "text",
+                        "analyzer": "italian"
+                    },
+                    "en": {
+                        "type": "text",
+                        "analyzer": "english"
+                    }
+                }
             },
             "cantonCode": {
                 "type": "keyword"

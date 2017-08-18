@@ -121,7 +121,8 @@ public class OccupationResourceIntTest {
         return new OccupationSynonym()
             .code(DEFAULT_CODE)
             .language(DEFAULT_LANGUAGE)
-            .name(DEFAULT_NAME);
+            .name(DEFAULT_NAME)
+            .externalId(99999999);
     }
 
     /**

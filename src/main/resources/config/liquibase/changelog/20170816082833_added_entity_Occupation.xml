@@ -97,13 +97,21 @@
             <column name="name" type="varchar(100)">
                 <constraints nullable="false"/>
             </column>
+
+            <column name="external_id" type="integer">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
+
+        <addUniqueConstraint constraintName="occ_syn_external_id_unique"
+                             columnNames="external_id"
+                             tableName="occupation_synonym"/>
     </changeSet>
 
-    <changeSet id="20170816082833-6" author="mwirth" context="!test">
-        <loadData
-            file="config/liquibase/changelog/data/REFERENCESERVICE_PUBLIC_OCCUPATION_SYNONYM.csv"
-            tableName="occupation_synonym">
-        </loadData>
-    </changeSet>
+    <!--<changeSet id="20170816082833-6" author="mwirth" context="!test">-->
+    <!--<loadData-->
+    <!--file="config/liquibase/changelog/data/REFERENCESERVICE_PUBLIC_OCCUPATION_SYNONYM.csv"-->
+    <!--tableName="occupation_synonym">-->
+    <!--</loadData>-->
+    <!--</changeSet>-->
 </databaseChangeLog>

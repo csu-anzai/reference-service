@@ -79,4 +79,6 @@ public interface OccupationService {
     Optional<Occupation> findOneOccupationByAvamCode(int avamCode);
 
     Optional<Occupation> findOneOccupationByX28Code(int x28Code);
+
+    Optional<OccupationSynonym> findOneOccupationSynonymByExternalId(int externalId);
 }
