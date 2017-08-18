@@ -42,7 +42,7 @@ class OccupationGatlingSimulation extends Simulation {
             .check(status.is(200))
     }
 
-    val feeder = csv("occupation_mapping.csv").random
+    val feeder = csv("OCCUPATION_MAPPING.csv").random
     val scn = scenario("Test the Locality entity")
         .feed(feeder)
         .exec(http("First unauthenticated request")

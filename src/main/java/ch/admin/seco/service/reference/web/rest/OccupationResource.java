@@ -4,6 +4,7 @@ import static java.util.Objects.isNull;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -94,11 +95,7 @@ public class OccupationResource {
         log.debug("REST request to update OccupationSynonym : {}", occupationSynonym);
 
         if (isNull(occupationSynonym.getId())) {
-            if (!occupationService.findOneOccupationSynonymByExternalId(occupationSynonym.getExternalId())
-                .map(item -> {
-                    occupationSynonym.setId(item.getId());
-                    return occupationSynonym;
-                }).isPresent()) {
+            if (getOccupationSynonymByExternalId(occupationSynonym).isPresent()) {
                 return createOccupationSynonym(occupationSynonym);
             }
         }
@@ -107,6 +104,14 @@ public class OccupationResource {
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(OCCUPATION_SYNONYM_ENTITY, occupationSynonym.getId().toString()))
             .body(result);
+    }
+
+    @PutMapping("/bulk" + OCCUPATION_SYNONYM_PATH)
+    @Timed
+    public ResponseEntity<Void> updateOccupationSynonyms(@Valid @RequestBody Collection<OccupationSynonym> occupationSynonyms) throws URISyntaxException {
+        log.debug("Request to update OccupationSynonyms : {}", occupationSynonyms);
+        occupationService.save(occupationSynonyms);
+        return ResponseEntity.ok().build();
     }
 
     /**
@@ -218,5 +223,13 @@ public class OccupationResource {
     public ResponseEntity<Occupation> getOccupationByX28Code(@RequestParam int x28Code) {
         return ResponseUtil.wrapOrNotFound(
             occupationService.findOneOccupationByX28Code(x28Code));
+    }
+
+    private Optional<OccupationSynonym> getOccupationSynonymByExternalId(OccupationSynonym occupationSynonym) {
+        return occupationService.findOneOccupationSynonymByExternalId(occupationSynonym.getExternalId())
+            .map(item -> {
+                occupationSynonym.setId(item.getId());
+                return occupationSynonym;
+            });
     }
 }

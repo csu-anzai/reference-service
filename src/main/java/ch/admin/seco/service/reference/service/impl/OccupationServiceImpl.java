@@ -1,5 +1,8 @@
 package ch.admin.seco.service.reference.service.impl;
 
+import static java.util.Objects.isNull;
+
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -228,6 +231,20 @@ public class OccupationServiceImpl implements OccupationService {
     public Optional<OccupationSynonym> findOneOccupationSynonymByExternalId(int externalId) {
         log.debug("Request to get OccupationSynonym : {}", externalId);
         return occupationSynonymRepository.findByExternalId(externalId);
+    }
+
+    @Override
+    public List<OccupationSynonym> save(Collection<OccupationSynonym> occupationSynonyms) {
+        occupationSynonyms.stream()
+            .filter(item -> isNull(item.getId()))
+            .forEach(occupationSynonym -> {
+                occupationSynonymRepository.findByExternalId(occupationSynonym.getExternalId())
+                    .ifPresent(item ->
+                        occupationSynonym.setId(item.getId())
+                    );
+
+            });
+        return occupationSynonymRepository.saveAll(occupationSynonyms);
     }
 
     @Async

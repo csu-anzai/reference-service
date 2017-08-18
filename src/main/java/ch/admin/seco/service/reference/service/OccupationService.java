@@ -1,5 +1,7 @@
 package ch.admin.seco.service.reference.service;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -81,4 +83,6 @@ public interface OccupationService {
     Optional<Occupation> findOneOccupationByX28Code(int x28Code);
 
     Optional<OccupationSynonym> findOneOccupationSynonymByExternalId(int externalId);
+
+    List<OccupationSynonym> save(Collection<OccupationSynonym> occupationSynonyms);
 }

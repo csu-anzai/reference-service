@@ -45,7 +45,7 @@ deploy:
   script: ".travis/deploy.sh"
   on:
     all_branches: true
-#    condition: "$TRAVIS_BRANCH =~ ^release.*$"
+    condition: "$TRAVIS_BRANCH =~ ^release.*$"
 after_deploy:
 -  sleep 90 && baseURL=http://159.100.254.166:8080 ./gradlew -b e2e.gradle gatlingRunAll --stacktrace
 notifications:
