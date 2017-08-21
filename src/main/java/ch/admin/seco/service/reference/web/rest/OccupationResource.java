@@ -95,7 +95,7 @@ public class OccupationResource {
         log.debug("REST request to update OccupationSynonym : {}", occupationSynonym);
 
         if (isNull(occupationSynonym.getId())) {
-            if (getOccupationSynonymByExternalId(occupationSynonym).isPresent()) {
+            if (!getOccupationSynonymByExternalId(occupationSynonym).isPresent()) {
                 return createOccupationSynonym(occupationSynonym);
             }
         }
