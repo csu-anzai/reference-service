@@ -1,5 +1,6 @@
 package ch.admin.seco.service.reference.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 
@@ -9,9 +10,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class JacksonConfiguration {
 
-    /*
-     * Support for Hibernate types in Jackson.
-     */
+    public JacksonConfiguration(ObjectMapper objectMapper) {
+    }
+
     @Bean
     public Hibernate5Module hibernate5Module() {
         return new Hibernate5Module();

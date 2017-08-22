@@ -8,14 +8,20 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.common.geo.GeoDistance;
 import org.elasticsearch.common.unit.DistanceUnit;
+import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.search.sort.GeoDistanceSortBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
+import org.elasticsearch.search.suggest.SuggestBuilder;
+import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
+import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
@@ -26,6 +32,7 @@ import ch.admin.seco.service.reference.domain.valueobject.GeoPoint;
 import ch.admin.seco.service.reference.repository.LocalityRepository;
 import ch.admin.seco.service.reference.repository.search.LocalitySearchRepository;
 import ch.admin.seco.service.reference.service.LocalityService;
+import ch.admin.seco.service.reference.service.dto.LocalitySuggestionDto;
 
 /**
  * Service Implementation for managing Locality.
@@ -37,12 +44,18 @@ public class LocalityServiceImpl implements LocalityService {
     private final Logger log = LoggerFactory.getLogger(LocalityServiceImpl.class);
 
     private final LocalityRepository localityRepository;
-
     private final LocalitySearchRepository localitySearchRepository;
+    private final ElasticsearchTemplate elasticsearchTemplate;
+    private final EntityToSynonymMapper occupationSynonymMapper;
 
-    public LocalityServiceImpl(LocalityRepository localityRepository, LocalitySearchRepository localitySearchRepository) {
+    public LocalityServiceImpl(LocalityRepository localityRepository,
+        LocalitySearchRepository localitySearchRepository,
+        ElasticsearchTemplate elasticsearchTemplate,
+        EntityToSynonymMapper occupationSynonymMapper) {
         this.localityRepository = localityRepository;
         this.localitySearchRepository = localitySearchRepository;
+        this.elasticsearchTemplate = elasticsearchTemplate;
+        this.occupationSynonymMapper = occupationSynonymMapper;
     }
 
     /**
@@ -134,5 +147,21 @@ public class LocalityServiceImpl implements LocalityService {
             .getContent()
             .stream()
             .findFirst();
+    }
+
+    @Override
+    public List<LocalitySuggestionDto> suggestLocalities(String prefix, int resultSize) {
+        CompletionSuggestionBuilder citySuggestions = new CompletionSuggestionBuilder("citySuggestions")
+            .prefix(prefix, Fuzziness.AUTO)
+            .size(resultSize);
+        SuggestBuilder suggestBuilder = new SuggestBuilder().addSuggestion("localities", citySuggestions);
+        SearchResponse searchResponse = elasticsearchTemplate.suggest(suggestBuilder, Locality.class);
+
+        return searchResponse.getSuggest()
+            .<CompletionSuggestion>getSuggestion("localities")
+            .getEntries().stream()
+            .flatMap(item -> item.getOptions().stream())
+            .map(occupationSynonymMapper::convertLocalitySuggestion)
+            .collect(Collectors.toList());
     }
 }

@@ -2,6 +2,7 @@ package ch.admin.seco.service.reference.domain;
 
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -11,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -18,6 +20,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
@@ -26,6 +30,7 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Mapping;
 
 import ch.admin.seco.service.reference.domain.valueobject.GeoPoint;
+import ch.admin.seco.service.reference.domain.view.LocalityViews;
 
 /**
  * A Locality.
@@ -70,6 +75,11 @@ public class Locality implements Serializable {
     @NotNull
     @Embedded
     private GeoPoint geoPoint;
+
+    @Transient
+    @JsonProperty("citySuggestions")
+    @JsonView(LocalityViews.ElasticSearch.class)
+    private Set<String> citySuggestions;
 
     public UUID getId() {
         return id;
@@ -146,6 +156,19 @@ public class Locality implements Serializable {
     public Locality geoPoint(GeoPoint geoPoint) {
         this.geoPoint = geoPoint;
         return this;
+    }
+
+    public Set<String> getCitySuggestions() {
+        return citySuggestions;
+    }
+
+    public Locality citySuggestions(Set<String> citySuggestions) {
+        this.citySuggestions = citySuggestions;
+        return this;
+    }
+
+    public void setCitySuggestions(Set<String> citySuggestions) {
+        this.citySuggestions = citySuggestions;
     }
 
     @Override

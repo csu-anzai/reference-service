@@ -27,6 +27,9 @@
             },
             "geoPoint": {
                 "type": "geo_point"
+            },
+            "citySuggestions": {
+                "type": "completion"
             }
         }
     }

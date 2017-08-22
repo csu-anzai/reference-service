@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import ch.admin.seco.service.reference.domain.Locality;
 import ch.admin.seco.service.reference.domain.valueobject.GeoPoint;
+import ch.admin.seco.service.reference.service.dto.LocalitySuggestionDto;
 
 /**
  * Service Interface for managing Locality.
@@ -58,4 +59,6 @@ public interface LocalityService {
      * @return nearest entity to geo point
      */
     Optional<Locality> searchNearestLocality(GeoPoint geoPoint);
+
+    List<LocalitySuggestionDto> suggestLocalities(String prefix, int resultSize);
 }

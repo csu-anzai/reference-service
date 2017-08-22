@@ -15,6 +15,7 @@ import ch.admin.seco.service.reference.domain.Classification;
 import ch.admin.seco.service.reference.domain.OccupationSynonym;
 import ch.admin.seco.service.reference.domain.search.ClassificationSynonym;
 import ch.admin.seco.service.reference.service.dto.ClassificationSuggestionDto;
+import ch.admin.seco.service.reference.service.dto.LocalitySuggestionDto;
 import ch.admin.seco.service.reference.service.dto.OccupationSuggestionDto;
 
 @Component
@@ -67,5 +68,10 @@ public class EntityToSynonymMapper {
     ClassificationSuggestionDto convertClassificationSuggestion(CompletionSuggestion.Entry.Option option) {
         Map<String, Object> source = option.getHit().getSourceAsMap();
         return new ClassificationSuggestionDto(String.class.cast(source.get("classification")), Integer.class.cast(source.get("code")));
+    }
+
+    LocalitySuggestionDto convertLocalitySuggestion(CompletionSuggestion.Entry.Option option) {
+        Map<String, Object> source = option.getHit().getSourceAsMap();
+        return new LocalitySuggestionDto(String.class.cast(source.get("id")), String.class.cast(source.get("city")));
     }
 }

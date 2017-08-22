@@ -6,6 +6,7 @@ import java.lang.reflect.Method;
 import java.util.stream.Stream;
 
 import com.codahale.metrics.annotation.Timed;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
@@ -20,9 +21,9 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ch.admin.seco.service.reference.domain.Locality;
 import ch.admin.seco.service.reference.domain.search.ClassificationSynonym;
 import ch.admin.seco.service.reference.domain.search.OccupationSynonym;
+import ch.admin.seco.service.reference.domain.view.LocalityViews;
 import ch.admin.seco.service.reference.repository.ClassificationRepository;
 import ch.admin.seco.service.reference.repository.LocalityRepository;
 import ch.admin.seco.service.reference.repository.OccupationSynonymRepository;
@@ -70,7 +71,7 @@ public class ElasticsearchIndexServiceImpl implements ch.admin.seco.service.refe
     public void reindexAll() {
         reindexClassification();
         reindexOccupationSynonym();
-        reindexForClass(Locality.class, localityRepository, localitySearchRepository);
+        reindexLocality();
         log.info("Elasticsearch: Successfully performed reindexing");
     }
 
@@ -98,6 +99,15 @@ public class ElasticsearchIndexServiceImpl implements ch.admin.seco.service.refe
             )
             .buffer(100)
             .subscribe(occupationSynonymSearchRepository::saveAll);
+    }
+
+    @JsonView(LocalityViews.ElasticSearch.class)
+    private void reindexLocality() {
+        Flux.fromStream(localityRepository.streamAll())
+            .map(locality -> locality
+                .citySuggestions(entityToSynonymMapper.extractSuggestionList(locality.getCity())))
+            .buffer(100)
+            .subscribe(localitySearchRepository::saveAll);
     }
 
     private <T, ID extends Serializable> void reindexForClass(Class<T> entityClass, JpaRepository<T, ID> jpaRepository,
