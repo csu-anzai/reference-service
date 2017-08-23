@@ -44,13 +44,14 @@ public interface LocalityService {
     void delete(UUID id);
 
     /**
-     * Search for the locality corresponding to the query.
+     * Search for the locality corresponding
+     * to the prefix and limit result by resultSize.
      *
-     *  @param query the query of the search
-     *
-     *  @return the list of entities
+     * @param prefix the prefix of the locality search
+     * @param resultSize the response size information
+     * @return the result of the search
      */
-    List<Locality> search(String query);
+    List<LocalitySuggestionDto> search(String prefix, int resultSize);
 
     /**
      * Search for the nearest locality to the geo point.
@@ -59,6 +60,4 @@ public interface LocalityService {
      * @return nearest entity to geo point
      */
     Optional<Locality> searchNearestLocality(GeoPoint geoPoint);
-
-    List<LocalitySuggestionDto> suggestLocalities(String prefix, int resultSize);
 }

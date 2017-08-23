@@ -32,9 +32,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ch.admin.seco.service.reference.ReferenceserviceApp;
 import ch.admin.seco.service.reference.domain.Locality;
+import ch.admin.seco.service.reference.domain.search.LocalitySynonym;
 import ch.admin.seco.service.reference.domain.valueobject.GeoPoint;
 import ch.admin.seco.service.reference.repository.LocalityRepository;
-import ch.admin.seco.service.reference.repository.search.LocalitySearchRepository;
+import ch.admin.seco.service.reference.repository.search.LocalitySynonymSearchRepository;
 import ch.admin.seco.service.reference.service.LocalityService;
 import ch.admin.seco.service.reference.web.rest.errors.ExceptionTranslator;
 
@@ -72,7 +73,7 @@ public class LocalityResourceIntTest {
     private LocalityService localityService;
 
     @Autowired
-    private LocalitySearchRepository localitySearchRepository;
+    private LocalitySynonymSearchRepository localitySynonymSearchRepository;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -99,7 +100,7 @@ public class LocalityResourceIntTest {
 
     @Before
     public void initTest() {
-        localitySearchRepository.deleteAll();
+        localitySynonymSearchRepository.deleteAll();
         locality = new Locality()
             .city(DEFAULT_CITY)
             .zipCode(DEFAULT_ZIP_CODE)
@@ -130,8 +131,8 @@ public class LocalityResourceIntTest {
         assertThat(testLocality.getGeoPoint().getLatitude()).isEqualTo(DEFAULT_LAT);
         assertThat(testLocality.getGeoPoint().getLongitude()).isEqualTo(DEFAULT_LON);
         // Validate the Locality in Elasticsearch
-        Optional<Locality> localityEs = localitySearchRepository.findById(testLocality.getId());
-        assertThat(localityEs).contains(testLocality);
+        Optional<LocalitySynonym> localitySynonym = localitySynonymSearchRepository.findById(testLocality.getId());
+        assertThat(localitySynonym).isPresent();
     }
 
     @Test
@@ -315,8 +316,8 @@ public class LocalityResourceIntTest {
         assertThat(testLocality.getGeoPoint().getLongitude()).isEqualTo(UPDATED_LON);
 
         // Validate the Locality in Elasticsearch
-        Optional<Locality> localityEs = localitySearchRepository.findById(testLocality.getId());
-        assertThat(localityEs).contains(testLocality);
+        Optional<LocalitySynonym> localitySynonym = localitySynonymSearchRepository.findById(testLocality.getId());
+        assertThat(localitySynonym).isPresent();
     }
 
     @Test
@@ -326,16 +327,13 @@ public class LocalityResourceIntTest {
         localityService.save(locality);
 
         // Search the locality
-        restLocalityMockMvc.perform(get("/api/_search/localities?query=city:" + (locality.getCity().substring(0, 3) + '*')))
+        restLocalityMockMvc.perform(get("/api/_search/localities?prefix={prefix}&resultSize={resultSize}", locality.getCity().substring(0, 2), 5))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(locality.getId().toString())))
             .andExpect(jsonPath("$.[*].city").value(hasItem(DEFAULT_CITY)))
-            .andExpect(jsonPath("$.[*].zipCode").value(hasItem(DEFAULT_ZIP_CODE)))
             .andExpect(jsonPath("$.[*].communalCode").value(hasItem(DEFAULT_COMMUNAL_CODE)))
-            .andExpect(jsonPath("$.[*].cantonCode").value(hasItem(DEFAULT_CANTON_CODE)))
-            .andExpect(jsonPath("$.[*].geoPoint.lat").value(hasItem(DEFAULT_LAT)))
-            .andExpect(jsonPath("$.[*].geoPoint.lon").value(hasItem(DEFAULT_LON)));
+            .andExpect(jsonPath("$.[*].cantonCode").value(hasItem(DEFAULT_CANTON_CODE)));
     }
 
     @Test
@@ -404,7 +402,7 @@ public class LocalityResourceIntTest {
             .andExpect(status().isOk());
 
         // Validate Elasticsearch is empty
-        boolean localityExistsInEs = localitySearchRepository.findById(locality.getId()).isPresent();
+        boolean localityExistsInEs = localitySynonymSearchRepository.findById(locality.getId()).isPresent();
         assertThat(localityExistsInEs).isFalse();
 
         // Validate the database is empty

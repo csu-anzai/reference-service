@@ -6,7 +6,6 @@ import java.lang.reflect.Method;
 import java.util.stream.Stream;
 
 import com.codahale.metrics.annotation.Timed;
-import com.fasterxml.jackson.annotation.JsonView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
@@ -23,12 +22,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ch.admin.seco.service.reference.domain.search.ClassificationSynonym;
 import ch.admin.seco.service.reference.domain.search.OccupationSynonym;
-import ch.admin.seco.service.reference.domain.view.LocalityViews;
 import ch.admin.seco.service.reference.repository.ClassificationRepository;
 import ch.admin.seco.service.reference.repository.LocalityRepository;
 import ch.admin.seco.service.reference.repository.OccupationSynonymRepository;
 import ch.admin.seco.service.reference.repository.search.ClassificationSearchRepository;
-import ch.admin.seco.service.reference.repository.search.LocalitySearchRepository;
+import ch.admin.seco.service.reference.repository.search.LocalitySynonymSearchRepository;
 import ch.admin.seco.service.reference.repository.search.OccupationSynonymSearchRepository;
 
 @Service
@@ -40,7 +38,7 @@ public class ElasticsearchIndexServiceImpl implements ch.admin.seco.service.refe
     private final OccupationSynonymRepository occupationSynonymRepository;
     private final OccupationSynonymSearchRepository occupationSynonymSearchRepository;
     private final LocalityRepository localityRepository;
-    private final LocalitySearchRepository localitySearchRepository;
+    private final LocalitySynonymSearchRepository localitySynonymSearchRepository;
     private final ElasticsearchTemplate elasticsearchTemplate;
     private final EntityToSynonymMapper entityToSynonymMapper;
 
@@ -50,7 +48,7 @@ public class ElasticsearchIndexServiceImpl implements ch.admin.seco.service.refe
         OccupationSynonymRepository occupationSynonymRepository,
         OccupationSynonymSearchRepository occupationSynonymSearchRepository,
         LocalityRepository localityRepository,
-        LocalitySearchRepository localitySearchRepository,
+        LocalitySynonymSearchRepository localitySynonymSearchRepository,
         ElasticsearchTemplate elasticsearchTemplate,
         EntityToSynonymMapper entityToSynonymMapper) {
 
@@ -59,7 +57,7 @@ public class ElasticsearchIndexServiceImpl implements ch.admin.seco.service.refe
         this.occupationSynonymRepository = occupationSynonymRepository;
         this.occupationSynonymSearchRepository = occupationSynonymSearchRepository;
         this.localityRepository = localityRepository;
-        this.localitySearchRepository = localitySearchRepository;
+        this.localitySynonymSearchRepository = localitySynonymSearchRepository;
         this.elasticsearchTemplate = elasticsearchTemplate;
         this.entityToSynonymMapper = entityToSynonymMapper;
     }
@@ -101,13 +99,11 @@ public class ElasticsearchIndexServiceImpl implements ch.admin.seco.service.refe
             .subscribe(occupationSynonymSearchRepository::saveAll);
     }
 
-    @JsonView(LocalityViews.ElasticSearch.class)
     private void reindexLocality() {
         Flux.fromStream(localityRepository.streamAll())
-            .map(locality -> locality
-                .citySuggestions(entityToSynonymMapper.extractSuggestionList(locality.getCity())))
+            .map(entityToSynonymMapper::toSynonym)
             .buffer(100)
-            .subscribe(localitySearchRepository::saveAll);
+            .subscribe(localitySynonymSearchRepository::saveAll);
     }
 
     private <T, ID extends Serializable> void reindexForClass(Class<T> entityClass, JpaRepository<T, ID> jpaRepository,

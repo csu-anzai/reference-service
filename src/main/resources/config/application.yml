@@ -58,8 +58,6 @@ spring:
         name: referenceservice
     jackson:
         serialization.write_dates_as_timestamps: false
-        mapper:
-            default_view_inclusion: true
     jpa:
         open-in-view: false
         hibernate:

@@ -1,12 +1,9 @@
 package ch.admin.seco.service.reference.service.impl;
 
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.common.geo.GeoDistance;
@@ -24,13 +21,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ch.admin.seco.service.reference.domain.Locality;
+import ch.admin.seco.service.reference.domain.search.LocalitySynonym;
 import ch.admin.seco.service.reference.domain.valueobject.GeoPoint;
 import ch.admin.seco.service.reference.repository.LocalityRepository;
-import ch.admin.seco.service.reference.repository.search.LocalitySearchRepository;
+import ch.admin.seco.service.reference.repository.search.LocalitySynonymSearchRepository;
 import ch.admin.seco.service.reference.service.LocalityService;
 import ch.admin.seco.service.reference.service.dto.LocalitySuggestionDto;
 
@@ -44,18 +43,18 @@ public class LocalityServiceImpl implements LocalityService {
     private final Logger log = LoggerFactory.getLogger(LocalityServiceImpl.class);
 
     private final LocalityRepository localityRepository;
-    private final LocalitySearchRepository localitySearchRepository;
+    private final LocalitySynonymSearchRepository localitySynonymSearchRepository;
     private final ElasticsearchTemplate elasticsearchTemplate;
-    private final EntityToSynonymMapper occupationSynonymMapper;
+    private final EntityToSynonymMapper entityToSynonymMapper;
 
     public LocalityServiceImpl(LocalityRepository localityRepository,
-        LocalitySearchRepository localitySearchRepository,
+        LocalitySynonymSearchRepository localitySynonymSearchRepository,
         ElasticsearchTemplate elasticsearchTemplate,
-        EntityToSynonymMapper occupationSynonymMapper) {
+        EntityToSynonymMapper entityToSynonymMapper) {
         this.localityRepository = localityRepository;
-        this.localitySearchRepository = localitySearchRepository;
+        this.localitySynonymSearchRepository = localitySynonymSearchRepository;
         this.elasticsearchTemplate = elasticsearchTemplate;
-        this.occupationSynonymMapper = occupationSynonymMapper;
+        this.entityToSynonymMapper = entityToSynonymMapper;
     }
 
     /**
@@ -68,7 +67,7 @@ public class LocalityServiceImpl implements LocalityService {
     public Locality save(Locality locality) {
         log.debug("Request to save Locality : {}", locality);
         Locality result = localityRepository.save(locality);
-        localitySearchRepository.save(result);
+        index(locality);
         return result;
     }
 
@@ -108,22 +107,31 @@ public class LocalityServiceImpl implements LocalityService {
         localityRepository.findById(id).ifPresent(
             locality -> {
                 localityRepository.delete(locality);
-                localitySearchRepository.delete(locality);
+                localitySynonymSearchRepository.deleteById(locality.getId());
             });
     }
 
     /**
-     * Search for the locality corresponding to the query.
+     * Search for the locality corresponding
+     * to the prefix and limit result by resultSize.
      *
-     *  @param query the query of the search
-     *  @return the list of entities
+     * @param prefix the prefix of the locality search
+     * @param resultSize the response size information
+     * @return the result of the search
      */
     @Override
-    @Transactional(readOnly = true)
-    public List<Locality> search(String query) {
-        log.debug("Request to search Localities for query {}", query);
-        return StreamSupport
-            .stream(localitySearchRepository.search(queryStringQuery(query)).spliterator(), false)
+    public List<LocalitySuggestionDto> search(String prefix, int resultSize) {
+        CompletionSuggestionBuilder citySuggestions = new CompletionSuggestionBuilder("suggestions")
+            .prefix(prefix, Fuzziness.AUTO)
+            .size(resultSize);
+        SuggestBuilder suggestBuilder = new SuggestBuilder().addSuggestion("localities", citySuggestions);
+        SearchResponse searchResponse = elasticsearchTemplate.suggest(suggestBuilder, LocalitySynonym.class);
+
+        return searchResponse.getSuggest()
+            .<CompletionSuggestion>getSuggestion("localities")
+            .getEntries().stream()
+            .flatMap(item -> item.getOptions().stream())
+            .map(entityToSynonymMapper::convertLocalitySuggestion)
             .collect(Collectors.toList());
     }
 
@@ -143,25 +151,14 @@ public class LocalityServiceImpl implements LocalityService {
             .withSort(distanceSortBuilder)
             .withPageable(PageRequest.of(0, 1))
             .build();
-        return localitySearchRepository.search(query)
+        return localitySynonymSearchRepository.search(query)
             .getContent()
-            .stream()
-            .findFirst();
+            .stream().findFirst()
+            .map(entityToSynonymMapper::fromSynonym);
     }
 
-    @Override
-    public List<LocalitySuggestionDto> suggestLocalities(String prefix, int resultSize) {
-        CompletionSuggestionBuilder citySuggestions = new CompletionSuggestionBuilder("citySuggestions")
-            .prefix(prefix, Fuzziness.AUTO)
-            .size(resultSize);
-        SuggestBuilder suggestBuilder = new SuggestBuilder().addSuggestion("localities", citySuggestions);
-        SearchResponse searchResponse = elasticsearchTemplate.suggest(suggestBuilder, Locality.class);
-
-        return searchResponse.getSuggest()
-            .<CompletionSuggestion>getSuggestion("localities")
-            .getEntries().stream()
-            .flatMap(item -> item.getOptions().stream())
-            .map(occupationSynonymMapper::convertLocalitySuggestion)
-            .collect(Collectors.toList());
+    @Async
+    public void index(Locality locality) {
+        localitySynonymSearchRepository.index(entityToSynonymMapper.toSynonym(locality));
     }
 }
