@@ -1,7 +1,4 @@
-import _root_.io.gatling.core.scenario.Simulation
 import ch.qos.logback.classic.LoggerContext
-import io.gatling.core.Predef._
-import io.gatling.http.Predef._
 import org.slf4j.LoggerFactory
 
 import scala.concurrent.duration._
@@ -48,9 +45,9 @@ class LocalityGatlingTest extends Simulation {
     val localityFeed = Iterator.continually(
         // Random number will be accessible in session under variable "OrderRef"
         Map(
-            "zipCodes" -> (1000 + Random.nextInt(1000)).toString,
-            "communalCodes" -> Random.nextInt(1000).toString,
-            "cityNames" -> Random.alphanumeric.take(Random.nextInt(20)).mkString
+            "cityNames" -> Random.alphanumeric.take(Random.nextInt(20)).mkString,
+            "latitudes" -> Random.nextInt(80),
+            "longitudes" -> Random.nextInt(20)
         )
     )
 
@@ -78,23 +75,17 @@ class LocalityGatlingTest extends Simulation {
                 .headers(headers_http_authenticated)
                 .check(status.is(200)))
                 .pause(PAUSE seconds, 5 seconds)
-                .exec(http("Create new locality")
-                    .post("/referenceservice/api/localities")
-                    .headers(headers_http_authenticated)
-                    .body(StringBody("""{"city":"${cityNames}", "zipCode":"${zipCodes}", "communalCode":${communalCodes}, "cantonCode":"ZH", "geoPoint":{"lat":1, "lon":1}}""")).asJSON
-                    .check(status.is(201))
-                    .check(headerRegex("Location", "(.*)").saveAs("new_locality_url"))).exitHereIfFailed
+                .exec(http("Search for localities")
+                    .get("/referenceservice/api/_search/localities")
+                    .queryParam("prefix", "${cityNames}")
+                    .queryParam("resultSize", "10")
+                    .check(status.is(200)))
                 .pause(PAUSE)
-                .repeat(5) {
-                    exec(http("Get created locality")
-                        .get("/referenceservice${new_locality_url}")
-                        .headers(headers_http_authenticated))
-                        .pause(PAUSE)
-                }
-                .exec(http("Delete created locality")
-                    .delete("/referenceservice${new_locality_url}")
-                    .headers(headers_http_authenticated))
-                .pause(PAUSE)
+                .exec(http("Search for nearest locality")
+                    .get("/referenceservice/api/_search/localities/nearest")
+                    .queryParam("latitude", "${latitudes}")
+                    .queryParam("longitude", "${longitudes}")
+                    .check(status.is(200)))
         }
 
     val users = scenario("Users").exec(scn)
