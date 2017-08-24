@@ -1,8 +1,8 @@
 package ch.admin.seco.service.reference.service.dto;
 
-public class LocalitySuggestionDto {
+import java.util.Objects;
 
-    private String id;
+public class LocalitySuggestionDto {
 
     private String city;
 
@@ -10,21 +10,12 @@ public class LocalitySuggestionDto {
 
     private String cantonCode;
 
-    public String getId() {
-        return id;
-    }
-
-    public LocalitySuggestionDto id(String id) {
-        this.id = id;
-        return this;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public String getCity() {
         return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public LocalitySuggestionDto city(String city) {
@@ -32,12 +23,12 @@ public class LocalitySuggestionDto {
         return this;
     }
 
-    public void setCity(String city) {
-        this.city = city;
-    }
-
     public int getCommunalCode() {
         return communalCode;
+    }
+
+    public void setCommunalCode(int communalCode) {
+        this.communalCode = communalCode;
     }
 
     public LocalitySuggestionDto communalCode(int communalCode) {
@@ -45,12 +36,12 @@ public class LocalitySuggestionDto {
         return this;
     }
 
-    public void setCommunalCode(int communalCode) {
-        this.communalCode = communalCode;
-    }
-
     public String getCantonCode() {
         return cantonCode;
+    }
+
+    public void setCantonCode(String cantonCode) {
+        this.cantonCode = cantonCode;
     }
 
     public LocalitySuggestionDto cantonCode(String cantonCode) {
@@ -58,7 +49,18 @@ public class LocalitySuggestionDto {
         return this;
     }
 
-    public void setCantonCode(String cantonCode) {
-        this.cantonCode = cantonCode;
+    @Override
+    public int hashCode() {
+        return Objects.hash(city, communalCode, cantonCode);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) { return true; }
+        if (o == null || getClass() != o.getClass()) { return false; }
+        LocalitySuggestionDto that = (LocalitySuggestionDto) o;
+        return communalCode == that.communalCode &&
+            Objects.equals(city, that.city) &&
+            Objects.equals(cantonCode, that.cantonCode);
     }
 }

@@ -1,11 +1,11 @@
 package ch.admin.seco.service.reference.service.impl;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import org.elasticsearch.action.admin.indices.analyze.AnalyzeRequest;
-import org.elasticsearch.action.admin.indices.analyze.AnalyzeResponse;
 import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
 
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
@@ -27,6 +27,16 @@ public class EntityToSynonymMapper {
 
     EntityToSynonymMapper(ElasticsearchTemplate elasticsearchTemplate) {
         this.elasticsearchTemplate = elasticsearchTemplate;
+    }
+
+    public Locality fromSynonym(LocalitySynonym localitySynonym) {
+        return new Locality()
+            .id(localitySynonym.getId())
+            .city(localitySynonym.getCity())
+            .zipCode(localitySynonym.getZipCode())
+            .communalCode(localitySynonym.getCommunalCode())
+            .cantonCode(localitySynonym.getCantonCode())
+            .geoPoint(localitySynonym.getGeoPoint());
     }
 
     ch.admin.seco.service.reference.domain.search.OccupationSynonym toSynonym(OccupationSynonym occupationSynonym) {
@@ -58,28 +68,15 @@ public class EntityToSynonymMapper {
             .citySuggestions(extractSuggestionList(locality.getCity()));
     }
 
-    public Locality fromSynonym(LocalitySynonym localitySynonym) {
-        return new Locality()
-            .id(localitySynonym.getId())
-            .city(localitySynonym.getCity())
-            .zipCode(localitySynonym.getZipCode())
-            .communalCode(localitySynonym.getCommunalCode())
-            .cantonCode(localitySynonym.getCantonCode())
-            .geoPoint(localitySynonym.getGeoPoint());
-    }
+    Set<String> extractSuggestionList(String term) {
+        Set<String> suggestions = new HashSet<>();
+        suggestions.add(term);
+        Pattern pattern = Pattern.compile("[-_/\\\\. ]+");
 
-    Set<String> extractSuggestionList(String name) {
-        Set<String> suggestions =
-            elasticsearchTemplate.getClient()
-                .admin()
-                .indices()
-                .analyze(new AnalyzeRequest().text(name).analyzer("simple"))
-                .actionGet()
-                .getTokens()
-                .stream()
-                .map(AnalyzeResponse.AnalyzeToken::getTerm)
-                .collect(Collectors.toSet());
-        suggestions.add(name.toLowerCase());
+        nextSubTerm(term, suggestions, pattern);
+
+        suggestions.remove("");
+        suggestions.remove(null);
         return suggestions;
     }
 
@@ -96,9 +93,17 @@ public class EntityToSynonymMapper {
     LocalitySuggestionDto convertLocalitySuggestion(CompletionSuggestion.Entry.Option option) {
         Map<String, Object> source = option.getHit().getSourceAsMap();
         return new LocalitySuggestionDto()
-            .id(String.class.cast(source.get("id")))
             .city(String.class.cast(source.get("city")))
             .communalCode(Integer.class.cast(source.get("communalCode")))
             .cantonCode(String.class.cast(source.get("cantonCode")));
+    }
+
+    private void nextSubTerm(String term, Set<String> suggestions, Pattern pattern) {
+        Matcher matcher = pattern.matcher(term);
+        if (matcher.find()) {
+            term = term.substring(matcher.end());
+            suggestions.add(term);
+            nextSubTerm(term, suggestions, pattern);
+        }
     }
 }

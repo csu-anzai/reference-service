@@ -3,33 +3,22 @@
         "properties": {
             "city": {
                 "type": "text",
-                "fields": {
-                    "de": {
-                        "type": "text",
-                        "analyzer": "german"
-                    },
-                    "fr": {
-                        "type": "text",
-                        "analyzer": "french"
-                    },
-                    "it": {
-                        "type": "text",
-                        "analyzer": "italian"
-                    },
-                    "en": {
-                        "type": "text",
-                        "analyzer": "english"
-                    }
-                }
+                "analyzer": "folding"
+            },
+            "communalCode": {
+                "type": "keyword",
+                "ignore_above": 5
             },
             "cantonCode": {
-                "type": "keyword"
+                "type": "keyword",
+                "ignore_above": 2
             },
             "geoPoint": {
                 "type": "geo_point"
             },
-            "suggestions": {
-                "type": "completion"
+            "citySuggestions": {
+                "type": "completion",
+                "analyzer": "folding"
             }
         }
     }

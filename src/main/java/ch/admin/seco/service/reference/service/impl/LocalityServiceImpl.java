@@ -1,14 +1,16 @@
 package ch.admin.seco.service.reference.service.impl;
 
+import static java.util.Collections.emptyList;
+import static java.util.Objects.nonNull;
+import static java.util.stream.Collectors.toList;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.common.geo.GeoDistance;
 import org.elasticsearch.common.unit.DistanceUnit;
-import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.search.sort.GeoDistanceSortBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.suggest.SuggestBuilder;
@@ -122,17 +124,23 @@ public class LocalityServiceImpl implements LocalityService {
     @Override
     public List<LocalitySuggestionDto> search(String prefix, int resultSize) {
         CompletionSuggestionBuilder citySuggestions = new CompletionSuggestionBuilder("suggestions")
-            .prefix(prefix, Fuzziness.AUTO)
-            .size(resultSize);
+            .prefix(prefix)
+            .size(Math.min(resultSize + 20, 10000)); // to factor in duplicate entries as 'Zürich' we increase the result size
         SuggestBuilder suggestBuilder = new SuggestBuilder().addSuggestion("localities", citySuggestions);
         SearchResponse searchResponse = elasticsearchTemplate.suggest(suggestBuilder, LocalitySynonym.class);
 
-        return searchResponse.getSuggest()
-            .<CompletionSuggestion>getSuggestion("localities")
-            .getEntries().stream()
-            .flatMap(item -> item.getOptions().stream())
-            .map(entityToSynonymMapper::convertLocalitySuggestion)
-            .collect(Collectors.toList());
+        CompletionSuggestion suggestion = searchResponse.getSuggest().getSuggestion("localities");
+        if (nonNull(suggestion)) {
+            return suggestion
+                .getEntries().stream()
+                .flatMap(item -> item.getOptions().stream())
+                .map(entityToSynonymMapper::convertLocalitySuggestion)
+                .distinct() // eliminate duplicates as 'Zürich'
+                .limit(resultSize) // reduce the result list to the desired result size
+                .collect(toList());
+        }
+
+        return emptyList();
     }
 
     /**

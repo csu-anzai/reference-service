@@ -75,7 +75,7 @@
 
     <changeSet id="20170816082833-4" author="varu">
         <loadData tableName="occupation"
-                  file="config/liquibase/changelog/data/REFERENCE_SERVICE_PUBLIC_OCCUPATION.csv"/>
+                  file="config/liquibase/changelog/data/REFERENCESERVICE_PUBLIC_OCCUPATION.csv"/>
     </changeSet>
 
     <!--

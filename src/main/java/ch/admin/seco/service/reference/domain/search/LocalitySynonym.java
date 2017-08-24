@@ -1,6 +1,5 @@
 package ch.admin.seco.service.reference.domain.search;
 
-import java.io.Serializable;
 import java.util.Set;
 import java.util.UUID;
 
@@ -8,14 +7,14 @@ import javax.persistence.Id;
 
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Mapping;
+import org.springframework.data.elasticsearch.annotations.Setting;
 
 import ch.admin.seco.service.reference.domain.valueobject.GeoPoint;
 
 @Document(indexName = "locality", type = "localities")
 @Mapping(mappingPath = "config/elasticsearch/mappings/locality.json")
-public class LocalitySynonym implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+@Setting(settingPath = "config/elasticsearch/settings/folding-analyzer.json")
+public class LocalitySynonym {
 
     @Id
     private UUID id;
@@ -30,10 +29,14 @@ public class LocalitySynonym implements Serializable {
 
     private GeoPoint geoPoint;
 
-    private Set<String> suggestions;
+    private Set<String> citySuggestions;
 
     public UUID getId() {
         return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public LocalitySynonym id(UUID id) {
@@ -41,12 +44,12 @@ public class LocalitySynonym implements Serializable {
         return this;
     }
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
     public String getCity() {
         return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public LocalitySynonym city(String city) {
@@ -54,21 +57,17 @@ public class LocalitySynonym implements Serializable {
         return this;
     }
 
-    public void setCity(String city) {
-        this.city = city;
-    }
-
     public String getZipCode() {
         return zipCode;
+    }
+
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
     }
 
     public LocalitySynonym zipCode(String zipCode) {
         this.zipCode = zipCode;
         return this;
-    }
-
-    public void setZipCode(String zipCode) {
-        this.zipCode = zipCode;
     }
 
     public int getCommunalCode() {
@@ -88,13 +87,13 @@ public class LocalitySynonym implements Serializable {
         return cantonCode;
     }
 
+    public void setCantonCode(String cantonCode) {
+        this.cantonCode = cantonCode;
+    }
+
     public LocalitySynonym cantonCode(String cantonCode) {
         this.cantonCode = cantonCode;
         return this;
-    }
-
-    public void setCantonCode(String cantonCode) {
-        this.cantonCode = cantonCode;
     }
 
     public GeoPoint getGeoPoint() {
@@ -110,16 +109,16 @@ public class LocalitySynonym implements Serializable {
         return this;
     }
 
-    public Set<String> getSuggestions() {
-        return suggestions;
+    public Set<String> getCitySuggestions() {
+        return citySuggestions;
+    }
+
+    public void setCitySuggestions(Set<String> citySuggestions) {
+        this.citySuggestions = citySuggestions;
     }
 
     public LocalitySynonym citySuggestions(Set<String> citySuggestions) {
-        this.suggestions = citySuggestions;
+        this.citySuggestions = citySuggestions;
         return this;
-    }
-
-    public void setSuggestions(Set<String> suggestions) {
-        this.suggestions = suggestions;
     }
 }
