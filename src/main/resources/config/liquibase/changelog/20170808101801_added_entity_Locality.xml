@@ -52,4 +52,27 @@
         <loadData tableName="locality"
                   file="config/liquibase/changelog/data/REFERENCESERVICE_PUBLIC_LOCALITY.csv"/>
     </changeSet>
+
+    <!--
+        Added the entity Canton.
+    -->
+    <changeSet id="20170808101801-3" author="miwr">
+        <createTable tableName="canton">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="code" type="varchar(2)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addUniqueConstraint constraintName="canton_code_unique"
+                             tableName="canton" columnNames="code"/>
+
+        <loadData tableName="canton"
+                  file="config/liquibase/changelog/data/REFERENCESERVICE_PUBLIC_CANTON.csv"/>
+    </changeSet>
 </databaseChangeLog>

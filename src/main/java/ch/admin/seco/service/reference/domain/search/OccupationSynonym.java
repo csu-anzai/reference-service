@@ -1,6 +1,5 @@
 package ch.admin.seco.service.reference.domain.search;
 
-import java.io.Serializable;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
@@ -17,9 +16,7 @@ import ch.admin.seco.service.reference.domain.Language;
  */
 @Document(indexName = "occupation", type = "occupations")
 @Mapping(mappingPath = "config/elasticsearch/mappings/occupation.json")
-public class OccupationSynonym implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class OccupationSynonym {
 
     @Id
     private UUID id;

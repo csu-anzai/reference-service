@@ -56,8 +56,12 @@ public class LocalitySuggestionDto {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) { return true; }
-        if (o == null || getClass() != o.getClass()) { return false; }
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         LocalitySuggestionDto that = (LocalitySuggestionDto) o;
         return communalCode == that.communalCode &&
             Objects.equals(city, that.city) &&

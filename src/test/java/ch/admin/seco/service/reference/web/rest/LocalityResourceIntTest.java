@@ -26,6 +26,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +35,7 @@ import ch.admin.seco.service.reference.ReferenceserviceApp;
 import ch.admin.seco.service.reference.domain.Locality;
 import ch.admin.seco.service.reference.domain.search.LocalitySynonym;
 import ch.admin.seco.service.reference.domain.valueobject.GeoPoint;
+import ch.admin.seco.service.reference.repository.CantonRepository;
 import ch.admin.seco.service.reference.repository.LocalityRepository;
 import ch.admin.seco.service.reference.repository.search.LocalitySynonymSearchRepository;
 import ch.admin.seco.service.reference.service.LocalityService;
@@ -48,16 +50,16 @@ import ch.admin.seco.service.reference.web.rest.errors.ExceptionTranslator;
 @SpringBootTest(classes = ReferenceserviceApp.class)
 public class LocalityResourceIntTest {
 
-    private static final String DEFAULT_CITY = "Elsau";
+    private static final String DEFAULT_CITY = "Bern";
     private static final String UPDATED_CITY = "Embrach";
 
-    private static final String DEFAULT_ZIP_CODE = "8352";
+    private static final String DEFAULT_ZIP_CODE = "3000";
     private static final String UPDATED_ZIP_CODE = "8424";
 
     private static final Integer DEFAULT_COMMUNAL_CODE = 219;
     private static final Integer UPDATED_COMMUNAL_CODE = 56;
 
-    private static final String DEFAULT_CANTON_CODE = "AA";
+    private static final String DEFAULT_CANTON_CODE = "BE";
     private static final String UPDATED_CANTON_CODE = "ZH";
 
     private static final Double DEFAULT_LAT = 47.506D;
@@ -68,6 +70,9 @@ public class LocalityResourceIntTest {
 
     @Autowired
     private LocalityRepository localityRepository;
+
+    @Autowired
+    private CantonRepository cantonRepository;
 
     @Autowired
     private LocalityService localityService;
@@ -326,14 +331,15 @@ public class LocalityResourceIntTest {
         // Initialize the database
         localityService.save(locality);
 
+
         // Search the locality
-        restLocalityMockMvc.perform(get("/api/_search/localities?prefix={prefix}&resultSize={resultSize}", locality.getCity().substring(0, 2), 5))
+        ResultActions actions = restLocalityMockMvc.perform(get("/api/_search/localities?prefix={prefix}&resultSize={resultSize}", "be", 5))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(locality.getId().toString())))
-            .andExpect(jsonPath("$.[*].city").value(hasItem(DEFAULT_CITY)))
-            .andExpect(jsonPath("$.[*].communalCode").value(hasItem(DEFAULT_COMMUNAL_CODE)))
-            .andExpect(jsonPath("$.[*].cantonCode").value(hasItem(DEFAULT_CANTON_CODE)));
+            .andExpect(jsonPath("$.localities[*].city").value(hasItem(DEFAULT_CITY)))
+            .andExpect(jsonPath("$.localities[*].communalCode").value(hasItem(DEFAULT_COMMUNAL_CODE)))
+            .andExpect(jsonPath("$.localities[*].cantonCode").value(hasItem(DEFAULT_CANTON_CODE)))
+            .andExpect(jsonPath("$.cantons[*].code").value(hasItem(DEFAULT_CANTON_CODE)));
     }
 
     @Test
@@ -433,6 +439,12 @@ public class LocalityResourceIntTest {
             .param("longitude", DEFAULT_LON.toString());
         restLocalityMockMvc.perform(requestBuilder)
             .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @Transactional
+    public void countCantons() {
+        assertThat(cantonRepository.count()).isEqualTo(25);
     }
 
     private void checkLocalityGeoPoint(GeoPoint geoPoint) throws Exception {

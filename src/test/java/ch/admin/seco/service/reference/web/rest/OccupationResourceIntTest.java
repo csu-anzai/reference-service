@@ -390,7 +390,7 @@ public class OccupationResourceIntTest {
         );
 
         // Search the occupationSynonym
-        restOccupationMockMvc.perform(get("/api/_search/occupations/synonym?prefix=Gaert&language=de&responseSize=10"))
+        restOccupationMockMvc.perform(get("/api/_search/occupations/synonym?prefix=Gaert&language=de&resultSize=10"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.occupations.[*].code").value(hasItem(DEFAULT_CODE)))

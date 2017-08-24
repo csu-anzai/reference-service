@@ -131,10 +131,6 @@ public class Locality implements Serializable {
         this.cantonCode = cantonCode;
     }
 
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
-
     public GeoPoint getGeoPoint() {
         return geoPoint;
     }

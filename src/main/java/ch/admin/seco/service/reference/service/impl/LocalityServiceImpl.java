@@ -1,12 +1,12 @@
 package ch.admin.seco.service.reference.service.impl;
 
-import static java.util.Collections.emptyList;
-import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.common.geo.GeoDistance;
@@ -33,6 +33,8 @@ import ch.admin.seco.service.reference.domain.valueobject.GeoPoint;
 import ch.admin.seco.service.reference.repository.LocalityRepository;
 import ch.admin.seco.service.reference.repository.search.LocalitySynonymSearchRepository;
 import ch.admin.seco.service.reference.service.LocalityService;
+import ch.admin.seco.service.reference.service.dto.CantonSuggestionDto;
+import ch.admin.seco.service.reference.service.dto.LocalityAutocompleteDto;
 import ch.admin.seco.service.reference.service.dto.LocalitySuggestionDto;
 
 /**
@@ -122,25 +124,22 @@ public class LocalityServiceImpl implements LocalityService {
      * @return the result of the search
      */
     @Override
-    public List<LocalitySuggestionDto> search(String prefix, int resultSize) {
-        CompletionSuggestionBuilder citySuggestions = new CompletionSuggestionBuilder("suggestions")
+    public LocalityAutocompleteDto search(String prefix, int resultSize) {
+        CompletionSuggestionBuilder citySuggestions = new CompletionSuggestionBuilder("citySuggestions")
             .prefix(prefix)
             .size(Math.min(resultSize + 20, 10000)); // to factor in duplicate entries as 'Zürich' we increase the result size
-        SuggestBuilder suggestBuilder = new SuggestBuilder().addSuggestion("localities", citySuggestions);
+
+        SuggestBuilder suggestBuilder = new SuggestBuilder()
+            .addSuggestion("localities", citySuggestions)
+            .addSuggestion("cantonCodes", new CompletionSuggestionBuilder("code.canton-suggestions").prefix(prefix))
+            .addSuggestion("cantonNames", new CompletionSuggestionBuilder("name.canton-suggestions").prefix(prefix));
         SearchResponse searchResponse = elasticsearchTemplate.suggest(suggestBuilder, LocalitySynonym.class);
 
-        CompletionSuggestion suggestion = searchResponse.getSuggest().getSuggestion("localities");
-        if (nonNull(suggestion)) {
-            return suggestion
-                .getEntries().stream()
-                .flatMap(item -> item.getOptions().stream())
-                .map(entityToSynonymMapper::convertLocalitySuggestion)
-                .distinct() // eliminate duplicates as 'Zürich'
-                .limit(resultSize) // reduce the result list to the desired result size
-                .collect(toList());
-        }
+        List<LocalitySuggestionDto> localities = convertSuggestionToDto(resultSize, searchResponse, entityToSynonymMapper::convertLocalitySuggestion, "localities");
 
-        return emptyList();
+        List<CantonSuggestionDto> cantons = convertSuggestionToDto(resultSize, searchResponse, entityToSynonymMapper::convertCantonSuggestion, "cantonCodes", "cantonNames");
+
+        return new LocalityAutocompleteDto(localities, cantons);
     }
 
     /**
@@ -168,5 +167,16 @@ public class LocalityServiceImpl implements LocalityService {
     @Async
     public void index(Locality locality) {
         localitySynonymSearchRepository.index(entityToSynonymMapper.toSynonym(locality));
+    }
+
+    private <T> List<T> convertSuggestionToDto(int resultSize, SearchResponse searchResponse,
+        Function<CompletionSuggestion.Entry.Option, T> mapperFunction, String... suggestionNames) {
+        return Stream.of(suggestionNames)
+            .flatMap(suggestionName -> searchResponse.getSuggest().<CompletionSuggestion>getSuggestion(suggestionName).getEntries().stream())
+            .flatMap(item -> item.getOptions().stream())
+            .map(mapperFunction)
+            .distinct() // eliminate duplicates as 'Zürich'
+            .limit(resultSize) // reduce the result list to the desired result size
+            .collect(toList());
     }
 }

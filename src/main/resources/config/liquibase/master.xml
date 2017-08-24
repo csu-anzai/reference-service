@@ -4,13 +4,15 @@
     xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
-    <include file="config/liquibase/changelog/00000000000000_initial_schema.xml"
-             relativeToChangelogFile="false"/>
+    <include
+        file="config/liquibase/changelog/00000000000000_initial_schema.xml"
+        relativeToChangelogFile="false"/>
     <include
         file="config/liquibase/changelog/20170719062906_added_entity_Classification.xml"
         relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20170808101801_added_entity_Locality.xml"
-             relativeToChangelogFile="false"/>
+    <include
+        file="config/liquibase/changelog/20170808101801_added_entity_Locality.xml"
+        relativeToChangelogFile="false"/>
     <include
         file="config/liquibase/changelog/20170816082833_added_entity_Occupation.xml"
         relativeToChangelogFile="false"/>

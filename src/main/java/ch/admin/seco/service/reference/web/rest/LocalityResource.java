@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ch.admin.seco.service.reference.domain.Locality;
 import ch.admin.seco.service.reference.domain.valueobject.GeoPoint;
 import ch.admin.seco.service.reference.service.LocalityService;
-import ch.admin.seco.service.reference.service.dto.LocalitySuggestionDto;
+import ch.admin.seco.service.reference.service.dto.LocalityAutocompleteDto;
 import ch.admin.seco.service.reference.web.rest.util.HeaderUtil;
 
 /**
@@ -36,10 +36,8 @@ import ch.admin.seco.service.reference.web.rest.util.HeaderUtil;
 @RequestMapping("/api")
 public class LocalityResource {
 
-    private final Logger log = LoggerFactory.getLogger(LocalityResource.class);
-
     private static final String ENTITY_NAME = "locality";
-
+    private final Logger log = LoggerFactory.getLogger(LocalityResource.class);
     private final LocalityService localityService;
 
     public LocalityResource(LocalityService localityService) {
@@ -132,12 +130,12 @@ public class LocalityResource {
      * to the prefix and limit result by resultSize.
      *
      * @param prefix the prefix of the locality search
-     * @param resultSize the responseSize information
+     * @param resultSize the resultSize information
      * @return the result of the search
      */
     @GetMapping("/_search/localities")
     @Timed
-    public List<LocalitySuggestionDto> searchLocalities(@RequestParam String prefix, @RequestParam int resultSize) {
+    public LocalityAutocompleteDto searchLocalities(@RequestParam String prefix, @RequestParam int resultSize) {
         log.debug("REST request to search Localities for prefix {}, resultSize {}", prefix, resultSize);
         return localityService.search(prefix, resultSize);
     }

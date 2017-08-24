@@ -16,6 +16,7 @@ import ch.admin.seco.service.reference.domain.Locality;
 import ch.admin.seco.service.reference.domain.OccupationSynonym;
 import ch.admin.seco.service.reference.domain.search.ClassificationSynonym;
 import ch.admin.seco.service.reference.domain.search.LocalitySynonym;
+import ch.admin.seco.service.reference.service.dto.CantonSuggestionDto;
 import ch.admin.seco.service.reference.service.dto.ClassificationSuggestionDto;
 import ch.admin.seco.service.reference.service.dto.LocalitySuggestionDto;
 import ch.admin.seco.service.reference.service.dto.OccupationSuggestionDto;
@@ -96,6 +97,11 @@ public class EntityToSynonymMapper {
             .city(String.class.cast(source.get("city")))
             .communalCode(Integer.class.cast(source.get("communalCode")))
             .cantonCode(String.class.cast(source.get("cantonCode")));
+    }
+
+    CantonSuggestionDto convertCantonSuggestion(CompletionSuggestion.Entry.Option option) {
+        Map<String, Object> source = option.getHit().getSourceAsMap();
+        return new CantonSuggestionDto().code(String.class.cast(source.get("code"))).name(String.class.cast(source.get("name")));
     }
 
     private void nextSubTerm(String term, Set<String> suggestions, Pattern pattern) {

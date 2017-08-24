@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.search.suggest.SuggestBuilder;
 import org.elasticsearch.search.suggest.SuggestBuilders;
 import org.elasticsearch.search.suggest.SuggestionBuilder;
@@ -144,7 +143,7 @@ public class OccupationServiceImpl implements OccupationService {
 
         Function<String, SuggestionBuilder> createSuggestionBuilder = (String field) ->
             SuggestBuilders.completionSuggestion(field + "." + language.name())
-                .prefix(prefix, Fuzziness.AUTO)
+                .prefix(prefix)
                 .size(resultSize)
                 .contexts(Collections.singletonMap("lang",
                     Collections.singletonList(CategoryQueryContext.builder().setCategory(language.name()).build())));

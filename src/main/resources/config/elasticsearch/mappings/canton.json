@@ -1,0 +1,26 @@
+{
+    "cantons": {
+        "properties": {
+            "name": {
+                "type": "text",
+                "analyzer": "folding",
+                "fields": {
+                    "canton-suggestions": {
+                        "type": "completion",
+                        "analyzer": "folding"
+                    }
+                }
+            },
+            "code": {
+                "type": "keyword",
+                "ignore_above": 2,
+                "fields": {
+                    "canton-suggestions": {
+                        "type": "completion",
+                        "analyzer": "folding"
+                    }
+                }
+            }
+        }
+    }
+}

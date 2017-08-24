@@ -163,15 +163,15 @@ public class OccupationResource {
      *
      * @param prefix       the query of the occupationSynonym search
      * @param language     the language information
-     * @param responseSize the responseSize information
+     * @param resultSize   the resultSize information
      * @return the result of the search
      */
     @GetMapping(OCCUPATION_SEARCH_PATH)
     @Timed
     public ResponseEntity<OccupationAutocompleteDto> searchOccupations(
-        @RequestParam String prefix, @RequestParam Language language, @RequestParam int responseSize) {
+        @RequestParam String prefix, @RequestParam Language language, @RequestParam int resultSize) {
         log.debug("REST request to search for a page of OccupationSynonyms for query {}", prefix);
-        OccupationAutocompleteDto result = occupationService.suggestOccupationSynonyms(prefix, language, responseSize);
+        OccupationAutocompleteDto result = occupationService.suggestOccupationSynonyms(prefix, language, resultSize);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
