@@ -151,7 +151,15 @@ public class LocalityResource {
     @GetMapping("/_search/localities/nearest")
     @Timed
     public ResponseEntity<Locality> searchNearestLocality(@RequestParam Double latitude, @RequestParam Double longitude) {
-        log.debug("REST request to search Locality nearest to geo point (latitude={}, longitude={})");
+        log.debug("REST request to search Locality nearest to geo point (latitude={}, longitude={})", latitude, longitude);
         return ResponseUtil.wrapOrNotFound(localityService.searchNearestLocality(new GeoPoint(latitude, longitude)));
+    }
+
+    @GetMapping(value = "/localities", params = "zipCode")
+    @Timed
+    public List<Locality> findLocalitiesByZipCode(@RequestParam String zipCode) {
+        log.debug("REST request to search Locality by zipCode({})", zipCode);
+        return localityService.findOneByZipCode(zipCode);
+
     }
 }

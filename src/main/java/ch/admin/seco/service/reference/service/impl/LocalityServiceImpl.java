@@ -164,6 +164,11 @@ public class LocalityServiceImpl implements LocalityService {
             .map(entityToSynonymMapper::fromSynonym);
     }
 
+    @Override
+    public List<Locality> findOneByZipCode(String zipCode) {
+        return localityRepository.findByZipCode(zipCode);
+    }
+
     @Async
     public void index(Locality locality) {
         localitySynonymSearchRepository.index(entityToSynonymMapper.toSynonym(locality));

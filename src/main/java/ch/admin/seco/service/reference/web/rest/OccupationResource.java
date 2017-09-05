@@ -24,6 +24,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -106,10 +107,10 @@ public class OccupationResource {
             .body(result);
     }
 
-    @PutMapping("/bulk" + OCCUPATION_SYNONYM_PATH)
+    @PatchMapping(OCCUPATION_SYNONYM_PATH)
     @Timed
     public ResponseEntity<Void> updateOccupationSynonyms(@Valid @RequestBody Collection<OccupationSynonym> occupationSynonyms) throws URISyntaxException {
-        log.debug("Request to update OccupationSynonyms : {}", occupationSynonyms);
+        log.debug("Request to update OccupationSynonyms : {}", occupationSynonyms.size());
         occupationService.save(occupationSynonyms);
         return ResponseEntity.ok().build();
     }

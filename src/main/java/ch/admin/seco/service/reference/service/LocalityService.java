@@ -60,4 +60,6 @@ public interface LocalityService {
      * @return nearest entity to geo point
      */
     Optional<Locality> searchNearestLocality(GeoPoint geoPoint);
+
+    List<Locality> findOneByZipCode(String zipCode);
 }
