@@ -5,12 +5,12 @@ job_center_id,name,city,street,house_number,zip_code,language
 a8aedb7e-8871-40b2-b8b4-6d65cc8dbc3e,RAV Heerbrugg,Heerbrugg,Berneckerstrasse,12,9435,de
 608f3214-9de8-4158-9b37-4f0cc76ebf8c,RAV Rapperswil-Jona,Rapperswil SG,Neue Jonastrasse,59,8640,de
 93252d45-3f9e-4dd1-8633-ebe8f8e3037b,RAV Wattwil,Wattwil,Bahnhofstrasse,12,9630,de
-232bb685-84fc-4009-969e-83258633bd98,ORP Schaffhausen,Schaffhausen,M�_hlentalstrasse,105,8200,de
+232bb685-84fc-4009-969e-83258633bd98,ORP Schaffhausen,Schaffhausen,Mühlentalstrasse,105,8200,de
 29c47a54-e04b-4467-be3a-434e04884f3d,RAV Solothurn,Solothurn,Sandmattstrasse,2,4500,de
 56a5318a-3148-4a30-9017-bd4c26f80569,RAV Olten,Olten,Solothurnerstr.,121,4600,de
 ed70e6ad-6676-461b-be83-b6d7afc57478,RAV Plus Solothurn,Solothurn,Rathausgasse,16,4509,de
 b9b70e89-45e3-47f8-9de3-48a1762244dc,RAV Goldau,Goldau,Bahnhofstrasse,8,6410,de
-8fe45b96-d43b-4317-9388-fb73e2a4d2b9,RAV Lachen,Lachen SZ,Z�_rcherstrasse,8,8853,de
+8fe45b96-d43b-4317-9388-fb73e2a4d2b9,RAV Lachen,Lachen SZ,Zürcherstrasse,8,8853,de
 94cbc9fb-4984-442c-8e7d-f8b9681e31c1,RAV Frauenfeld,Frauenfeld Kant. Verwaltung,Thundorferstrasse,37,8510,de
 272a57df-bd44-4c7b-88a7-fde80f882117,RAV Kreuzlingen,Kreuzlingen,Hafenstrasse,50 c,8280,de
 728b4286-a7c0-4f40-b43f-49a919f8c0bd,RAV Amriswil,Amriswil,Egelmoosstrasse,3,8580,de
@@ -21,18 +21,18 @@ fed2b215-4560-43d9-ac8c-95075e731591,RAV Opfikon-Glattbrugg,Glattbrugg,Europastr
 f01f43d3-5512-4e96-97e0-02e2403c403d,RAV Winterthur,Winterthur,Technoparkstrasse,2,8401,de
 c0425e24-6c04-4873-a34e-c21a91e7ca7d,RAV Fehraltorf,Fehraltorf,Luppmenstrasse,3,8320,de
 334bf9b2-f2dd-4965-9979-4ddd7d993365,RAV Uster,Uster,Brunnenstrasse,1,8610,de
-e140f0a7-f0ef-4830-8b73-08b113d37df6,RAV R�_ti,R�_ti ZH,Joweid Zentrum,1,8630,de
-6f73c60a-fcc9-40b2-8539-d7c0344bc577,RAV B�_lach,B�_lach,Ackerstrasse,2,8180,de
+e140f0a7-f0ef-4830-8b73-08b113d37df6,RAV Rüti,Rüti ZH,Joweid Zentrum,1,8630,de
+6f73c60a-fcc9-40b2-8539-d7c0344bc577,RAV Bülach,Bülach,Ackerstrasse,2,8180,de
 464cb703-221b-488d-8c83-5ee52f99fe1c,RAV Meilen,Meilen,Bruechstrasse,12,8706,de
-1049ca53-ea13-4442-b8fa-97e88d2821e1,RAV Thalwil,Thalwil,Z�_rcherstrasse,68,8800,de
+1049ca53-ea13-4442-b8fa-97e88d2821e1,RAV Thalwil,Thalwil,Zürcherstrasse,68,8800,de
 5e647557-f639-4e77-a816-28709043c378,RAV Dietikon,Dietikon,Neumattstrasse,7,8953,de
 450ac3a0-c610-42c1-a2d4-29b592a61d48,RAV Regensdorf,Regensdorf,Pumpwerkstrasse,15,8105,de
-44831d23-628d-4584-a121-219933e6a553,RAV Z�_rich,Z�_rich,Hardturmstrasse,11,8037,de
-2060b940-f106-4c25-8fc1-c3d07776fb36,RAV Z�_rich,Z�_rich,Staffelstrasse,8,8027,de
-b8196537-fd5e-4407-8832-cd9a070b271c,RAV Z�_rich,Z�_rich,Badenerstrasse,296,8040,de
-90056b43-5c27-4235-b4b4-3de8c87e652f,RAV Z�_rich,Z�_rich,Eggb�_hlstrasse,36,8050,de
-0d5e750a-6127-4a11-93e3-6480b0634f69,RAV Z�_rich,Z�_rich 1,Lagerstrasse,107,8021,de
-631f6919-3df6-4e1c-ac7d-8832e146b583,RAV Z�_rich,Z�_rich,Nansenstrasse,16,8050,de
+44831d23-628d-4584-a121-219933e6a553,RAV Zürich,Zürich,Hardturmstrasse,11,8037,de
+2060b940-f106-4c25-8fc1-c3d07776fb36,RAV Zürich,Zürich,Staffelstrasse,8,8027,de
+b8196537-fd5e-4407-8832-cd9a070b271c,RAV Zürich,Zürich,Badenerstrasse,296,8040,de
+90056b43-5c27-4235-b4b4-3de8c87e652f,RAV Zürich,Zürich,Eggbühlstrasse,36,8050,de
+0d5e750a-6127-4a11-93e3-6480b0634f69,RAV Zürich,Zürich 1,Lagerstrasse,107,8021,de
+631f6919-3df6-4e1c-ac7d-8832e146b583,RAV Zürich,Zürich,Nansenstrasse,16,8050,de
 b1d12eba-7409-48af-bd11-278418152a77,RAV Freiburg Nord / Broyebezirk,Estavayer-le-Lac,Rue Saint-Laurent,5,1470,de
 8c8908b3-234a-416f-be73-75d7ef1e3f7c,RAV Freiburg Zentrum / Saanebezirk,Freiburg,Route des Arsenaux,15,1700,de
 7ad9c1cc-83c9-42f9-934f-7b4c5e02b9fd,RAV Zofingen,Zofingen,Strengelbacherstrasse,1,4800,de
@@ -43,24 +43,24 @@ fbd4dd98-d144-4e20-b63b-c2fe01f83885,RAV Brugg,Brugg AG,Bahnhofstrasse,19,5201,d
 bc6436eb-eb42-4a63-85f9-7e233f92826e,RAV Rheinfelden,Rheinfelden,Bahnhofstrasse,26,4310,de
 1decc12e-70cd-41d2-b20d-1aa959a2d82c,RAV Appenzell-Innerrhoden,Appenzell,Poststrasse,9,9050,de
 cb075ca2-ae43-4f55-80b3-74bed7a98fe6,RAV Appenzell Ausserrhoden,Herisau,Obstmarkt,1,9102,de
-735892bf-4f30-4c2a-993e-8a1c43034387,RAV G�_mligen,G�_mligen,Worbstrasse,223,3073,de
+735892bf-4f30-4c2a-993e-8a1c43034387,RAV Gümligen,Gümligen,Worbstrasse,223,3073,de
 bc6c14f2-6622-4ae6-9223-e0eab4a1210e,RAV Zollikofen,Zollikofen,Industriestrasse,35,3052,de
 65a849a9-14ac-4ca5-ac27-388bc156f4a4,RAV Interlaken,Interlaken,Kammistrasse,13,3800,de
 ad1a2ce4-b877-4114-ab9f-c03d7ea36cbb,RAV Spiez,Spiez,Krattigstrasse,4,3700,de
 dca98d13-5858-4f0f-b011-185c5d7342d6,RAV Lyss,Lyss,Bahnhofstrasse,9,3250,de
-0292c62b-5236-4ec6-822c-4cdcded3ac23,RAV B�_mpliz-Bethlehem,Bern,Wangenstrasse,86A,3018,de
+0292c62b-5236-4ec6-822c-4cdcded3ac23,RAV Bümpliz-Bethlehem,Bern,Wangenstrasse,86A,3018,de
 fce123e0-e3bc-44f9-9cf8-6398232ac045,RAV Bern West,Bern,Lagerhausweg,10,3018,de
 f1ec1191-ec58-49b7-b3b1-52fa6cd2681a,RAV Bern Zentrum,Bern,Reiterstrasse,9B,3013,de
 1689de9b-28b9-40d1-b16a-ac03057f5247,RAV Biel,Biel/Bienne,Zentralstrasse,63,2502,de
 2dc2d1bf-b609-440b-8810-3e850af4066d,RAV Burgdorf,Burgdorf,Oberburgstrasse,8,3400,de
 84da04c3-5473-4d5d-8732-701101ac0d89,RAV Langenthal,Langenthal,Murgenthalstrasse,15,4901,de
-709db56d-3f7f-4036-9f84-19200899853e,RAV Thun,Thun,M�_nchstrasse,4b,3600,de
-fcad989b-395e-4feb-97b6-6fa9cb23e136,RAV M�_nchenstein,M�_nchenstein,Grabenackerstrasse,8b,4142,de
-360ab631-a5b0-40c5-8dd9-0c40b98a5102,RAV Oberwil,Oberwil BL,M�_hlemattstrasse,22,4104,de
+709db56d-3f7f-4036-9f84-19200899853e,RAV Thun,Thun,Münchstrasse,4b,3600,de
+fcad989b-395e-4feb-97b6-6fa9cb23e136,RAV Münchenstein,Münchenstein,Grabenackerstrasse,8b,4142,de
+360ab631-a5b0-40c5-8dd9-0c40b98a5102,RAV Oberwil,Oberwil BL,Mühlemattstrasse,22,4104,de
 56b4c414-b23d-4062-b316-e5d6fb5e8851,RAV Laufen,Laufen,Bahnhofstrasse,30,4242,de
 1c080151-06c6-48d2-9f65-18fdc4f91528,RAV Gelterkinden,Gelterkinden,Sissacherstrasse,2,4460,de
 9eea38d2-1cb7-4efc-a314-89ce8e751d6d,RAV Liestal,Liestal,Eichenweg,6,4410,de
-a29f7ac2-ee24-49f4-9a2b-53222f0e9536,RAV Pratteln,Pratteln,G�_terstrasse,107,4133,de
+a29f7ac2-ee24-49f4-9a2b-53222f0e9536,RAV Pratteln,Pratteln,Güterstrasse,107,4133,de
 deb55417-1cdd-45dd-b1f1-85786aab0c70,RAV Basel,Basel,Hochstrasse,37,4002,de
 f476ddc3-1a1f-45d1-822b-d17013d3bb13,RAV Utengasse,Basel,Utengasse,36,4005,de
 b921aced-d1fd-4fd0-8211-aed3d6e50e6d,RAV Basel,Basel,Hochstrasse,37,4002,de
@@ -73,23 +73,23 @@ d631cb59-5001-499a-84c2-57fdf2c118cf,RAV Thusis,Thusis,Feldstrasse,2,7430,de
 8467e025-36d8-4f83-a705-67b6281a8806,RAV Ilanz,Ilanz,Bahnhofstrasse,31,7130,de
 efd11b69-1f1a-4160-8398-f1ff0dbb465c,RAV Davos,Davos Platz,Talstrasse,2A,7270,de
 c61ac24e-37a0-42e7-ac13-855451505815,RAV Samedan,Samedan,A l'En,4,7503,de
-62206916-6c4d-42d8-a8de-f7ce8c3d073c,RAV Emmen,Emmenbr�_cke 1,Gerliswilstrasse,17,6021,de
+62206916-6c4d-42d8-a8de-f7ce8c3d073c,RAV Emmen,Emmenbrücke 1,Gerliswilstrasse,17,6021,de
 b3d51339-0e8c-4480-898c-021ef52fa9cf,RAV Luzern,Luzern 7,Baselstrasse,61A,6000,de
 2cee0d72-e0ab-4fc5-a0bb-f7c353b7abb0,RAV Pilatus,Luzern,Landenbergstrasse,39,6002,de
 02c08811-ebac-4acc-b66c-c4dd0ca70051,RAV Sursee,Sursee,Leopoldstrasse,6,6210,de
 37a56350-d8ff-48a2-a674-e476f425f846,RAV Wolhusen,Wolhusen,Im Schmitteli 2,2,6110,de
 c8128ac5-c52d-4ddb-b1d8-0b4ba6527fc8,RAV Nid- und Obwalden,Hergiswil NW,Bahnhofstrasse,2,6052,de
 88bb4ac0-89ca-4977-afb0-edb993920cfd,RAV Ob- und Nidwalden,Hergiswil NW,Bahnhofstrasse,2,6052,de
-1aadca44-42ee-4bb9-a194-68c7959c406c,RAV Freiburg S�_d / Greyerzbezirk,Bulle,Route de Riaz,18,1630,de
-1826c1a5-1988-4f01-bc35-e48d0b13e2b3,RAV Freiburg S�_d / Vivisbachbezirk,Ch�tel-St-Denis,Rue de Vevey,25,1618,de
-0357c7bf-8f62-4a05-9409-d9a0c248e3f1,RAV Freiburg S�_d / Glanebezirk,Romont FR,Place St-Jacques,61,1680,de
+1aadca44-42ee-4bb9-a194-68c7959c406c,RAV Freiburg Süd / Greyerzbezirk,Bulle,Route de Riaz,18,1630,de
+1826c1a5-1988-4f01-bc35-e48d0b13e2b3,RAV Freiburg Süd / Vivisbachbezirk,Châtel-St-Denis,Rue de Vevey,25,1618,de
+0357c7bf-8f62-4a05-9409-d9a0c248e3f1,RAV Freiburg Süd / Glanebezirk,Romont FR,Place St-Jacques,61,1680,de
 7634ff2d-f258-4d5e-8c40-d3f2c9bcda0e,OCE - ORP 3,Genf,Rue des Gares,16,1201,de
 8f1e03f3-38d6-46d8-83bd-cdf00b31b5e1,OCE - ORP 1,Genf,Rue des Gares,16,1201,de
 ed1c79f6-a6de-4cd6-80fc-9f80deff4891,OCE - ORP 4,Genf,Rue des Gares,16,1201,de
 65b15a37-bb10-47e8-b129-897d97ecf859,OCE - ORP 2,Genf,Rue des Gares,16,1201,de
-cfdd7cf2-51b8-4d1a-9ad3-74277209889b,ORP Del�mont,Delsberg,Rue de la Jeunesse,1,2800,de
+cfdd7cf2-51b8-4d1a-9ad3-74277209889b,ORP Delémont,Delsberg,Rue de la Jeunesse,1,2800,de
 56ca348a-5367-4c8b-9ed4-4fd8d355c344,ORP Porrentruy Case postale 1472,Pruntrut,Rue Auguste-Cuenin,15,2900,de
-b9df5077-f596-4efe-b323-5e3ae8fcbc52,ORP Saignel�gier,Saignel�gier,Rue Bel-Air,5,2350,de
+b9df5077-f596-4efe-b323-5e3ae8fcbc52,ORP Saignelégier,Saignelégier,Rue Bel-Air,5,2350,de
 76fcd4b4-6aa5-4773-a762-fd0385804b36,RAV La Chaux-de-Fonds,La Chaux-de-Fonds,Rue du Parc,119,2301,de
 e795ce81-0532-407b-855a-75f1c73da148,RAV Neuenburg,Neuenburg,Av. Edouard-Dubois,20,2000,de
 babc916f-f8da-4904-8819-3beb3bb7c527,ORP Lausanne,Lausanne,Pl. Chauderon,9,1002,de
@@ -99,10 +99,10 @@ f097c43a-0618-4144-b2e5-8a3cf95ab91a,ORP Echallens,Echallens,Ch. du Grand-Record
 0a354587-8d99-42e9-b584-5c0061531079,ORP Morges,Morges 2,Av. de la Gottaz,30,1110,de
 5d540b83-f4b3-4906-a351-c971053ac937,ORP Ouest lausannois,Prilly,,,1008,de
 2b2ea771-df90-4d39-8fe5-fbe208944443,ORP Pully,Pully,,,1009,de
-597ed305-0683-4227-9a84-28b8e3bad146,ORP d'Yverdon-les-Bains,Yverdon-les-Bains,Rue des P��cheurs,8A,1400,de
+597ed305-0683-4227-9a84-28b8e3bad146,ORP d'Yverdon-les-Bains,Yverdon-les-Bains,Rue des Pêcheurs,8A,1400,de
 73adcb9e-a921-4055-9237-255811257932,ORP Nyon,Nyon,,,1260,de
 2d589211-0459-43aa-86cb-3755174c5399,ORP Monthey - St-Maurice,Monthey,Rue du Coppet,2,1870,de
-5011539f-39c5-4cff-aaf7-18e7771a2838,ORP Martigny,Martigny,Rue du L�man,29,1920,de
+5011539f-39c5-4cff-aaf7-18e7771a2838,ORP Martigny,Martigny,Rue du Léman,29,1920,de
 78f660c4-5193-425b-bac9-8c76db51dcc7,ORP Sierre,Siders,Route de la Bonne-Eau,20,3960,de
 059a1511-3006-471b-8a4e-ab1cca69bdf4,ORP Sion,Sitten,Place du Midi,40,1950,de
 01e2839f-40eb-418b-a88d-e4cdeb6d7045,URC Roveredo,Roveredo GR,Centro regionale dei servizi,,6535,de
@@ -118,7 +118,7 @@ e3b47c38-cd0d-4110-8f6e-3c2f10efb991,ORP Bienne,Biel/Bienne,Zentralstrasse,63,25
 ea3dbe5d-34aa-4dc7-a659-6068c5cfe36d,RAV Menziken,Menziken,Hauptstrasse,2,5737,de
 c7031265-b2d8-49c2-8904-ccfd3dd7e247,RAV Fleurier,Fleurier,Rue de l'Ecole d'Horlogerie,13,2114,de
 748297b3-6cee-42c8-92f4-c4d3691b4c12,Fachberatung Jugend,Basel,Utengasse,36,4005,de
-8d6afa20-fd5b-4339-a910-bf32b556c126,Fachberatung ��bergang II,Basel,Hochstzrasse,37,4002,de
+8d6afa20-fd5b-4339-a910-bf32b556c126,Fachberatung Übergang II,Basel,Hochstzrasse,37,4002,de
 7836aa42-4663-4425-b584-ff8d037868a6,Fachberatung IV,Basel,Hochstrasse,37,4002,de
 42dc884c-c24d-4033-be24-2f5c27787210,RAV Brugg II,Brugg AG,Bahnhofstrasse,19,5201,de
 38059975-1bab-4781-ae24-650942e392e1,RAV St.Gallen,St-Gall 1,Geltenwilenstrasse,16/18,9001,fr
@@ -127,12 +127,12 @@ c7031265-b2d8-49c2-8904-ccfd3dd7e247,RAV Fleurier,Fleurier,Rue de l'Ecole d'Horl
 a8aedb7e-8871-40b2-b8b4-6d65cc8dbc3e,RAV Heerbrugg,Heerbrugg,Berneckerstrasse,12,9435,fr
 608f3214-9de8-4158-9b37-4f0cc76ebf8c,RAV Rapperswil-Jona,Rapperswil SG,Neue Jonastrasse,59,8640,fr
 93252d45-3f9e-4dd1-8633-ebe8f8e3037b,RAV Wattwil,Wattwil,Bahnhofstrasse,12,9630,fr
-232bb685-84fc-4009-969e-83258633bd98,ORP Schaffhouse,Schaffhouse,M�_hlentalstrasse,105,8200,fr
+232bb685-84fc-4009-969e-83258633bd98,ORP Schaffhouse,Schaffhouse,Mühlentalstrasse,105,8200,fr
 29c47a54-e04b-4467-be3a-434e04884f3d,RAV Solothurn,Soleure,Sandmattstrasse,2,4500,fr
 56a5318a-3148-4a30-9017-bd4c26f80569,RAV Olten,Olten,Solothurnerstr.,121,4600,fr
 ed70e6ad-6676-461b-be83-b6d7afc57478,RAV Plus Solothurn,Soleure,Rathausgasse,16,4509,fr
 b9b70e89-45e3-47f8-9de3-48a1762244dc,RAV Goldau,Goldau,Bahnhofstrasse,8,6410,fr
-8fe45b96-d43b-4317-9388-fb73e2a4d2b9,RAV Lachen,Lachen SZ,Z�_rcherstrasse,8,8853,fr
+8fe45b96-d43b-4317-9388-fb73e2a4d2b9,RAV Lachen,Lachen SZ,Zürcherstrasse,8,8853,fr
 94cbc9fb-4984-442c-8e7d-f8b9681e31c1,RAV Frauenfeld,Frauenfeld Kant. Verwaltung,Thundorferstrasse,37,8510,fr
 272a57df-bd44-4c7b-88a7-fde80f882117,RAV Kreuzlingen,Kreuzlingen,Hafenstrasse,50 c,8280,fr
 728b4286-a7c0-4f40-b43f-49a919f8c0bd,RAV Amriswil,Amriswil,Egelmoosstrasse,3,8580,fr
@@ -143,18 +143,18 @@ fed2b215-4560-43d9-ac8c-95075e731591,RAV Opfikon-Glattbrugg,Glattbrugg,Europastr
 f01f43d3-5512-4e96-97e0-02e2403c403d,RAV Winterthur,Winterthur,Technoparkstrasse,2,8401,fr
 c0425e24-6c04-4873-a34e-c21a91e7ca7d,RAV Fehraltorf,Fehraltorf,Luppmenstrasse,3,8320,fr
 334bf9b2-f2dd-4965-9979-4ddd7d993365,RAV Uster,Uster,Brunnenstrasse,1,8610,fr
-e140f0a7-f0ef-4830-8b73-08b113d37df6,RAV R�_ti,R�_ti ZH,Joweid Zentrum,1,8630,fr
-6f73c60a-fcc9-40b2-8539-d7c0344bc577,RAV B�_lach,B�_lach,Ackerstrasse,2,8180,fr
+e140f0a7-f0ef-4830-8b73-08b113d37df6,RAV Rüti,Rüti ZH,Joweid Zentrum,1,8630,fr
+6f73c60a-fcc9-40b2-8539-d7c0344bc577,RAV Bülach,Bülach,Ackerstrasse,2,8180,fr
 464cb703-221b-488d-8c83-5ee52f99fe1c,RAV Meilen,Meilen,Bruechstrasse,12,8706,fr
-1049ca53-ea13-4442-b8fa-97e88d2821e1,RAV Thalwil,Thalwil,Z�_rcherstrasse,68,8800,fr
+1049ca53-ea13-4442-b8fa-97e88d2821e1,RAV Thalwil,Thalwil,Zürcherstrasse,68,8800,fr
 5e647557-f639-4e77-a816-28709043c378,RAV Dietikon,Dietikon,Neumattstrasse,7,8953,fr
 450ac3a0-c610-42c1-a2d4-29b592a61d48,RAV Regensdorf,Regensdorf,Pumpwerkstrasse,15,8105,fr
-44831d23-628d-4584-a121-219933e6a553,RAV Z�_rich Hardturmstrasse,Zurich 37,Hardturmstrasse,11,8037,fr
-2060b940-f106-4c25-8fc1-c3d07776fb36,RAV Z�_rich Staffelstrasse,Zurich 27,Staffelstrasse,8,8027,fr
-b8196537-fd5e-4407-8832-cd9a070b271c,RAV Z�_rich Badenerstrasse,Zurich 40,Badenerstrasse,296,8040,fr
-90056b43-5c27-4235-b4b4-3de8c87e652f,RAV Z�_rich Eggb�_hlstrasse,Zurich 50,Eggb�_hlstrasse,36,8050,fr
-0d5e750a-6127-4a11-93e3-6480b0634f69,RAV Z�_rich Lagerstrasse,Zurich 1,Lagerstrasse,107,8021,fr
-631f6919-3df6-4e1c-ac7d-8832e146b583,RAV Z�_rich Nansenstrasse,Zurich 50,Nansenstrasse,16,8050,fr
+44831d23-628d-4584-a121-219933e6a553,RAV Zürich Hardturmstrasse,Zurich 37,Hardturmstrasse,11,8037,fr
+2060b940-f106-4c25-8fc1-c3d07776fb36,RAV Zürich Staffelstrasse,Zurich 27,Staffelstrasse,8,8027,fr
+b8196537-fd5e-4407-8832-cd9a070b271c,RAV Zürich Badenerstrasse,Zurich 40,Badenerstrasse,296,8040,fr
+90056b43-5c27-4235-b4b4-3de8c87e652f,RAV Zürich Eggbühlstrasse,Zurich 50,Eggbühlstrasse,36,8050,fr
+0d5e750a-6127-4a11-93e3-6480b0634f69,RAV Zürich Lagerstrasse,Zurich 1,Lagerstrasse,107,8021,fr
+631f6919-3df6-4e1c-ac7d-8832e146b583,RAV Zürich Nansenstrasse,Zurich 50,Nansenstrasse,16,8050,fr
 b1d12eba-7409-48af-bd11-278418152a77,ORP Fribourg Nord / District Broye,Estavayer-le-Lac,Rue Saint-Laurent,5,1470,fr
 8c8908b3-234a-416f-be73-75d7ef1e3f7c,ORP Fribourg Centre / District Sarine,Fribourg,Route des Arsenaux,15,1700,fr
 7ad9c1cc-83c9-42f9-934f-7b4c5e02b9fd,RAV Zofingen,Zofingen,Strengelbacherstrasse,1,4800,fr
@@ -165,26 +165,26 @@ fbd4dd98-d144-4e20-b63b-c2fe01f83885,RAV Brugg,Brugg AG,Bahnhofstrasse,19,5201,f
 bc6436eb-eb42-4a63-85f9-7e233f92826e,RAV Rheinfelden,Rheinfelden,Bahnhofstrasse,26,4310,fr
 1decc12e-70cd-41d2-b20d-1aa959a2d82c,RAV Appenzell-Innerrhoden,Appenzell,Poststrasse,9,9050,fr
 cb075ca2-ae43-4f55-80b3-74bed7a98fe6,RAV Appenzell Ausserrhoden,Herisau,Obstmarkt,1,9102,fr
-735892bf-4f30-4c2a-993e-8a1c43034387,RAV G�_mligen,G�_mligen,Worbstrasse,223,3073,fr
+735892bf-4f30-4c2a-993e-8a1c43034387,RAV Gümligen,Gümligen,Worbstrasse,223,3073,fr
 bc6c14f2-6622-4ae6-9223-e0eab4a1210e,RAV Zollikofen,Zollikofen,Industriestrasse,35,3052,fr
 65a849a9-14ac-4ca5-ac27-388bc156f4a4,RAV Interlaken,Interlaken,Kammistrasse,13,3800,fr
 ad1a2ce4-b877-4114-ab9f-c03d7ea36cbb,RAV Spiez,Spiez,Krattigstrasse,4,3700,fr
 dca98d13-5858-4f0f-b011-185c5d7342d6,RAV Lyss,Lyss,Bahnhofstrasse,9,3250,fr
-0292c62b-5236-4ec6-822c-4cdcded3ac23,RAV B�_mpliz-Bethlehem,Berne,Wangenstrasse,86A,3018,fr
+0292c62b-5236-4ec6-822c-4cdcded3ac23,RAV Bümpliz-Bethlehem,Berne,Wangenstrasse,86A,3018,fr
 fce123e0-e3bc-44f9-9cf8-6398232ac045,RAV Bern West,Berne,Lagerhausweg,10,3018,fr
 f1ec1191-ec58-49b7-b3b1-52fa6cd2681a,RAV Bern Zentrum,Berne,Reiterstrasse,9B,3013,fr
 1689de9b-28b9-40d1-b16a-ac03057f5247,RAV Biel,Biel/Bienne,Zentralstrasse,63,2502,fr
 2dc2d1bf-b609-440b-8810-3e850af4066d,RAV Burgdorf,Berthoud,Oberburgstrasse,8,3400,fr
 84da04c3-5473-4d5d-8732-701101ac0d89,RAV Langenthal,Langenthal,Murgenthalstrasse,15,4901,fr
-709db56d-3f7f-4036-9f84-19200899853e,RAV Thun,Thun,M�_nchstrasse,4b,3600,fr
-fcad989b-395e-4feb-97b6-6fa9cb23e136,RAV M�_nchenstein,M�_nchenstein,Grabenackerstrasse,8b,4142,fr
-360ab631-a5b0-40c5-8dd9-0c40b98a5102,RAV Oberwil,Oberwil BL,M�_hlemattstrasse,22,4104,fr
+709db56d-3f7f-4036-9f84-19200899853e,RAV Thun,Thun,Münchstrasse,4b,3600,fr
+fcad989b-395e-4feb-97b6-6fa9cb23e136,RAV Münchenstein,Münchenstein,Grabenackerstrasse,8b,4142,fr
+360ab631-a5b0-40c5-8dd9-0c40b98a5102,RAV Oberwil,Oberwil BL,Mühlemattstrasse,22,4104,fr
 56b4c414-b23d-4062-b316-e5d6fb5e8851,RAV Laufen,Laufen,Bahnhofstrasse,30,4242,fr
 1c080151-06c6-48d2-9f65-18fdc4f91528,RAV Gelterkinden,Gelterkinden,Sissacherstrasse,2,4460,fr
 9eea38d2-1cb7-4efc-a314-89ce8e751d6d,RAV Liestal,Liestal,Eichenweg,6,4410,fr
-a29f7ac2-ee24-49f4-9a2b-53222f0e9536,RAV Pratteln,Pratteln,G�_terstrasse,107,4133,fr
+a29f7ac2-ee24-49f4-9a2b-53222f0e9536,RAV Pratteln,Pratteln,Güterstrasse,107,4133,fr
 deb55417-1cdd-45dd-b1f1-85786aab0c70,RAV Basel,Basel,Hochstrasse,37,4002,fr
-f476ddc3-1a1f-45d1-822b-d17013d3bb13,RAV Utengasse,B�le,Utengasse,36,4005,fr
+f476ddc3-1a1f-45d1-822b-d17013d3bb13,RAV Utengasse,Bâle,Utengasse,36,4005,fr
 b921aced-d1fd-4fd0-8211-aed3d6e50e6d,RAV Basel,Basel,Hochstrasse,37,4002,fr
 e43a3eda-8bc9-424a-9458-c35a0cb62086,RAV Aussendienst,Basel,Hochstrasse,37,4002,fr
 3ea1f45a-9f58-47b4-a95a-d8b6f79aa868,ORP Fribourg Nord / District Singine,Tafers,Schwarzseestrasse,5,1712,fr
@@ -195,27 +195,27 @@ d631cb59-5001-499a-84c2-57fdf2c118cf,RAV Thusis,Thusis,Feldstrasse,2,7430,fr
 8467e025-36d8-4f83-a705-67b6281a8806,RAV Ilanz,Ilanz,Bahnhofstrasse,31,7130,fr
 efd11b69-1f1a-4160-8398-f1ff0dbb465c,RAV Davos,Davos Platz,Talstrasse,2A,7270,fr
 c61ac24e-37a0-42e7-ac13-855451505815,RAV Samedan,Samedan,A l'En,4,7503,fr
-62206916-6c4d-42d8-a8de-f7ce8c3d073c,RAV Emmen,Emmenbr�_cke 1,Gerliswilstrasse,17,6021,fr
+62206916-6c4d-42d8-a8de-f7ce8c3d073c,RAV Emmen,Emmenbrücke 1,Gerliswilstrasse,17,6021,fr
 b3d51339-0e8c-4480-898c-021ef52fa9cf,RAV Lucerne,Lucerne 7,Baselstrasse,61A,6000,fr
 2cee0d72-e0ab-4fc5-a0bb-f7c353b7abb0,RAV Pilatus,Lucerne 2,Landenbergstrasse,39,6002,fr
 02c08811-ebac-4acc-b66c-c4dd0ca70051,RAV Sursee,Sursee,Leopoldstrasse,6,6210,fr
 37a56350-d8ff-48a2-a674-e476f425f846,RAV Wolhusen,Wolhusen,Im Schmitteli 2,2,6110,fr
 c8128ac5-c52d-4ddb-b1d8-0b4ba6527fc8,RAV Nid- und Obwalden,Hergiswil NW,Bahnhofstrasse,2,6052,fr
 88bb4ac0-89ca-4977-afb0-edb993920cfd,RAV Ob- und Nidwalden,Hergiswil NW,Bahnhofstrasse,2,6052,fr
-1aadca44-42ee-4bb9-a194-68c7959c406c,ORP Fribourg Sud / District Gruy��re,Bulle,Route de Riaz,18,1630,fr
-1826c1a5-1988-4f01-bc35-e48d0b13e2b3,ORP Fribourg Sud / District Veveyse,Ch�tel-St-Denis,Rue de Vevey,25,1618,fr
-0357c7bf-8f62-4a05-9409-d9a0c248e3f1,ORP Fribourg Sud / District Gl�ne,Romont FR,Place St-Jacques,61,1680,fr
-7634ff2d-f258-4d5e-8c40-d3f2c9bcda0e,OCE - ORP 3,Gen��ve,Rue des Gares,16,1201,fr
-8f1e03f3-38d6-46d8-83bd-cdf00b31b5e1,OCE - ORP 1,Gen��ve,Rue des Gares,16,1201,fr
-ed1c79f6-a6de-4cd6-80fc-9f80deff4891,OCE - ORP 4,Gen��ve,Rue des Gares,16,1201,fr
-65b15a37-bb10-47e8-b129-897d97ecf859,OCE - ORP 2,Gen��ve,Rue des Gares,16,1201,fr
-cfdd7cf2-51b8-4d1a-9ad3-74277209889b,ORP Del�mont,Del�mont,Rue de la Jeunesse,1,2800,fr
+1aadca44-42ee-4bb9-a194-68c7959c406c,ORP Fribourg Sud / District Gruyère,Bulle,Route de Riaz,18,1630,fr
+1826c1a5-1988-4f01-bc35-e48d0b13e2b3,ORP Fribourg Sud / District Veveyse,Châtel-St-Denis,Rue de Vevey,25,1618,fr
+0357c7bf-8f62-4a05-9409-d9a0c248e3f1,ORP Fribourg Sud / District Glâe,Romont FR,Place St-Jacques,61,1680,fr
+7634ff2d-f258-4d5e-8c40-d3f2c9bcda0e,OCE - ORP 3,Genève,Rue des Gares,16,1201,fr
+8f1e03f3-38d6-46d8-83bd-cdf00b31b5e1,OCE - ORP 1,Genève,Rue des Gares,16,1201,fr
+ed1c79f6-a6de-4cd6-80fc-9f80deff4891,OCE - ORP 4,Genève,Rue des Gares,16,1201,fr
+65b15a37-bb10-47e8-b129-897d97ecf859,OCE - ORP 2,Genève,Rue des Gares,16,1201,fr
+cfdd7cf2-51b8-4d1a-9ad3-74277209889b,ORP Delémont,Delémont,Rue de la Jeunesse,1,2800,fr
 56ca348a-5367-4c8b-9ed4-4fd8d355c344,"ORP Porrentruy
 
 Case postale 1472",Porrentruy,Rue Auguste-Cuenin,15,2900,fr
-b9df5077-f596-4efe-b323-5e3ae8fcbc52,ORP Saignel�gier,Saignel�gier,Rue Bel-Air,5,2350,fr
+b9df5077-f596-4efe-b323-5e3ae8fcbc52,ORP Saignelégier,Saignelégier,Rue Bel-Air,5,2350,fr
 76fcd4b4-6aa5-4773-a762-fd0385804b36,RAV La Chaux-de-Fonds,La Chaux-de-Fonds,Rue du Parc,119,2301,fr
-e795ce81-0532-407b-855a-75f1c73da148,RAV Neuch�tel,Neuch�tel,Av. Edouard-Dubois,20,2000,fr
+e795ce81-0532-407b-855a-75f1c73da148,RAV Neuchâtel,Neuchâtel,Av. Edouard-Dubois,20,2000,fr
 babc916f-f8da-4904-8819-3beb3bb7c527,ORP Lausanne,Lausanne,Pl. Chauderon,9,1002,fr
 f097c43a-0618-4144-b2e5-8a3cf95ab91a,ORP Echallens,Echallens,Ch. du Grand-Record,7,1040,fr
 15d182d4-990d-41f9-b3bb-42d4e65b0830,ORP Riviera,Vevey,,,1800,fr
@@ -223,10 +223,10 @@ f097c43a-0618-4144-b2e5-8a3cf95ab91a,ORP Echallens,Echallens,Ch. du Grand-Record
 0a354587-8d99-42e9-b584-5c0061531079,ORP Morges,Morges 2,Av. de la Gottaz,30,1110,fr
 5d540b83-f4b3-4906-a351-c971053ac937,ORP Ouest lausannois,Prilly,,,1008,fr
 2b2ea771-df90-4d39-8fe5-fbe208944443,ORP Pully,Pully,,,1009,fr
-597ed305-0683-4227-9a84-28b8e3bad146,ORP d'Yverdon-les-Bains,Yverdon-les-Bains,Rue des P��cheurs,8A,1400,fr
+597ed305-0683-4227-9a84-28b8e3bad146,ORP d'Yverdon-les-Bains,Yverdon-les-Bains,Rue des Pêcheurs,8A,1400,fr
 73adcb9e-a921-4055-9237-255811257932,ORP Nyon,Nyon,,,1260,fr
 2d589211-0459-43aa-86cb-3755174c5399,ORP Monthey - St-Maurice,Monthey,Rue du Coppet,2,1870,fr
-5011539f-39c5-4cff-aaf7-18e7771a2838,ORP Martigny,Martigny,Rue du L�man,29,1920,fr
+5011539f-39c5-4cff-aaf7-18e7771a2838,ORP Martigny,Martigny,Rue du Léman,29,1920,fr
 78f660c4-5193-425b-bac9-8c76db51dcc7,ORP Sierre,Sierre,Route de la Bonne-Eau,20,3960,fr
 059a1511-3006-471b-8a4e-ab1cca69bdf4,ORP Sion,Sion,Place du Midi,40,1950,fr
 01e2839f-40eb-418b-a88d-e4cdeb6d7045,URC Roveredo,Roveredo GR,Centro regionale dei servizi,,6535,fr
@@ -241,8 +241,8 @@ e3b47c38-cd0d-4110-8f6e-3c2f10efb991,ORP Bienne,Biel/Bienne,Zentralstrasse,63,25
 7c65d8a9-5d40-4a66-b260-f3c14c7722aa,RAV Basel,Basel,Hochstrasse,37,4002,fr
 ea3dbe5d-34aa-4dc7-a659-6068c5cfe36d,RAV Menziken,Menziken,Hauptstrasse,2,5737,fr
 c7031265-b2d8-49c2-8904-ccfd3dd7e247,RAV Fleurier,Fleurier,Rue de l'Ecole d'Horlogerie,13,2114,fr
-748297b3-6cee-42c8-92f4-c4d3691b4c12,Fachberatung Jugend,B�le,Utengasse,36,4005,fr
-8d6afa20-fd5b-4339-a910-bf32b556c126,Fachberatung ��bergang II,Basel,Hochstzrasse,37,4002,fr
+748297b3-6cee-42c8-92f4-c4d3691b4c12,Fachberatung Jugend,Bâle,Utengasse,36,4005,fr
+8d6afa20-fd5b-4339-a910-bf32b556c126,Fachberatung Übergang II,Basel,Hochstrasse,37,4002,fr
 7836aa42-4663-4425-b584-ff8d037868a6,RAV Basel,Basel,Hochstrasse,37,4002,fr
 42dc884c-c24d-4033-be24-2f5c27787210,RAV Brugg II,Brugg AG,Bahnhofstrasse,19,5201,fr
 38059975-1bab-4781-ae24-650942e392e1,RAV St.Gallen,S. Gallo 1,Geltenwilenstrasse,16/18,9001,it
@@ -251,12 +251,12 @@ c7031265-b2d8-49c2-8904-ccfd3dd7e247,RAV Fleurier,Fleurier,Rue de l'Ecole d'Horl
 a8aedb7e-8871-40b2-b8b4-6d65cc8dbc3e,RAV Heerbrugg,Heerbrugg,Berneckerstrasse,12,9435,it
 608f3214-9de8-4158-9b37-4f0cc76ebf8c,RAV Rapperswil-Jona,Rapperswil SG,Neue Jonastrasse,59,8640,it
 93252d45-3f9e-4dd1-8633-ebe8f8e3037b,RAV Wattwil,Wattwil,Bahnhofstrasse,12,9630,it
-232bb685-84fc-4009-969e-83258633bd98,ORP Sciaffusa,Sciaffusa,M�_hlentalstrasse,105,8200,it
+232bb685-84fc-4009-969e-83258633bd98,ORP Sciaffusa,Sciaffusa,Mühlentalstrasse,105,8200,it
 29c47a54-e04b-4467-be3a-434e04884f3d,RAV Solothurn,Soletta,Sandmattstrasse,2,4500,it
 56a5318a-3148-4a30-9017-bd4c26f80569,RAV Olten,Olten,Solothurnerstr.,121,4600,it
 ed70e6ad-6676-461b-be83-b6d7afc57478,RAV Plus Solothurn,Solettta,Rathausgasse,16,4509,it
 b9b70e89-45e3-47f8-9de3-48a1762244dc,RAV Goldau,Goldau,Bahnhofstrasse,8,6410,it
-8fe45b96-d43b-4317-9388-fb73e2a4d2b9,RAV Lachen,Lachen SZ,Z�_rcherstrasse,8,8853,it
+8fe45b96-d43b-4317-9388-fb73e2a4d2b9,RAV Lachen,Lachen SZ,Zürcherstrasse,8,8853,it
 94cbc9fb-4984-442c-8e7d-f8b9681e31c1,RAV Frauenfeld,Frauenfeld Kant. Verwaltung,Thundorferstrasse,37,8510,it
 272a57df-bd44-4c7b-88a7-fde80f882117,RAV Kreuzlingen,Kreuzlingen,Hafenstrasse,50 c,8280,it
 728b4286-a7c0-4f40-b43f-49a919f8c0bd,RAV Amriswil,Amriswil,Egelmoosstrasse,3,8580,it
@@ -267,18 +267,18 @@ fed2b215-4560-43d9-ac8c-95075e731591,RAV Opfikon-Glattbrugg,Glattbrugg,Europastr
 f01f43d3-5512-4e96-97e0-02e2403c403d,RAV Winterthur,Winterthur,Technoparkstrasse,2,8401,it
 c0425e24-6c04-4873-a34e-c21a91e7ca7d,RAV Fehraltorf,Fehraltorf,Luppmenstrasse,3,8320,it
 334bf9b2-f2dd-4965-9979-4ddd7d993365,RAV Uster,Uster,Brunnenstrasse,1,8610,it
-e140f0a7-f0ef-4830-8b73-08b113d37df6,RAV R�_ti,R�_ti ZH,Joweid Zentrum,1,8630,it
-6f73c60a-fcc9-40b2-8539-d7c0344bc577,RAV B�_lach,B�_lach,Ackerstrasse,2,8180,it
+e140f0a7-f0ef-4830-8b73-08b113d37df6,RAV Rüti,Rüti ZH,Joweid Zentrum,1,8630,it
+6f73c60a-fcc9-40b2-8539-d7c0344bc577,RAV Bülach,Bülach,Ackerstrasse,2,8180,it
 464cb703-221b-488d-8c83-5ee52f99fe1c,RAV Meilen,Meilen,Bruechstrasse,12,8706,it
-1049ca53-ea13-4442-b8fa-97e88d2821e1,RAV Thalwil,Thalwil,Z�_rcherstrasse,68,8800,it
+1049ca53-ea13-4442-b8fa-97e88d2821e1,RAV Thalwil,Thalwil,Zürcherstrasse,68,8800,it
 5e647557-f639-4e77-a816-28709043c378,RAV Dietikon,Dietikon,Neumattstrasse,7,8953,it
 450ac3a0-c610-42c1-a2d4-29b592a61d48,RAV Regensdorf,Regensdorf,Pumpwerkstrasse,15,8105,it
-44831d23-628d-4584-a121-219933e6a553,RAV Z�_rich Hardturmstrasse,Zurigo 37,Hardturmstrasse,11,8037,it
-2060b940-f106-4c25-8fc1-c3d07776fb36,RAV Z�_rich Staffelstrasse,Zurigo 27,Staffelstrasse,8,8027,it
-b8196537-fd5e-4407-8832-cd9a070b271c,RAV Z�_rich Badenerstrasse,Zurigo 40,Badenerstrasse,296,8040,it
-90056b43-5c27-4235-b4b4-3de8c87e652f,RAV Z�_rich Eggb�_hlstrasse,Zurigo 50,Eggb�_hlstrasse,36,8050,it
-0d5e750a-6127-4a11-93e3-6480b0634f69,RAV Z�_rich Lagerstrasse,Zurigo 1,Lagerstrasse,107,8021,it
-631f6919-3df6-4e1c-ac7d-8832e146b583,RAV Z�_rich Nansenstrasse,Zurigo 50,Nansenstrasse,16,8050,it
+44831d23-628d-4584-a121-219933e6a553,RAV Zürich Hardturmstrasse,Zurigo 37,Hardturmstrasse,11,8037,it
+2060b940-f106-4c25-8fc1-c3d07776fb36,RAV Zürich Staffelstrasse,Zurigo 27,Staffelstrasse,8,8027,it
+b8196537-fd5e-4407-8832-cd9a070b271c,RAV Zürich Badenerstrasse,Zurigo 40,Badenerstrasse,296,8040,it
+90056b43-5c27-4235-b4b4-3de8c87e652f,RAV Zürich Eggbühlstrasse,Zurigo 50,Eggbühlstrasse,36,8050,it
+0d5e750a-6127-4a11-93e3-6480b0634f69,RAV Zürich Lagerstrasse,Zurigo 1,Lagerstrasse,107,8021,it
+631f6919-3df6-4e1c-ac7d-8832e146b583,RAV Zürich Nansenstrasse,Zurigo 50,Nansenstrasse,16,8050,it
 b1d12eba-7409-48af-bd11-278418152a77,ORP Fribourg Nord / District Broye,Estavayer-le-Lac,Rue Saint-Laurent,5,1470,it
 8c8908b3-234a-416f-be73-75d7ef1e3f7c,ORP Fribourg Centre / District Sarine,Friborgo,Route des Arsenaux,15,1700,it
 7ad9c1cc-83c9-42f9-934f-7b4c5e02b9fd,RAV Zofingen,Zofingen,Strengelbacherstrasse,1,4800,it
@@ -289,24 +289,24 @@ fbd4dd98-d144-4e20-b63b-c2fe01f83885,RAV Brugg,Brugg AG,Bahnhofstrasse,19,5201,i
 bc6436eb-eb42-4a63-85f9-7e233f92826e,RAV Rheinfelden,Rheinfelden,Bahnhofstrasse,26,4310,it
 1decc12e-70cd-41d2-b20d-1aa959a2d82c,RAV Appenzell-Innerrhoden,Appenzell,Poststrasse,9,9050,it
 cb075ca2-ae43-4f55-80b3-74bed7a98fe6,RAV Appenzell Ausserrhoden,Herisau,Obstmarkt,1,9102,it
-735892bf-4f30-4c2a-993e-8a1c43034387,RAV G�_mligen,G�_mligen,Worbstrasse,223,3073,it
+735892bf-4f30-4c2a-993e-8a1c43034387,RAV Gümligen,Gümligen,Worbstrasse,223,3073,it
 bc6c14f2-6622-4ae6-9223-e0eab4a1210e,RAV Zollikofen,Zollikofen,Industriestrasse,35,3052,it
 65a849a9-14ac-4ca5-ac27-388bc156f4a4,RAV Interlaken,Interlaken,Kammistrasse,13,3800,it
 ad1a2ce4-b877-4114-ab9f-c03d7ea36cbb,RAV Spiez,Spiez,Krattigstrasse,4,3700,it
 dca98d13-5858-4f0f-b011-185c5d7342d6,RAV Lyss,Lyss,Bahnhofstrasse,9,3250,it
-0292c62b-5236-4ec6-822c-4cdcded3ac23,RAV B�_mpliz-Bethlehem,Berna,Wangenstrasse,86A,3018,it
+0292c62b-5236-4ec6-822c-4cdcded3ac23,RAV Bümpliz-Bethlehem,Berna,Wangenstrasse,86A,3018,it
 fce123e0-e3bc-44f9-9cf8-6398232ac045,RAV Bern West,Berna,Lagerhausweg,10,3018,it
 f1ec1191-ec58-49b7-b3b1-52fa6cd2681a,RAV Bern Zentrum,Berna,Reiterstrasse,9B,3013,it
 1689de9b-28b9-40d1-b16a-ac03057f5247,RAV Biel,Biel/Bienne,Zentralstrasse,63,2502,it
 2dc2d1bf-b609-440b-8810-3e850af4066d,RAV Burgdorf,Burgdorf,Oberburgstrasse,8,3400,it
 84da04c3-5473-4d5d-8732-701101ac0d89,RAV Langenthal,Langenthal,Murgenthalstrasse,15,4901,it
-709db56d-3f7f-4036-9f84-19200899853e,RAV Thun,Thun,M�_nchstrasse,4b,3600,it
-fcad989b-395e-4feb-97b6-6fa9cb23e136,RAV M�_nchenstein,M�_nchenstein,Grabenackerstrasse,8b,4142,it
-360ab631-a5b0-40c5-8dd9-0c40b98a5102,RAV Oberwil,Oberwil BL,M�_hlemattstrasse,22,4104,it
+709db56d-3f7f-4036-9f84-19200899853e,RAV Thun,Thun,Münchstrasse,4b,3600,it
+fcad989b-395e-4feb-97b6-6fa9cb23e136,RAV Münchenstein,Münchenstein,Grabenackerstrasse,8b,4142,it
+360ab631-a5b0-40c5-8dd9-0c40b98a5102,RAV Oberwil,Oberwil BL,Mühlemattstrasse,22,4104,it
 56b4c414-b23d-4062-b316-e5d6fb5e8851,RAV Laufen,Laufen,Bahnhofstrasse,30,4242,it
 1c080151-06c6-48d2-9f65-18fdc4f91528,RAV Gelterkinden,Gelterkinden,Sissacherstrasse,2,4460,it
 9eea38d2-1cb7-4efc-a314-89ce8e751d6d,RAV Liestal,Liestal,Eichenweg,6,4410,it
-a29f7ac2-ee24-49f4-9a2b-53222f0e9536,RAV Pratteln,Pratteln,G�_terstrasse,107,4133,it
+a29f7ac2-ee24-49f4-9a2b-53222f0e9536,RAV Pratteln,Pratteln,Güterstrasse,107,4133,it
 deb55417-1cdd-45dd-b1f1-85786aab0c70,RAV Basel,Basel,Hochstrasse,37,4002,it
 f476ddc3-1a1f-45d1-822b-d17013d3bb13,RAV Utengasse,Basilea,Utengasse,36,4005,it
 b921aced-d1fd-4fd0-8211-aed3d6e50e6d,RAV Basel,Basel,Hochstrasse,37,4002,it
@@ -319,27 +319,27 @@ d631cb59-5001-499a-84c2-57fdf2c118cf,RAV Thusis,Thusis,Feldstrasse,2,7430,it
 8467e025-36d8-4f83-a705-67b6281a8806,RAV Ilanz,Ilanz,Bahnhofstrasse,31,7130,it
 efd11b69-1f1a-4160-8398-f1ff0dbb465c,RAV Davos,Davos Platz,Talstrasse,2A,7270,it
 c61ac24e-37a0-42e7-ac13-855451505815,RAV Samedan,Samedan,A l'En,4,7503,it
-62206916-6c4d-42d8-a8de-f7ce8c3d073c,RAV Emmen,Emmenbr�_cke 1,Gerliswilstrasse,17,6021,it
+62206916-6c4d-42d8-a8de-f7ce8c3d073c,RAV Emmen,Emmenbrücke 1,Gerliswilstrasse,17,6021,it
 b3d51339-0e8c-4480-898c-021ef52fa9cf,RAV Lucerna,Lucerna 7,Baselstrasse,61A,6000,it
 2cee0d72-e0ab-4fc5-a0bb-f7c353b7abb0,RAV Pilatus,Lucerna 2,Landenbergstrasse,39,6002,it
 02c08811-ebac-4acc-b66c-c4dd0ca70051,RAV Sursee,Sursee,Leopoldstrasse,6,6210,it
 37a56350-d8ff-48a2-a674-e476f425f846,RAV Wolhusen,Wolhusen,Im Schmitteli 2,2,6110,it
 c8128ac5-c52d-4ddb-b1d8-0b4ba6527fc8,RAV Nid- und Obwalden,Hergiswil NW,Bahnhofstrasse,2,6052,it
 88bb4ac0-89ca-4977-afb0-edb993920cfd,RAV Ob- und Nidwalden,Hergiswil NW,Bahnhofstrasse,2,6052,it
-1aadca44-42ee-4bb9-a194-68c7959c406c,ORP Fribourg Sud / District Gruy��re,Bulle,Route de Riaz,18,1630,it
-1826c1a5-1988-4f01-bc35-e48d0b13e2b3,ORP Fribourg Sud / District Veveyse,Ch�tel-St-Denis,Rue de Vevey,25,1618,it
-0357c7bf-8f62-4a05-9409-d9a0c248e3f1,ORP Fribourg Sud / District Gl�ne,Romont FR,Place St-Jacques,61,1680,it
+1aadca44-42ee-4bb9-a194-68c7959c406c,ORP Fribourg Sud / District Gruyère,Bulle,Route de Riaz,18,1630,it
+1826c1a5-1988-4f01-bc35-e48d0b13e2b3,ORP Fribourg Sud / District Veveyse,Châtel-St-Denis,Rue de Vevey,25,1618,it
+0357c7bf-8f62-4a05-9409-d9a0c248e3f1,ORP Fribourg Sud / District Glâe,Romont FR,Place St-Jacques,61,1680,it
 7634ff2d-f258-4d5e-8c40-d3f2c9bcda0e,OCE - ORP 3,Ginevra,Rue des Gares,16,1201,it
 8f1e03f3-38d6-46d8-83bd-cdf00b31b5e1,OCE - ORP 1,Ginevra,Rue des Gares,16,1201,it
 ed1c79f6-a6de-4cd6-80fc-9f80deff4891,OCE - ORP 4,Ginevra,Rue des Gares,16,1201,it
 65b15a37-bb10-47e8-b129-897d97ecf859,OCE - ORP 2,Ginevra,Rue des Gares,16,1201,it
-cfdd7cf2-51b8-4d1a-9ad3-74277209889b,ORP Del�mont,Del�mont,Rue de la Jeunesse,1,2800,it
+cfdd7cf2-51b8-4d1a-9ad3-74277209889b,ORP Delémont,Delémont,Rue de la Jeunesse,1,2800,it
 56ca348a-5367-4c8b-9ed4-4fd8d355c344,"ORP Porrentruy
 
 Case postale 1472",Porrentruy,Rue Auguste-Cuenin,15,2900,it
-b9df5077-f596-4efe-b323-5e3ae8fcbc52,ORP Saignel�gier,Saignel�gier,Rue Bel-Air,5,2350,it
+b9df5077-f596-4efe-b323-5e3ae8fcbc52,ORP Saignelégier,Saignelégier,Rue Bel-Air,5,2350,it
 76fcd4b4-6aa5-4773-a762-fd0385804b36,RAV La Chaux-de-Fonds,La Chaux-de-Fonds,Rue du Parc,119,2301,it
-e795ce81-0532-407b-855a-75f1c73da148,RAV Neuch�tel,Neuch�tel,Av. Edouard-Dubois,20,2000,it
+e795ce81-0532-407b-855a-75f1c73da148,RAV Neuchâtel,Neuchâtel,Av. Edouard-Dubois,20,2000,it
 babc916f-f8da-4904-8819-3beb3bb7c527,ORP Lausanne,Losanna,Pl. Chauderon,9,1002,it
 f097c43a-0618-4144-b2e5-8a3cf95ab91a,ORP Echallens,Echallens,Ch. du Grand-Record,7,1040,it
 15d182d4-990d-41f9-b3bb-42d4e65b0830,ORP Riviera,Vevey,,,1800,it
@@ -347,10 +347,10 @@ f097c43a-0618-4144-b2e5-8a3cf95ab91a,ORP Echallens,Echallens,Ch. du Grand-Record
 0a354587-8d99-42e9-b584-5c0061531079,ORP Morges,Morges 2,Av. de la Gottaz,30,1110,it
 5d540b83-f4b3-4906-a351-c971053ac937,ORP Ouest lausannois,Prilly,,,1008,it
 2b2ea771-df90-4d39-8fe5-fbe208944443,ORP Pully,Pully,,,1009,it
-597ed305-0683-4227-9a84-28b8e3bad146,ORP d'Yverdon-les-Bains,Yverdon-les-Bains,Rue des P��cheurs,8A,1400,it
+597ed305-0683-4227-9a84-28b8e3bad146,ORP d'Yverdon-les-Bains,Yverdon-les-Bains,Rue des Pêcheurs,8A,1400,it
 73adcb9e-a921-4055-9237-255811257932,ORP Nyon,Nyon,,,1260,it
 2d589211-0459-43aa-86cb-3755174c5399,ORP Monthey - St-Maurice,Monthey,Rue du Coppet,2,1870,it
-5011539f-39c5-4cff-aaf7-18e7771a2838,ORP Martigny,Martigny,Rue du L�man,29,1920,it
+5011539f-39c5-4cff-aaf7-18e7771a2838,ORP Martigny,Martigny,Rue du Léman,29,1920,it
 78f660c4-5193-425b-bac9-8c76db51dcc7,ORP Sierre,Sierre,Route de la Bonne-Eau,20,3960,it
 059a1511-3006-471b-8a4e-ab1cca69bdf4,ORP Sion,Sion,Place du Midi,40,1950,it
 01e2839f-40eb-418b-a88d-e4cdeb6d7045,URC Roveredo,Roveredo GR,Centro regionale dei servizi,,6535,it
@@ -366,6 +366,6 @@ e3b47c38-cd0d-4110-8f6e-3c2f10efb991,ORP Bienne,Biel/Bienne,Zentralstrasse,63,25
 ea3dbe5d-34aa-4dc7-a659-6068c5cfe36d,RAV Menziken,Menziken,Hauptstrasse,2,5737,it
 c7031265-b2d8-49c2-8904-ccfd3dd7e247,RAV Fleurier,Fleurier,Rue de l'Ecole d'Horlogerie,13,2114,it
 748297b3-6cee-42c8-92f4-c4d3691b4c12,Fachberatung Jugend,Basilea,Utengasse,36,4005,it
-8d6afa20-fd5b-4339-a910-bf32b556c126,Fachberatung ��bergang II,Basel,Hochstzrasse,37,4002,it
+8d6afa20-fd5b-4339-a910-bf32b556c126,Fachberatung Übergang II,Basel,Hochstzrasse,37,4002,it
 7836aa42-4663-4425-b584-ff8d037868a6,RAV Basel,Basel,Hochstrasse,37,4002,it
 42dc884c-c24d-4033-be24-2f5c27787210,RAV Brugg II,Brugg AG,Bahnhofstrasse,19,5201,it
