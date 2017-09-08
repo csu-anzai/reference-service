@@ -1,0 +1,70 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <changeSet author="varu" id="1504692242337-1">
+        <createTable tableName="job_center">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="code" type="varchar(5)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+
+            <column name="email" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="phone" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="fax" type="varchar(20)"/>
+        </createTable>
+
+        <createTable tableName="job_center_addresses">
+            <column name="job_center_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="name" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="city" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="street" type="varchar(150)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="house_number" type="varchar(7)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="zip_code" type="integer">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="language" type="varchar(2)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="job_center_addresses"
+                                 baseColumnNames="job_center_id"
+                                 constraintName="fk_job_center_addresses_job_center"
+                                 referencedTableName="job_center"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet author="varu" id="1504692242337-2" context="!test">
+        <loadData tableName="job_center"
+                  file="config/liquibase/changelog/data/REFERENCESERVICE_PUBLIC_JOB_CENTER.csv"/>
+
+        <loadData tableName="job_center_addresses"
+                  file="config/liquibase/changelog/data/REFERENCESERVICE_PUBLIC_JOB_CENTER_ADDRESS.csv"/>
+    </changeSet>
+</databaseChangeLog>
