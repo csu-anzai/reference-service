@@ -4,8 +4,6 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import ch.admin.seco.service.reference.domain.Language;
@@ -13,29 +11,27 @@ import ch.admin.seco.service.reference.domain.Language;
 @Embeddable
 public class Address {
 
-    @Column(name = "name")
+    @Column(name = "name", length = 100, nullable = false)
     @NotNull
     private String name;
 
-    @Column(name = "city")
+    @Column(name = "city", length = 100, nullable = false)
     @NotNull
     private String city;
 
-    @Column(name = "street")
+    @Column(name = "street", length = 100, nullable = false)
     @NotNull
     private String street;
 
-    @Column(name = "house_number")
+    @Column(name = "house_number", length = 7, nullable = false)
     @NotNull
     private String houseNumber;
 
-    @Column(name = "zip_code")
+    @Column(name = "zip_code", length = 4, nullable = false)
     @NotNull
-    @Min(1000)
-    @Max(9999)
-    private int zipCode;
+    private String zipCode;
 
-    @Column(name = "language")
+    @Column(name = "language", length = 2, nullable = false)
     @NotNull
     @Enumerated(EnumType.STRING)
     private Language language;
@@ -92,16 +88,16 @@ public class Address {
         this.houseNumber = houseNumber;
     }
 
-    public int getZipCode() {
+    public String getZipCode() {
         return zipCode;
     }
 
-    public Address zipCode(int zipCode) {
+    public Address zipCode(String zipCode) {
         this.zipCode = zipCode;
         return this;
     }
 
-    public void setZipCode(int zipCode) {
+    public void setZipCode(String zipCode) {
         this.zipCode = zipCode;
     }
 

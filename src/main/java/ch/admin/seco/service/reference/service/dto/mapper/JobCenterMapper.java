@@ -41,9 +41,8 @@ public class JobCenterMapper {
     }
 
     private Optional<Address> findAddressByLanguage(Set<Address> addresses, Language language) {
-        Optional<Address> address = findAddressByLanguage.apply(addresses, language);
-        return address.isPresent()
-            ? address
-            : findAddressByLanguage.apply(addresses, Language.de);
+        return findAddressByLanguage.apply(addresses, language)
+            .map(Optional::of)
+            .orElseGet(() -> findAddressByLanguage.apply(addresses, Language.de));
     }
 }

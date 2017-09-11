@@ -32,19 +32,19 @@ public class JobCenter implements Serializable {
     @GenericGenerator(name = "UUIDGenerator", strategy = "uuid2")
     private UUID id;
 
-    @Column(name = "code")
+    @Column(name = "code", length = 5, nullable = false)
     @NotNull
     private String code;
 
-    @Column(name = "email")
+    @Column(name = "email", nullable = false)
     @NotNull
     private String email;
 
-    @Column(name = "phone")
+    @Column(name = "phone", length = 20, nullable = false)
     @NotNull
     private String phone;
 
-    @Column(name = "fax")
+    @Column(name = "fax", length = 20)
     private String fax;
 
     @Valid

@@ -10,7 +10,7 @@ public class AddressDto {
 
     private String houseNumber;
 
-    private int zipCode;
+    private String zipCode;
 
     public String getName() {
         return name;
@@ -64,16 +64,16 @@ public class AddressDto {
         this.houseNumber = houseNumber;
     }
 
-    public int getZipCode() {
+    public String getZipCode() {
         return zipCode;
     }
 
-    public AddressDto zipCode(int zipCode) {
+    public AddressDto zipCode(String zipCode) {
         this.zipCode = zipCode;
         return this;
     }
 
-    public void setZipCode(int zipCode) {
+    public void setZipCode(String zipCode) {
         this.zipCode = zipCode;
     }
 

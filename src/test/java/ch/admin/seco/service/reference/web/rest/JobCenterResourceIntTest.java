@@ -54,7 +54,7 @@ public class JobCenterResourceIntTest {
     private static final String STREET_EN = "Berneckerstrasse EN";
     private static final String STREET_DE = "Berneckerstrasse DE";
     private static final String HOUSE_NUMBER = "12";
-    private static final int ZIP_CODE = 9000;
+    private static final String ZIP_CODE = "9000";
 
     @Autowired
     private JobCenterRepository jobCenterRepository;
