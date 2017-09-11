@@ -2,7 +2,6 @@ package ch.admin.seco.service.reference.service.dto.mapper;
 
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.BiFunction;
 
 import org.springframework.stereotype.Component;
 
@@ -17,32 +16,30 @@ public class JobCenterMapper {
 
     private final AddressMapper addressMapper;
 
-    private final BiFunction<Set<Address>, Language, Optional<Address>> findAddressByLanguage = (addresses, language) -> addresses.stream()
-        .filter(address -> address.getLanguage().equals(language))
-        .findFirst();
-
     public JobCenterMapper(AddressMapper addressMapper) {
         this.addressMapper = addressMapper;
     }
 
     public JobCenterDto jobCenterToDto(JobCenter jobCenter, Language language) {
-        AddressDto addressDto = findAddressByLanguage(jobCenter.getAddresses(), language)
-            .map(addressMapper::addressToDto)
-            .orElse(null);
-
         return new JobCenterDto()
             .id(jobCenter.getId())
             .code(jobCenter.getCode())
             .email(jobCenter.getEmail())
             .phone(jobCenter.getPhone())
             .fax(jobCenter.getFax())
-            .address(addressDto);
-
+            .address(findAddressDtoByLanguageOrDefault(jobCenter.getAddresses(), language, Language.de));
     }
 
-    private Optional<Address> findAddressByLanguage(Set<Address> addresses, Language language) {
-        return findAddressByLanguage.apply(addresses, language)
-            .map(Optional::of)
-            .orElseGet(() -> findAddressByLanguage.apply(addresses, Language.de));
+    private AddressDto findAddressDtoByLanguageOrDefault(Set<Address> addresses, Language language, Language defaultLanguage) {
+        return findAddressDtoByLanguage(addresses, language)
+            .orElseGet(() -> findAddressDtoByLanguage(addresses, defaultLanguage)
+                .orElse(null));
+    }
+
+    private Optional<AddressDto> findAddressDtoByLanguage(Set<Address> addresses, Language language) {
+        return addresses.stream()
+            .filter(address -> address.getLanguage().equals(language))
+            .findFirst()
+            .map(addressMapper::addressToDto);
     }
 }
