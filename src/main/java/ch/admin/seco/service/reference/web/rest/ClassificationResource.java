@@ -98,7 +98,7 @@ public class ClassificationResource {
     public List<Classification> getAllClassifications() {
         log.debug("REST request to get all Classifications");
         return classificationService.findAll();
-    }
+        }
 
     /**
      * GET  /classifications/:id : get the "id" classification.

@@ -4,7 +4,7 @@
       "packageName": "ch.admin.seco.service.reference",
       "nativeLanguage": "de"
     },
-    "jhipsterVersion": "4.5.6",
+    "jhipsterVersion": "4.8.2",
     "baseName": "referenceservice",
     "packageName": "ch.admin.seco.service.reference",
     "packageFolder": "ch/admin/seco/service/reference",

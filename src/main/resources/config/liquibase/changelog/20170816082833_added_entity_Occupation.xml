@@ -23,9 +23,7 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="x28_code" type="integer">
-                <constraints nullable="false"/>
-            </column>
+            <column name="x28_code" type="integer"/>
 
             <column name="avam_code" type="integer">
                 <constraints nullable="false"/>

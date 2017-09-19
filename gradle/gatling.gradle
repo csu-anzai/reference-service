@@ -3,7 +3,7 @@ apply plugin: 'scala'
 sourceSets {
     test {
         scala {
-            srcDirs = ['src/test/gatling/simulations']
+            srcDirs = ['src/test/gatling/user-files/simulations']
             output.classesDir = 'build/test-classes'
         }
     }
@@ -27,7 +27,7 @@ task gatlingRun(dependsOn: 'manifestJar') {
     description = 'Run a single Gatling simulation. You must write the name of your Gatling simulation.'
 
     doLast {
-        def String gatlingSimulationClass = "WriteTheNameOfYourGatlingSimulation"
+        String gatlingSimulationClass = "$simulation"
         if (project.hasProperty('gatlingSimulationClass')) {
             gatlingSimulationClass = project.property('gatlingSimulationClass')
         }
@@ -41,11 +41,11 @@ task gatlingRunAll(dependsOn: 'manifestJar') {
     description = 'Run all available Gatling simulations.'
 
     doLast {
-        FileTree tree = fileTree(dir: './src/test/gatling/simulations')
+        FileTree tree = fileTree(dir: './src/test/gatling/user-files/simulations')
         tree.include '**/*.scala'
         tree.each { File file ->
             def simulationClassName = file.name.replaceFirst(".scala", "")
-            createGatlingRunTask(simulationClassName).dependsOn('manifestJar').execute();
+            createGatlingRunTask(simulationClassName).dependsOn('manifestJar').execute()
         }
     }
 }
@@ -57,10 +57,10 @@ def createGatlingRunTask(def gatlingSimulationClassName) {
 
         final def sourceSet = sourceSets.test
 
-        def String gatlingDataFolder = "$project.rootDir.absolutePath/src/test/gatling/data"
-        def String gatlingReportsFolder = "$project.buildDir.absolutePath/reports/gatling"
-        def String gatlingBodiesFolder = "$project.rootDir.absolutePath/src/test/gatling/bodies"
-        def String gatlingSimulationsFolder = "$project.rootDir.absolutePath/src/test/gatling/simulations"
+        String gatlingDataFolder = "$project.rootDir.absolutePath/src/test/gatling/user-files/data"
+        String gatlingReportsFolder = "$project.buildDir.absolutePath/reports/gatling"
+        String gatlingBodiesFolder = "$project.rootDir.absolutePath/src/test/gatling/user-files/bodies"
+        String gatlingSimulationsFolder = "$project.rootDir.absolutePath/src/test/gatling/user-files/simulations"
 
         classpath sourceSet.output + files(manifestJar.archivePath) + files("src/test/gatling/conf")
         main = "io.gatling.app.Gatling"

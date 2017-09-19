@@ -51,7 +51,7 @@ deploy:
   on:
     tags: true
 after_deploy:
--  sleep 90 && baseURL=http://159.100.254.166:8080 ./gradlew -b e2e.gradle gatlingRunAll --stacktrace
+-  sleep 90 && baseURL=https://dev.job-room.ch:8443 ./gradlew -b e2e.gradle gatlingRunAll --stacktrace
 notifications:
   webhooks:
     on_success: change

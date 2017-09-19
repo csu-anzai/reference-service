@@ -75,4 +75,5 @@
         <loadData tableName="canton"
                   file="config/liquibase/changelog/data/REFERENCESERVICE_PUBLIC_CANTON.csv"/>
     </changeSet>
+    <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->
 </databaseChangeLog>

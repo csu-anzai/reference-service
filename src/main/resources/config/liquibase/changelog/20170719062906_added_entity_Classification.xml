@@ -41,5 +41,5 @@
                   tableName="classification">
         </loadData>
     </changeSet>
-
+    <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->
 </databaseChangeLog>

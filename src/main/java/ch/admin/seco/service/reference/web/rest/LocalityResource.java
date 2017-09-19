@@ -96,7 +96,7 @@ public class LocalityResource {
     public List<Locality> getAllLocalities() {
         log.debug("REST request to get all Localities");
         return localityService.findAll();
-    }
+        }
 
     /**
      * GET  /localities/:id : get the "id" locality.

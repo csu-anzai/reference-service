@@ -2,27 +2,31 @@ import org.gradle.internal.os.OperatingSystem
 
 buildscript {
     repositories {
-        mavenCentral()
-        jcenter()
         maven { url "http://repo.spring.io/plugins-release" }
         maven { url "http://repo.spring.io/milestone" }
-        maven { url "http://repo.spring.io/snapshot" }
         maven { url "https://plugins.gradle.org/m2/" }
+        jcenter()
     }
     dependencies {
-        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.5"
-        classpath "net.ltgt.gradle:gradle-apt-plugin:0.10"
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${spring_boot_version}"
-        classpath "org.springframework.build.gradle:propdeps-plugin:0.0.7"
-        classpath "io.spring.gradle:dependency-management-plugin:1.0.3.RELEASE"
-        classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.4.16"
+        classpath "io.spring.gradle:propdeps-plugin:0.0.10.RELEASE"
         //jhipster-needle-gradle-buildscript-dependency - JHipster will add additional gradle build script plugins here
     }
 }
 
+plugins {
+    id "org.sonarqube" version "2.5"
+    id "net.ltgt.apt" version "0.11"
+    id "io.spring.dependency-management" version "1.0.3.RELEASE"
+    id "com.moowork.node" version "1.2.0"
+    id "com.gorylenko.gradle-git-properties" version "1.4.17"
+    //jhipster-needle-gradle-plugins - JHipster will add additional gradle plugins here
+}
+
+
 apply plugin: 'java'
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility=1.8
+targetCompatibility=1.8
 apply plugin: 'maven'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'war'
@@ -30,10 +34,11 @@ apply plugin: 'propdeps'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'com.gorylenko.gradle-git-properties'
 apply plugin: 'checkstyle'
+apply plugin: 'idea'
 dependencyManagement {
-    imports {
-        mavenBom 'org.springframework.cloud:spring-cloud-dependencies:' + spring_cloud_version
-    }
+  imports {
+    mavenBom 'org.springframework.cloud:spring-cloud-dependencies:' + spring_cloud_version
+  }
 }
 defaultTasks 'bootRun'
 
@@ -66,7 +71,7 @@ if (OperatingSystem.current().isWindows()) {
     bootRun {
         dependsOn pathingJar
         doFirst {
-            classpath = files("$buildDir/classes/main", "$buildDir/resources/main", pathingJar.archivePath)
+            classpath = files("$buildDir/classes/java/main", "$buildDir/resources/main", pathingJar.archivePath)
         }
     }
 }
@@ -105,7 +110,6 @@ apply from: 'gradle/sonar.gradle'
 apply from: 'gradle/liquibase.gradle'
 apply from: 'gradle/mapstruct.gradle'
 apply from: 'gradle/docker.gradle'
-apply from: 'gradle/maven-publish.gradle'
 //jhipster-needle-gradle-apply-from - JHipster will add additional gradle scripts to be applied here
 
 if (project.hasProperty('prod')) {
@@ -140,12 +144,9 @@ configurations {
 }
 
 repositories {
-    mavenLocal()
-    mavenCentral()
-    jcenter()
     maven { url 'http://repo.spring.io/milestone' }
+    jcenter()
     maven { url 'https://alvch.jfrog.io/alvch/libs-releases' }
-    maven { url 'http://repo.spring.io/snapshot' }
     maven { url 'https://repository.jboss.org/nexus/content/repositories/releases' }
     maven { url 'https://oss.sonatype.org/content/repositories/releases' }
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
@@ -183,9 +184,11 @@ dependencies {
     compile "org.apache.commons:commons-lang3:${commons_lang_version}"
     compile "commons-io:commons-io:${commons_io_version}"
     compile "javax.transaction:javax.transaction-api"
-    compile "org.hibernate:hibernate-envers"
+    compile "org.hibernate:hibernate-envers:${hibernate_version}"
     compile "org.hibernate:hibernate-validator"
     compile("org.liquibase:liquibase-core")
+    compile "org.hibernate:hibernate-entitymanager:${hibernate_version}"
+    compile ("org.liquibase:liquibase-core")
     compile "com.mattbertolini:liquibase-slf4j:${liquibase_slf4j_version}"
     compile "org.springframework.boot:spring-boot-actuator"
     compile "org.springframework.boot:spring-boot-autoconfigure"
@@ -208,6 +211,7 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-reactor-netty"
     compile "org.springframework.boot:spring-boot-starter-undertow"
     compile "org.springframework.boot:spring-boot-starter-thymeleaf"
+    compile "org.zalando:problem-spring-web:${problem_spring_web_version}"
     compile "org.springframework.cloud:spring-cloud-starter"
     compile "org.springframework.cloud:spring-cloud-starter-ribbon"
     compile "org.springframework.cloud:spring-cloud-starter-hystrix"
@@ -229,7 +233,6 @@ dependencies {
     compile "org.postgresql:postgresql"
     compile "com.h2database:h2"
     compile "org.mapstruct:mapstruct-jdk8:${mapstruct_version}"
-//    compile "org.apache.logging.log4j:log4j-to-slf4j:${log4j_version}"
     testCompile "org.awaitility:awaitility:${awaitility_version}"
     testCompile "com.jayway.jsonpath:json-path"
     testCompile "info.cukes:cucumber-junit:${cucumber_version}"
@@ -259,7 +262,7 @@ task cleanResources(type: Delete) {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '3.5'
+    gradleVersion = '4.1'
 }
 
 task stage(dependsOn: 'bootJar') {
@@ -268,9 +271,6 @@ task stage(dependsOn: 'bootJar') {
 compileJava.dependsOn processResources
 processResources.dependsOn cleanResources, bootBuildInfo
 bootBuildInfo.mustRunAfter cleanResources
-
-checkstyle.configFile file('gradle/config/checkstyle.xml')
-checkstyleTest.enabled false
 
 afterEvaluate {
     bootJar {

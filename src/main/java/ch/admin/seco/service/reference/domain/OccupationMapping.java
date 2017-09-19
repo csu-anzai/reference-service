@@ -40,15 +40,14 @@ public class OccupationMapping implements Serializable {
     @Column(name = "code", nullable = false)
     private int code;
 
-    @NotNull
     @Min(10000000)
     @Max(99999999)
-    @Column(name = "x28_code", nullable = false, unique = true)
-    private int x28Code;
+    @Column(name = "x28_code", nullable = true, unique = true)
+    private Integer x28Code;
 
     @NotNull
     @Min(10000)
-    @Max(99999)
+    @Max(999999)
     @Column(name = "avam_code", nullable = false)
     private int avamCode;
 
@@ -73,15 +72,15 @@ public class OccupationMapping implements Serializable {
         return this;
     }
 
-    public int getX28Code() {
+    public Integer getX28Code() {
         return x28Code;
     }
 
-    public void setX28Code(int x28Code) {
+    public void setX28Code(Integer x28Code) {
         this.x28Code = x28Code;
     }
 
-    public OccupationMapping x28Code(int x28Code) {
+    public OccupationMapping x28Code(Integer x28Code) {
         this.x28Code = x28Code;
         return this;
     }

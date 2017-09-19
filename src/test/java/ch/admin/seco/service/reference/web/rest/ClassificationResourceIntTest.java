@@ -85,7 +85,7 @@ public class ClassificationResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        ClassificationResource classificationResource = new ClassificationResource(classificationService);
+        final ClassificationResource classificationResource = new ClassificationResource(classificationService);
         this.restClassificationMockMvc = MockMvcBuilders.standaloneSetup(classificationResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -151,7 +151,7 @@ public class ClassificationResourceIntTest {
             .content(TestUtil.convertObjectToJsonBytes(classification)))
             .andExpect(status().isBadRequest());
 
-        // Validate the Alice in the database
+        // Validate the Classification in the database
         List<Classification> classificationList = classificationRepository.findAll();
         assertThat(classificationList).hasSize(databaseSizeBeforeCreate);
     }

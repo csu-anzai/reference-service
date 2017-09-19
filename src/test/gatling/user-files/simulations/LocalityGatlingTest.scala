@@ -72,12 +72,7 @@ class LocalityGatlingTest extends Simulation {
             .check(status.is(200)))
         .pause(PAUSE)
         .repeat(5) {
-            exec(http("Get all localities")
-                .get("/referenceservice/api/localities")
-                .headers(headers_http_authenticated)
-                .check(status.is(200)))
-                .pause(1 seconds, 2 seconds)
-                .exec(http("Search for localities")
+                exec(http("Search for localities")
                     .get("/referenceservice/api/_search/localities")
                     .queryParam("prefix", "${cityNames}")
                     .queryParam("resultSize", "10")

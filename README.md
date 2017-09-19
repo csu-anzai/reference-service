@@ -4,7 +4,7 @@
 [![Coverage Status](https://codecov.io/github/alv-ch/reference-service/coverage.svg?branch=develop)](https://codecov.io/github/alv-ch/reference-service?branch=develop)
 [![Quality Gate](https://sonarqube.com/api/badges/gate?key=ch.admin.seco.service.reference%3Areferenceservice)](https://sonarcloud.io/dashboard?id=ch.admin.seco.service.reference%3Areferenceservice)
 
-This application was generated using JHipster 4.5.6, you can find documentation and help at [https://jhipster.github.io/documentation-archive/v4.5.6](https://jhipster.github.io/documentation-archive/v4.5.6).
+This application was generated using JHipster 4.8.2, you can find documentation and help at [http://www.jhipster.tech/documentation-archive/v4.8.2](http://www.jhipster.tech/documentation-archive/v4.8.2).
 
 This is a "microservice" application intended to be part of a microservice architecture, please refer to the [Doing microservices with JHipster][] page of the documentation for more information.
 
@@ -33,6 +33,7 @@ will generate few files:
     create src/main/webapp/app/my-component/my-component.component.ts
     update src/main/webapp/app/app.module.ts
 
+
 ## Building for production
 
 To optimize the referenceservice application for production, run:
@@ -55,11 +56,11 @@ To launch your application's tests, run:
 
 Performance tests are run against the DEV enviroment by [Gatling][] and written in Scala. They're located in [src/test/gatling](src/test/gatling) and can be run with:
 
-    baseURL=http://159.100.254.166:8080 ./gradlew -b e2e.gradle gatlingRunAll
+    baseURL=https://dev.job-room.ch:8443 ./gradlew -b e2e.gradle gatlingRunAll
     
 or run individual test
     
-    baseURL=http://159.100.254.166:8080 ./gradlew -b e2e.gradle gatlingRun -PgatlingSimulationClass=LocalityGatlingTest
+    baseURL=https://dev.job-room.ch:8443 ./gradlew -b e2e.gradle gatlingRun -PgatlingSimulationClass=LocalityGatlingTest
 
 
 For more information, refer to the [Running tests page][].
@@ -90,14 +91,14 @@ For more information refer to [Using Docker and Docker-Compose][], this page als
 
 To configure CI for your project, run the ci-cd sub-generator (`jhipster ci-cd`), this will let you generate configuration files for a number of Continuous Integration systems. Consult the [Setting up Continuous Integration][] page for more information.
 
-[JHipster Homepage and latest documentation]: https://jhipster.github.io
-[JHipster 4.5.6 archive]: https://jhipster.github.io/documentation-archive/v4.5.6
-[Doing microservices with JHipster]: https://jhipster.github.io/documentation-archive/v4.5.6/microservices-architecture/
-[Using JHipster in development]: https://jhipster.github.io/documentation-archive/v4.5.6/development/
-[Service Discovery and Configuration with the JHipster-Registry]: https://jhipster.github.io/documentation-archive/v4.5.6/microservices-architecture/#jhipster-registry
-[Using Docker and Docker-Compose]: https://jhipster.github.io/documentation-archive/v4.5.6/docker-compose
-[Using JHipster in production]: https://jhipster.github.io/documentation-archive/v4.5.6/production/
-[Running tests page]: https://jhipster.github.io/documentation-archive/v4.5.6/running-tests/
-[Setting up Continuous Integration]: https://jhipster.github.io/documentation-archive/v4.5.6/setting-up-ci/
+[JHipster Homepage and latest documentation]: http://www.jhipster.tech
+[JHipster 4.8.2 archive]: http://www.jhipster.tech/documentation-archive/v4.8.2
+[Doing microservices with JHipster]: http://www.jhipster.tech/documentation-archive/v4.8.2/microservices-architecture/
+[Using JHipster in development]: http://www.jhipster.tech/documentation-archive/v4.8.2/development/
+[Service Discovery and Configuration with the JHipster-Registry]: http://www.jhipster.tech/documentation-archive/v4.8.2/microservices-architecture/#jhipster-registry
+[Using Docker and Docker-Compose]: http://www.jhipster.tech/documentation-archive/v4.8.2/docker-compose
+[Using JHipster in production]: http://www.jhipster.tech/documentation-archive/v4.8.2/production/
+[Running tests page]: http://www.jhipster.tech/documentation-archive/v4.8.2/running-tests/
+[Setting up Continuous Integration]: http://www.jhipster.tech/documentation-archive/v4.8.2/setting-up-ci/
 
 [Gatling]: http://gatling.io/
