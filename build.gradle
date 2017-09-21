@@ -23,10 +23,9 @@ plugins {
     //jhipster-needle-gradle-plugins - JHipster will add additional gradle plugins here
 }
 
-
 apply plugin: 'java'
-sourceCompatibility=1.8
-targetCompatibility=1.8
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 apply plugin: 'maven'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'war'
@@ -36,9 +35,9 @@ apply plugin: 'com.gorylenko.gradle-git-properties'
 apply plugin: 'checkstyle'
 apply plugin: 'idea'
 dependencyManagement {
-  imports {
-    mavenBom 'org.springframework.cloud:spring-cloud-dependencies:' + spring_cloud_version
-  }
+    imports {
+        mavenBom 'org.springframework.cloud:spring-cloud-dependencies:' + spring_cloud_version
+    }
 }
 defaultTasks 'bootRun'
 
@@ -106,10 +105,12 @@ task testReport(type: TestReport) {
 cucumberTest.finalizedBy(testReport)
 
 apply from: 'gradle/checkstyle.gradle'
+apply from: 'gradle/docker.gradle'
 apply from: 'gradle/sonar.gradle'
 apply from: 'gradle/liquibase.gradle'
 apply from: 'gradle/mapstruct.gradle'
-apply from: 'gradle/docker.gradle'
+apply from: 'gradle/maven-publish.gradle'
+apply from: 'gradle/jacoco.gradle'
 //jhipster-needle-gradle-apply-from - JHipster will add additional gradle scripts to be applied here
 
 if (project.hasProperty('prod')) {
@@ -147,6 +148,7 @@ repositories {
     maven { url 'http://repo.spring.io/milestone' }
     jcenter()
     maven { url 'https://alvch.jfrog.io/alvch/libs-releases' }
+    maven { url 'http://repo.spring.io/snapshot' }
     maven { url 'https://repository.jboss.org/nexus/content/repositories/releases' }
     maven { url 'https://oss.sonatype.org/content/repositories/releases' }
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
@@ -186,9 +188,8 @@ dependencies {
     compile "javax.transaction:javax.transaction-api"
     compile "org.hibernate:hibernate-envers:${hibernate_version}"
     compile "org.hibernate:hibernate-validator"
-    compile("org.liquibase:liquibase-core")
     compile "org.hibernate:hibernate-entitymanager:${hibernate_version}"
-    compile ("org.liquibase:liquibase-core")
+    compile("org.liquibase:liquibase-core")
     compile "com.mattbertolini:liquibase-slf4j:${liquibase_slf4j_version}"
     compile "org.springframework.boot:spring-boot-actuator"
     compile "org.springframework.boot:spring-boot-autoconfigure"
