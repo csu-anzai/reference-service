@@ -28,13 +28,10 @@ spring:
     cache:
         type: none
     datasource:
-#        type: com.zaxxer.hikari.HikariDataSource
-#        url: jdbc:h2:mem:referenceservice;DB_CLOSE_DELAY=-1
-#        name:
-#        username:
-#        password:
         type: com.zaxxer.hikari.HikariDataSource
-        url: jdbc:h2:file:./build/h2db/db/referenceservice;DB_CLOSE_DELAY=-1
+        url: jdbc:h2:mem:referenceservice;DB_CLOSE_DELAY=-1
+#        url: jdbc:h2:file:./build/h2db/db/referenceservice;DB_CLOSE_DELAY=-1
+        name:
         username: referenceservice
         password:
     jpa:
