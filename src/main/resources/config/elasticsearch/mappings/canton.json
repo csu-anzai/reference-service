@@ -3,11 +3,14 @@
         "properties": {
             "name": {
                 "type": "text",
-                "analyzer": "folding",
+                "analyzer": "ascii_and_german_folding",
                 "fields": {
                     "canton-suggestions": {
                         "type": "completion",
-                        "analyzer": "folding"
+                        "analyzer": "ascii_and_german_folding",
+                        "preserve_separators": false,
+                        "preserve_position_increments": false
+
                     }
                 }
             },
@@ -16,8 +19,7 @@
                 "ignore_above": 2,
                 "fields": {
                     "canton-suggestions": {
-                        "type": "completion",
-                        "analyzer": "folding"
+                        "type": "completion"
                     }
                 }
             }

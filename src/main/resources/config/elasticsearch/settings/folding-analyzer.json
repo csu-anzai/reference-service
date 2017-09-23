@@ -1,10 +1,18 @@
 {
     "analysis": {
+        "filter": {
+            "german_stemmer": {
+                "type": "stemmer",
+                "language": "light_german"
+            }
+        },
         "analyzer": {
-            "folding": {
+            "ascii_and_german_folding": {
                 "tokenizer": "standard",
                 "filter": [
                     "lowercase",
+                    "german_normalization",
+                    "german_stemmer",
                     "asciifolding"
                 ]
             }
