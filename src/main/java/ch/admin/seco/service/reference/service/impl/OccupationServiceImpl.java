@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
 
@@ -25,14 +26,15 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ch.admin.seco.service.reference.domain.Classification;
 import ch.admin.seco.service.reference.domain.Language;
 import ch.admin.seco.service.reference.domain.Occupation;
 import ch.admin.seco.service.reference.domain.OccupationMapping;
 import ch.admin.seco.service.reference.domain.OccupationSynonym;
+import ch.admin.seco.service.reference.repository.ClassificationRepository;
 import ch.admin.seco.service.reference.repository.OccupationMappingRepository;
 import ch.admin.seco.service.reference.repository.OccupationRepository;
 import ch.admin.seco.service.reference.repository.OccupationSynonymRepository;
@@ -57,6 +59,7 @@ public class OccupationServiceImpl implements OccupationService {
     private final EntityToSynonymMapper occupationSynonymMapper;
     private final OccupationMappingRepository occupationMappingRepository;
     private final OccupationRepository occupationRepository;
+    private final ClassificationRepository classificationRepository;
     private final Function<OccupationMapping, Optional<Occupation>> occupationMappingToOccupation;
     private OccupationServiceImpl occupationServiceImpl;
 
@@ -66,7 +69,8 @@ public class OccupationServiceImpl implements OccupationService {
         ElasticsearchTemplate elasticsearchTemplate,
         EntityToSynonymMapper occupationSynonymMapper,
         OccupationMappingRepository occupationMappingRepository,
-        OccupationRepository occupationRepository) {
+        OccupationRepository occupationRepository,
+        ClassificationRepository classificationRepository) {
 
         this.applicationContext = applicationContext;
         this.occupationSynonymRepository = occupationSynonymRepository;
@@ -75,6 +79,7 @@ public class OccupationServiceImpl implements OccupationService {
         this.occupationSynonymMapper = occupationSynonymMapper;
         this.occupationMappingRepository = occupationMappingRepository;
         this.occupationRepository = occupationRepository;
+        this.classificationRepository = classificationRepository;
 
         this.occupationMappingToOccupation = mapping -> occupationRepository.findOneByCode(mapping.getCode());
     }
@@ -89,7 +94,7 @@ public class OccupationServiceImpl implements OccupationService {
     public OccupationSynonym save(OccupationSynonym occupationSynonym) {
         log.debug("Request to save OccupationSynonym : {}", occupationSynonym);
         OccupationSynonym result = occupationSynonymRepository.save(occupationSynonym);
-        occupationServiceImpl.index(result);
+        occupationSynonymSearchRepository.save(occupationSynonymMapper.toSynonym(occupationSynonym));
         return result;
     }
 
@@ -159,11 +164,17 @@ public class OccupationServiceImpl implements OccupationService {
             .map(occupationSynonymMapper::convertOccupationSuggestion)
             .collect(Collectors.toList());
 
-        List<ClassificationSuggestionDto> classifications = suggestResponse.getSuggest()
-            .<CompletionSuggestion>getSuggestion("classifications").getEntries().stream()
-            .flatMap(item -> item.getOptions().stream())
-            .map(occupationSynonymMapper::convertClassificationSuggestion)
-            .collect(Collectors.toList());
+        List<ClassificationSuggestionDto> classifications =
+            Stream.of(
+                suggestResponse.getSuggest()
+                    .<CompletionSuggestion>getSuggestion("classifications").getEntries().stream()
+                    .flatMap(item -> item.getOptions().stream())
+                    .map(occupationSynonymMapper::convertClassificationSuggestion),
+                getClassificationsFromOccupatonAsStream(language, occupations)
+                    .map(classification -> new ClassificationSuggestionDto(classification.getName(), classification.getCode())))
+                .flatMap(Function.identity())
+                .distinct()
+                .collect(Collectors.toList());
 
         return new OccupationAutocompleteDto(occupations, classifications);
     }
@@ -246,9 +257,11 @@ public class OccupationServiceImpl implements OccupationService {
         return occupationSynonymRepository.saveAll(occupationSynonyms);
     }
 
-    @Async
-    void index(OccupationSynonym occupationSynonym) {
-        occupationSynonymSearchRepository.save(occupationSynonymMapper.toSynonym(occupationSynonym));
+    private Stream<Classification> getClassificationsFromOccupatonAsStream(Language language, List<OccupationSuggestionDto> occupations) {
+        List<Integer> occupationCodes = occupations.stream()
+            .map(occupationSuggestionDto -> occupationSuggestionDto.getCode())
+            .collect(Collectors.toList());
+        return classificationRepository.findAllByOccupationCodes(language, occupationCodes);
     }
 
     @PostConstruct

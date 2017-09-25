@@ -53,14 +53,12 @@ public class OccupationResourceIntTest {
 
     //Occupation synonym constants
     private static final Integer DEFAULT_CODE = 88888888;
-    private static final Integer DEFAULT_CODE_2 = 77777777;
     private static final Integer UPDATED_CODE = 99999999;
 
     private static final Language DEFAULT_LANGUAGE = Language.de;
     private static final Language UPDATED_LANGUAGE = Language.fr;
 
     private static final String DEFAULT_NAME = "Gärtner";
-    private static final String DEFAULT_NAME_2 = "Gärtner/innen und verwandte Berufe";
     private static final String UPDATED_NAME = "Java Informatiker";
 
     //Occupation mapping constants
@@ -70,7 +68,12 @@ public class OccupationResourceIntTest {
 
     //Occupation constants
     private static final Integer OCCUPATION_CODE = 10000000;
-    private static final Integer OCCUPATION_CLASSIFICATION_CODE = 111;
+    private static final Integer CLASSIFICATION_CODE = 111;
+    private static final Integer CLASSIFICATION_CODE_2 = 311;
+    private static final String CLASSIFICATION_NAME = "Gärtner/innen und verwandte Berufe";
+    private static final String CLASSIFICATION_NAME_2 = "Berufe der Landwirtschaft";
+
+
     private static final String OCCUPATION_LABEL_DE = "Label DE";
     private static final String OCCUPATION_LABEL_FR = "Label FR";
     private static final String OCCUPATION_LABEL_IT = "Label IT";
@@ -141,7 +144,7 @@ public class OccupationResourceIntTest {
     private static Occupation createOccupationEntity() {
         return new Occupation()
             .code(OCCUPATION_CODE)
-            .classificationCode(OCCUPATION_CLASSIFICATION_CODE)
+            .classificationCode(CLASSIFICATION_CODE)
             .labelDe(OCCUPATION_LABEL_DE)
             .labelFr(OCCUPATION_LABEL_FR)
             .labelIt(OCCUPATION_LABEL_IT)
@@ -384,10 +387,17 @@ public class OccupationResourceIntTest {
         occupationService.save(occupationSynonym);
         classificationService.save(
             new Classification()
-                .code(DEFAULT_CODE_2)
-                .name(DEFAULT_NAME_2)
+                .code(CLASSIFICATION_CODE)
+                .name(CLASSIFICATION_NAME)
                 .language(DEFAULT_LANGUAGE)
         );
+        classificationService.save(
+            new Classification()
+                .code(CLASSIFICATION_CODE_2)
+                .name(CLASSIFICATION_NAME_2)
+                .language(DEFAULT_LANGUAGE)
+        );
+        occupationRepository.save(new Occupation().classificationCode(CLASSIFICATION_CODE_2).code(DEFAULT_CODE));
 
         // Search the occupationSynonym
         restOccupationMockMvc.perform(get("/api/_search/occupations/synonym?prefix=Gaert&language=de&resultSize=10"))
@@ -395,8 +405,10 @@ public class OccupationResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.occupations.[*].code").value(hasItem(DEFAULT_CODE)))
             .andExpect(jsonPath("$.occupations.[*].name").value(hasItem(DEFAULT_NAME)))
-            .andExpect(jsonPath("$.classifications.[*].code").value(hasItem(DEFAULT_CODE_2)))
-            .andExpect(jsonPath("$.classifications.[*].name").value(hasItem(DEFAULT_NAME_2)));
+            .andExpect(jsonPath("$.classifications.[0].code").value(CLASSIFICATION_CODE))
+            .andExpect(jsonPath("$.classifications.[0].name").value(CLASSIFICATION_NAME))
+            .andExpect(jsonPath("$.classifications.[1].code").value(CLASSIFICATION_CODE_2))
+            .andExpect(jsonPath("$.classifications.[1].name").value(CLASSIFICATION_NAME_2));
     }
 
     @Test
@@ -480,7 +492,7 @@ public class OccupationResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(occupation.getId().toString()))
             .andExpect(jsonPath("$.code").value(OCCUPATION_CODE))
-            .andExpect(jsonPath("$.classificationCode").value(OCCUPATION_CLASSIFICATION_CODE))
+            .andExpect(jsonPath("$.classificationCode").value(CLASSIFICATION_CODE))
             .andExpect(jsonPath("$.labelDe").value(OCCUPATION_LABEL_DE))
             .andExpect(jsonPath("$.labelFr").value(OCCUPATION_LABEL_FR))
             .andExpect(jsonPath("$.labelIt").value(OCCUPATION_LABEL_IT))
@@ -505,7 +517,7 @@ public class OccupationResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(occupation.getId().toString()))
             .andExpect(jsonPath("$.code").value(OCCUPATION_CODE))
-            .andExpect(jsonPath("$.classificationCode").value(OCCUPATION_CLASSIFICATION_CODE))
+            .andExpect(jsonPath("$.classificationCode").value(CLASSIFICATION_CODE))
             .andExpect(jsonPath("$.labelDe").value(OCCUPATION_LABEL_DE))
             .andExpect(jsonPath("$.labelFr").value(OCCUPATION_LABEL_FR))
             .andExpect(jsonPath("$.labelIt").value(OCCUPATION_LABEL_IT))
@@ -532,7 +544,7 @@ public class OccupationResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(occupation.getId().toString()))
             .andExpect(jsonPath("$.code").value(OCCUPATION_CODE))
-            .andExpect(jsonPath("$.classificationCode").value(OCCUPATION_CLASSIFICATION_CODE))
+            .andExpect(jsonPath("$.classificationCode").value(CLASSIFICATION_CODE))
             .andExpect(jsonPath("$.labelDe").value(OCCUPATION_LABEL_DE))
             .andExpect(jsonPath("$.labelFr").value(OCCUPATION_LABEL_FR))
             .andExpect(jsonPath("$.labelIt").value(OCCUPATION_LABEL_IT))

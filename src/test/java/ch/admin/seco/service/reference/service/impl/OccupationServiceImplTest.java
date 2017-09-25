@@ -21,6 +21,7 @@ import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 
 import ch.admin.seco.service.reference.domain.Occupation;
 import ch.admin.seco.service.reference.domain.OccupationMapping;
+import ch.admin.seco.service.reference.repository.ClassificationRepository;
 import ch.admin.seco.service.reference.repository.OccupationMappingRepository;
 import ch.admin.seco.service.reference.repository.OccupationRepository;
 import ch.admin.seco.service.reference.repository.OccupationSynonymRepository;
@@ -56,6 +57,9 @@ public class OccupationServiceImplTest {
     @Mock
     private OccupationRepository occupationRepository;
 
+    @Mock
+    private ClassificationRepository classificationRepository;
+
     private Occupation occupation;
 
     @Before
@@ -63,7 +67,7 @@ public class OccupationServiceImplTest {
         occupationService = new OccupationServiceImpl(applicationContext,
             occupationSynonymRepository, occupationSynonymSearchRepository,
             elasticsearchTemplate, occupationSynonymMapper, occupationMappingRepository,
-            occupationRepository);
+            occupationRepository, classificationRepository);
         occupation = createOccupation(CODE, CLASSIFICATION_CODE);
     }
 
