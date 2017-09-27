@@ -51,16 +51,6 @@ public interface OccupationService {
     void delete(UUID id);
 
     /**
-     * Search for the occupationSynonym corresponding to the query.
-     *
-     * @param prefix     the query of the search
-     * @param language   the language of the search
-     * @param resultSize the pagination information
-     * @return the lists of occupations and classifications
-     */
-    OccupationAutocompleteDto suggestOccupationSynonyms(String prefix, Language language, int resultSize);
-
-    /**
      * Get one occupationMapping by id.
      *
      * @param id the id of the entity
@@ -85,4 +75,15 @@ public interface OccupationService {
     Optional<OccupationSynonym> findOneOccupationSynonymByExternalId(int externalId);
 
     List<OccupationSynonym> save(Collection<OccupationSynonym> occupationSynonyms);
+
+    /**
+     * Search for the occupationSynonym corresponding to the query.
+     *
+     * @param prefix     the query of the search
+     * @param language   the language of the search
+     * @param resultSize the pagination information
+     * @return the lists of occupations and classifications
+     */
+    OccupationAutocompleteDto suggest(String prefix, Language language, int resultSize);
+
 }

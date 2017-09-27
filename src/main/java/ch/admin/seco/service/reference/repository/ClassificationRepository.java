@@ -15,7 +15,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
 import ch.admin.seco.service.reference.domain.Classification;
-import ch.admin.seco.service.reference.domain.Language;
 
 
 /**
@@ -30,12 +29,12 @@ public interface ClassificationRepository extends JpaRepository<Classification, 
 
     @Query(nativeQuery = true, value =
         "SELECT c.* FROM classification c LEFT JOIN occupation o ON c.code = o.classification_code" +
-            " WHERE o.code IN (?2) and c.language = ?1")
-    Stream<Classification> findAllByOccupationCodes(String language, List<Integer> classificationCodes);
+            " WHERE o.code IN (?1)")
+    Stream<Classification> _findAllByOccupationCodes(List<Integer> classificationCodes);
 
-    default Stream<Classification> findAllByOccupationCodes(Language language, List<Integer> classificationCodes) {
+    default Stream<Classification> findAllByOccupationCodes(List<Integer> classificationCodes) {
         return CollectionUtils.isEmpty(classificationCodes)
             ? Stream.empty()
-            : findAllByOccupationCodes(language.name(), classificationCodes);
+            : _findAllByOccupationCodes(classificationCodes);
     }
 }

@@ -31,9 +31,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import ch.admin.seco.service.reference.ReferenceserviceApp;
-import ch.admin.seco.service.reference.domain.Classification;
 import ch.admin.seco.service.reference.domain.Language;
-import ch.admin.seco.service.reference.domain.search.ClassificationSynonym;
+import ch.admin.seco.service.reference.domain.search.ClassificationSuggestion;
+import ch.admin.seco.service.reference.domain.valueobject.Labels;
 import ch.admin.seco.service.reference.repository.ClassificationRepository;
 import ch.admin.seco.service.reference.repository.search.ClassificationSearchRepository;
 import ch.admin.seco.service.reference.service.ClassificationService;
@@ -55,7 +55,6 @@ public class ClassificationResourceIntTest {
     private static final String UPDATED_NAME = "BBBBBBBBBB";
 
     private static final Language DEFAULT_LANGUAGE = Language.de;
-    private static final Language UPDATED_LANGUAGE = Language.fr;
 
     @Autowired
     private ClassificationRepository classificationRepository;
@@ -80,7 +79,20 @@ public class ClassificationResourceIntTest {
 
     private MockMvc restClassificationMockMvc;
 
-    private Classification classification;
+    private ch.admin.seco.service.reference.domain.Classification classification;
+
+    /**
+     * Create an entity for this test.
+     *
+     * This is a static method, as tests for other entities might also need it,
+     * if they test an entity which requires the current entity.
+     */
+    public static ch.admin.seco.service.reference.domain.Classification createEntity(EntityManager em) {
+        ch.admin.seco.service.reference.domain.Classification classification = new ch.admin.seco.service.reference.domain.Classification()
+            .code(DEFAULT_CODE)
+            .labels(new Labels().de(DEFAULT_NAME));
+        return classification;
+    }
 
     @Before
     public void setup() {
@@ -90,20 +102,6 @@ public class ClassificationResourceIntTest {
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
             .setMessageConverters(jacksonMessageConverter).build();
-    }
-
-    /**
-     * Create an entity for this test.
-     *
-     * This is a static method, as tests for other entities might also need it,
-     * if they test an entity which requires the current entity.
-     */
-    public static Classification createEntity(EntityManager em) {
-        Classification classification = new Classification()
-            .code(DEFAULT_CODE)
-            .name(DEFAULT_NAME)
-            .language(DEFAULT_LANGUAGE);
-        return classification;
     }
 
     @Before
@@ -124,15 +122,14 @@ public class ClassificationResourceIntTest {
             .andExpect(status().isCreated());
 
         // Validate the Classification in the database
-        List<Classification> classificationList = classificationRepository.findAll();
+        List<ch.admin.seco.service.reference.domain.Classification> classificationList = classificationRepository.findAll();
         assertThat(classificationList).hasSize(databaseSizeBeforeCreate + 1);
-        Classification testClassification = classificationList.get(classificationList.size() - 1);
+        ch.admin.seco.service.reference.domain.Classification testClassification = classificationList.get(classificationList.size() - 1);
         assertThat(testClassification.getCode()).isEqualTo(DEFAULT_CODE);
-        assertThat(testClassification.getName()).isEqualTo(DEFAULT_NAME);
-        assertThat(testClassification.getLanguage()).isEqualTo(DEFAULT_LANGUAGE);
+        assertThat(testClassification.getLabels().getDe()).isEqualTo(DEFAULT_NAME);
 
         // Validate the Classification in Elasticsearch
-        List<ClassificationSynonym> classificationSynonymList = classificationSearchRepository
+        List<ClassificationSuggestion> classificationSynonymList = classificationSearchRepository
             .findAllByCodeEquals(testClassification.getCode());
         assertThat(classificationSynonymList).hasSize(1);
     }
@@ -152,7 +149,7 @@ public class ClassificationResourceIntTest {
             .andExpect(status().isBadRequest());
 
         // Validate the Classification in the database
-        List<Classification> classificationList = classificationRepository.findAll();
+        List<ch.admin.seco.service.reference.domain.Classification> classificationList = classificationRepository.findAll();
         assertThat(classificationList).hasSize(databaseSizeBeforeCreate);
     }
 
@@ -170,7 +167,7 @@ public class ClassificationResourceIntTest {
             .content(TestUtil.convertObjectToJsonBytes(classification)))
             .andExpect(status().isBadRequest());
 
-        List<Classification> classificationList = classificationRepository.findAll();
+        List<ch.admin.seco.service.reference.domain.Classification> classificationList = classificationRepository.findAll();
         assertThat(classificationList).hasSize(databaseSizeBeforeTest);
     }
 
@@ -179,7 +176,7 @@ public class ClassificationResourceIntTest {
     public void checkNameIsRequired() throws Exception {
         int databaseSizeBeforeTest = classificationRepository.findAll().size();
         // set the field null
-        classification.setName(null);
+        classification.setLabels(null);
 
         // Create the Classification, which fails.
 
@@ -188,7 +185,7 @@ public class ClassificationResourceIntTest {
             .content(TestUtil.convertObjectToJsonBytes(classification)))
             .andExpect(status().isBadRequest());
 
-        List<Classification> classificationList = classificationRepository.findAll();
+        List<ch.admin.seco.service.reference.domain.Classification> classificationList = classificationRepository.findAll();
         assertThat(classificationList).hasSize(databaseSizeBeforeTest);
     }
 
@@ -204,8 +201,7 @@ public class ClassificationResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(classification.getId().toString())))
             .andExpect(jsonPath("$.[*].code").value(hasItem(DEFAULT_CODE)))
-            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
-            .andExpect(jsonPath("$.[*].language").value(hasItem(DEFAULT_LANGUAGE.toString())));
+            .andExpect(jsonPath("$.[*].labels.de").value(hasItem(DEFAULT_NAME.toString())));
     }
 
     @Test
@@ -220,8 +216,7 @@ public class ClassificationResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(classification.getId().toString()))
             .andExpect(jsonPath("$.code").value(DEFAULT_CODE))
-            .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
-            .andExpect(jsonPath("$.language").value(DEFAULT_LANGUAGE.toString()));
+            .andExpect(jsonPath("$.labels.de").value(DEFAULT_NAME.toString()));
     }
 
     @Test
@@ -241,11 +236,10 @@ public class ClassificationResourceIntTest {
         int databaseSizeBeforeUpdate = classificationRepository.findAll().size();
 
         // Update the classification
-        Classification updatedClassification = classificationRepository.getOne(classification.getId());
+        ch.admin.seco.service.reference.domain.Classification updatedClassification = classificationRepository.getOne(classification.getId());
         updatedClassification
             .code(UPDATED_CODE)
-            .name(UPDATED_NAME)
-            .language(UPDATED_LANGUAGE);
+            .labels(new Labels().de(UPDATED_NAME));
 
         restClassificationMockMvc.perform(put("/api/classifications")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -253,15 +247,14 @@ public class ClassificationResourceIntTest {
             .andExpect(status().isOk());
 
         // Validate the Classification in the database
-        List<Classification> classificationList = classificationRepository.findAll();
+        List<ch.admin.seco.service.reference.domain.Classification> classificationList = classificationRepository.findAll();
         assertThat(classificationList).hasSize(databaseSizeBeforeUpdate);
-        Classification testClassification = classificationList.get(classificationList.size() - 1);
+        ch.admin.seco.service.reference.domain.Classification testClassification = classificationList.get(classificationList.size() - 1);
         assertThat(testClassification.getCode()).isEqualTo(UPDATED_CODE);
-        assertThat(testClassification.getName()).isEqualTo(UPDATED_NAME);
-        assertThat(testClassification.getLanguage()).isEqualTo(UPDATED_LANGUAGE);
+        assertThat(testClassification.getLabels().getDe()).isEqualTo(UPDATED_NAME);
 
         // Validate the Classification in Elasticsearch
-        List<ClassificationSynonym> classificationSynonymList = classificationSearchRepository
+        List<ClassificationSuggestion> classificationSynonymList = classificationSearchRepository
             .findAllByCodeEquals(testClassification.getCode());
         assertThat(classificationSynonymList).hasSize(1);
     }
@@ -280,7 +273,7 @@ public class ClassificationResourceIntTest {
             .andExpect(status().isCreated());
 
         // Validate the Classification in the database
-        List<Classification> classificationList = classificationRepository.findAll();
+        List<ch.admin.seco.service.reference.domain.Classification> classificationList = classificationRepository.findAll();
         assertThat(classificationList).hasSize(databaseSizeBeforeUpdate + 1);
     }
 
@@ -302,7 +295,7 @@ public class ClassificationResourceIntTest {
         assertThat(classificationExistsInEs).isFalse();
 
         // Validate the database is empty
-        List<Classification> classificationList = classificationRepository.findAll();
+        List<ch.admin.seco.service.reference.domain.Classification> classificationList = classificationRepository.findAll();
         assertThat(classificationList).hasSize(databaseSizeBeforeDelete - 1);
     }
 
@@ -318,17 +311,16 @@ public class ClassificationResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(classification.getId().toString())))
             .andExpect(jsonPath("$.[*].code").value(hasItem(DEFAULT_CODE)))
-            .andExpect(jsonPath("$.[*].classification").value(hasItem(DEFAULT_NAME.toString())))
-            .andExpect(jsonPath("$.[*].language").value(hasItem(DEFAULT_LANGUAGE.toString())));
+            .andExpect(jsonPath("$.[*].labels.de").value(hasItem(DEFAULT_NAME.toString())));
     }
 
     @Test
     @Transactional
     public void equalsVerifier() throws Exception {
-        TestUtil.equalsVerifier(Classification.class);
-        Classification classification1 = new Classification();
+        TestUtil.equalsVerifier(ch.admin.seco.service.reference.domain.Classification.class);
+        ch.admin.seco.service.reference.domain.Classification classification1 = new ch.admin.seco.service.reference.domain.Classification();
         classification1.setId(UUID.randomUUID());
-        Classification classification2 = new Classification();
+        ch.admin.seco.service.reference.domain.Classification classification2 = new ch.admin.seco.service.reference.domain.Classification();
         classification2.setId(classification1.getId());
         assertThat(classification1).isEqualTo(classification2);
         classification2.setId(UUID.randomUUID());

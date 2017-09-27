@@ -41,6 +41,7 @@ public class OccupationServiceImplTest {
     private static final int X28_CODE_2 = 787433;
 
     private OccupationServiceImpl occupationService;
+    private OccupationSuggestionImpl occupationSuggestion;
 
     @Mock
     private ApplicationContext applicationContext;
@@ -62,15 +63,6 @@ public class OccupationServiceImplTest {
 
     private Occupation occupation;
 
-    @Before
-    public void setUp() {
-        occupationService = new OccupationServiceImpl(applicationContext,
-            occupationSynonymRepository, occupationSynonymSearchRepository,
-            elasticsearchTemplate, occupationSynonymMapper, occupationMappingRepository,
-            occupationRepository, classificationRepository);
-        occupation = createOccupation(CODE, CLASSIFICATION_CODE);
-    }
-
     private static Occupation createOccupation(int code, int classificationCode) {
         Occupation occupation = new Occupation()
             .code(code)
@@ -86,6 +78,18 @@ public class OccupationServiceImplTest {
             .x28Code(x28Code);
         occupationMapping.setId(UUID.randomUUID());
         return occupationMapping;
+    }
+
+    @Before
+    public void setUp() {
+        occupationService = new OccupationServiceImpl(applicationContext,
+            occupationSynonymRepository, occupationSynonymSearchRepository,
+            occupationSynonymMapper, occupationMappingRepository,
+            occupationRepository, classificationRepository, occupationSuggestion);
+
+        occupationSuggestion = new OccupationSuggestionImpl(elasticsearchTemplate, occupationSynonymMapper, classificationRepository);
+
+        occupation = createOccupation(CODE, CLASSIFICATION_CODE);
     }
 
     @Test

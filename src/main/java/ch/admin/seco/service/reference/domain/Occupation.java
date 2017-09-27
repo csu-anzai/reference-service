@@ -5,17 +5,21 @@ import java.util.Objects;
 import java.util.UUID;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
+
+import ch.admin.seco.service.reference.domain.valueobject.Labels;
 
 /**
  * A Occupation.
@@ -43,17 +47,9 @@ public class Occupation implements Serializable {
     @Column(name = "classification_code", nullable = false)
     private int classificationCode;
 
-    @Column(name = "label_de")
-    private String labelDe;
-
-    @Column(name = "label_fr")
-    private String labelFr;
-
-    @Column(name = "label_it")
-    private String labelIt;
-
-    @Column(name = "label_en")
-    private String labelEn;
+    @Valid
+    @Embedded
+    private Labels labels;
 
     public UUID getId() {
         return id;
@@ -89,55 +85,16 @@ public class Occupation implements Serializable {
         return this;
     }
 
-    public String getLabelDe() {
-        return labelDe;
+    public Labels getLabels() {
+        return labels;
     }
 
-    public void setLabelDe(String labelDe) {
-        this.labelDe = labelDe;
+    public void setLabels(Labels labels) {
+        this.labels = labels;
     }
 
-    public Occupation labelDe(String labelDe) {
-        this.labelDe = labelDe;
-        return this;
-    }
-
-    public String getLabelFr() {
-        return labelFr;
-    }
-
-    public void setLabelFr(String labelFr) {
-        this.labelFr = labelFr;
-    }
-
-    public Occupation labelFr(String labelFr) {
-        this.labelFr = labelFr;
-        return this;
-    }
-
-    public String getLabelIt() {
-        return labelIt;
-    }
-
-    public void setLabelIt(String labelIt) {
-        this.labelIt = labelIt;
-    }
-
-    public Occupation labelIt(String labelIt) {
-        this.labelIt = labelIt;
-        return this;
-    }
-
-    public String getLabelEn() {
-        return labelEn;
-    }
-
-    public void setLabelEn(String labelEn) {
-        this.labelEn = labelEn;
-    }
-
-    public Occupation labelEn(String labelEn) {
-        this.labelEn = labelEn;
+    public Occupation labels(Labels labels) {
+        this.labels = labels;
         return this;
     }
 
@@ -166,10 +123,7 @@ public class Occupation implements Serializable {
             "id=" + id +
             ", code=" + code +
             ", classificationCode=" + classificationCode +
-            ", labelDe='" + labelDe + '\'' +
-            ", labelFr='" + labelFr + '\'' +
-            ", labelIt='" + labelIt + '\'' +
-            ", labelEn='" + labelEn + '\'' +
+            ", labels=" + labels +
             '}';
     }
 }

@@ -3,7 +3,6 @@ package ch.admin.seco.service.reference.service.impl;
 import static java.util.Objects.isNull;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -13,19 +12,12 @@ import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
 
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.search.suggest.SuggestBuilder;
-import org.elasticsearch.search.suggest.SuggestBuilders;
-import org.elasticsearch.search.suggest.SuggestionBuilder;
-import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
-import org.elasticsearch.search.suggest.completion.context.CategoryQueryContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,7 +32,6 @@ import ch.admin.seco.service.reference.repository.OccupationRepository;
 import ch.admin.seco.service.reference.repository.OccupationSynonymRepository;
 import ch.admin.seco.service.reference.repository.search.OccupationSynonymSearchRepository;
 import ch.admin.seco.service.reference.service.OccupationService;
-import ch.admin.seco.service.reference.service.dto.ClassificationSuggestionDto;
 import ch.admin.seco.service.reference.service.dto.OccupationAutocompleteDto;
 import ch.admin.seco.service.reference.service.dto.OccupationSuggestionDto;
 
@@ -55,33 +46,32 @@ public class OccupationServiceImpl implements OccupationService {
     private final ApplicationContext applicationContext;
     private final OccupationSynonymRepository occupationSynonymRepository;
     private final OccupationSynonymSearchRepository occupationSynonymSearchRepository;
-    private final ElasticsearchTemplate elasticsearchTemplate;
     private final EntityToSynonymMapper occupationSynonymMapper;
     private final OccupationMappingRepository occupationMappingRepository;
     private final OccupationRepository occupationRepository;
     private final ClassificationRepository classificationRepository;
+    private final OccupationSuggestionImpl occupationSuggestion;
     private final Function<OccupationMapping, Optional<Occupation>> occupationMappingToOccupation;
     private OccupationServiceImpl occupationServiceImpl;
 
     public OccupationServiceImpl(ApplicationContext applicationContext,
         OccupationSynonymRepository occupationSynonymRepository,
         OccupationSynonymSearchRepository occupationSynonymSearchRepository,
-        ElasticsearchTemplate elasticsearchTemplate,
         EntityToSynonymMapper occupationSynonymMapper,
         OccupationMappingRepository occupationMappingRepository,
         OccupationRepository occupationRepository,
-        ClassificationRepository classificationRepository) {
+        ClassificationRepository classificationRepository, OccupationSuggestionImpl occupationSuggestion) {
 
         this.applicationContext = applicationContext;
         this.occupationSynonymRepository = occupationSynonymRepository;
         this.occupationSynonymSearchRepository = occupationSynonymSearchRepository;
-        this.elasticsearchTemplate = elasticsearchTemplate;
         this.occupationSynonymMapper = occupationSynonymMapper;
         this.occupationMappingRepository = occupationMappingRepository;
         this.occupationRepository = occupationRepository;
         this.classificationRepository = classificationRepository;
 
         this.occupationMappingToOccupation = mapping -> occupationRepository.findOneByCode(mapping.getCode());
+        this.occupationSuggestion = occupationSuggestion;
     }
 
     /**
@@ -94,7 +84,7 @@ public class OccupationServiceImpl implements OccupationService {
     public OccupationSynonym save(OccupationSynonym occupationSynonym) {
         log.debug("Request to save OccupationSynonym : {}", occupationSynonym);
         OccupationSynonym result = occupationSynonymRepository.save(occupationSynonym);
-        occupationSynonymSearchRepository.save(occupationSynonymMapper.toSynonym(occupationSynonym));
+        occupationSynonymSearchRepository.save(occupationSynonymMapper.toSuggestion(occupationSynonym));
         return result;
     }
 
@@ -132,51 +122,6 @@ public class OccupationServiceImpl implements OccupationService {
                 occupationSynonymSearchRepository.deleteAllByCodeEquals(occupation.getCode());
             }
         );
-    }
-
-    /**
-     * Search for the occupation synonym corresponding to the query.
-     *
-     * @param prefix   the query of the search
-     * @param language the pagination information
-     * @return the list of entities
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public OccupationAutocompleteDto suggestOccupationSynonyms(String prefix, Language language, int resultSize) {
-        log.debug("Request to search for a page of Occupations for query {}", prefix);
-
-        Function<String, SuggestionBuilder> createSuggestionBuilder = (String field) ->
-            SuggestBuilders.completionSuggestion(field + "." + language.name())
-                .prefix(prefix)
-                .size(resultSize)
-                .contexts(Collections.singletonMap("lang",
-                    Collections.singletonList(CategoryQueryContext.builder().setCategory(language.name()).build())));
-
-        SearchResponse suggestResponse = elasticsearchTemplate.suggest(new SuggestBuilder()
-                .addSuggestion("occupations", createSuggestionBuilder.apply("occupationSuggestions"))
-                .addSuggestion("classifications", createSuggestionBuilder.apply("classificationSuggestions")),
-            ch.admin.seco.service.reference.domain.search.OccupationSynonym.class);
-
-        List<OccupationSuggestionDto> occupations = suggestResponse.getSuggest()
-            .<CompletionSuggestion>getSuggestion("occupations").getEntries().stream()
-            .flatMap(item -> item.getOptions().stream())
-            .map(occupationSynonymMapper::convertOccupationSuggestion)
-            .collect(Collectors.toList());
-
-        List<ClassificationSuggestionDto> classifications =
-            Stream.of(
-                suggestResponse.getSuggest()
-                    .<CompletionSuggestion>getSuggestion("classifications").getEntries().stream()
-                    .flatMap(item -> item.getOptions().stream())
-                    .map(occupationSynonymMapper::convertClassificationSuggestion),
-                getClassificationsFromOccupatonAsStream(language, occupations)
-                    .map(classification -> new ClassificationSuggestionDto(classification.getName(), classification.getCode())))
-                .flatMap(Function.identity())
-                .distinct()
-                .collect(Collectors.toList());
-
-        return new OccupationAutocompleteDto(occupations, classifications);
     }
 
     /**
@@ -257,11 +202,17 @@ public class OccupationServiceImpl implements OccupationService {
         return occupationSynonymRepository.saveAll(occupationSynonyms);
     }
 
-    private Stream<Classification> getClassificationsFromOccupatonAsStream(Language language, List<OccupationSuggestionDto> occupations) {
+    @Transactional(readOnly = true)
+    @Override
+    public OccupationAutocompleteDto suggest(String prefix, Language language, int resultSize) {
+        return occupationSuggestion.suggest(prefix, language, resultSize);
+    }
+
+    private Stream<Classification> getClassificationsFromOccupatonAsStream(List<OccupationSuggestionDto> occupations) {
         List<Integer> occupationCodes = occupations.stream()
             .map(occupationSuggestionDto -> occupationSuggestionDto.getCode())
             .collect(Collectors.toList());
-        return classificationRepository.findAllByOccupationCodes(language, occupationCodes);
+        return classificationRepository.findAllByOccupationCodes(occupationCodes);
     }
 
     @PostConstruct

@@ -5,23 +5,24 @@ import java.util.Objects;
 import java.util.UUID;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 
 import org.springframework.data.elasticsearch.annotations.Document;
+
+import ch.admin.seco.service.reference.domain.valueobject.Labels;
 
 /**
  * A Classification.
@@ -30,7 +31,7 @@ import org.springframework.data.elasticsearch.annotations.Document;
 @Table(name = "classification")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "classification")
-public class Classification implements Serializable {
+public class Classification<T extends Classification<T>> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -47,14 +48,9 @@ public class Classification implements Serializable {
     private int code;
 
     @NotNull
-    @Size(min = 2, max = 255)
-    @Column(name = "name", length = 100, nullable = false)
-    private String name;
-
-    @NotNull
-    @Column(name = "language", length = 2, nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Language language;
+    @Valid
+    @Embedded
+    private Labels labels;
 
     public UUID getId() {
         return id;
@@ -64,43 +60,40 @@ public class Classification implements Serializable {
         this.id = id;
     }
 
-    public int getCode() {
-        return code;
+    public T id(UUID id) {
+        this.id = id;
+        return (T) this;
     }
 
-    public Classification code(int code) {
-        this.code = code;
-        return this;
+    public int getCode() {
+        return code;
     }
 
     public void setCode(int code) {
         this.code = code;
     }
 
-    public String getName() {
-        return name;
+    public T code(int code) {
+        this.code = code;
+        return (T) this;
     }
 
-    public Classification name(String name) {
-        this.name = name;
-        return this;
+    public Labels getLabels() {
+        return labels;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setLabels(Labels labels) {
+        this.labels = labels;
     }
 
-    public Language getLanguage() {
-        return language;
+    public T labels(Labels label) {
+        this.labels = label;
+        return (T) this;
     }
 
-    public Classification language(Language language) {
-        this.language = language;
-        return this;
-    }
-
-    public void setLanguage(Language language) {
-        this.language = language;
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getId());
     }
 
     @Override
@@ -119,17 +112,11 @@ public class Classification implements Serializable {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hashCode(getId());
-    }
-
-    @Override
     public String toString() {
         return "Classification{" +
             "id=" + getId() +
             ", code='" + getCode() + "'" +
-            ", name='" + getName() + "'" +
-            ", language='" + getLanguage() + "'" +
+            ", labels='" + getLabels() + "'" +
             "}";
     }
 }

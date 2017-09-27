@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StopWatch;
 
 import ch.admin.seco.service.reference.domain.Canton;
-import ch.admin.seco.service.reference.domain.search.ClassificationSynonym;
+import ch.admin.seco.service.reference.domain.search.ClassificationSuggestion;
 import ch.admin.seco.service.reference.domain.search.LocalitySynonym;
 import ch.admin.seco.service.reference.domain.search.OccupationSynonym;
 import ch.admin.seco.service.reference.repository.CantonRepository;
@@ -84,34 +84,32 @@ public class ElasticsearchIndexServiceImpl implements ch.admin.seco.service.refe
     }
 
     private void reindexOccupationIndex() {
-        elasticsearchTemplate.deleteIndex(ClassificationSynonym.class);
+        elasticsearchTemplate.deleteIndex(ClassificationSuggestion.class);
         elasticsearchTemplate.deleteIndex(OccupationSynonym.class);
         reindexClassification();
         reindexOccupationSynonym();
     }
 
     private void reindexClassification() {
-        elasticsearchTemplate.createIndex(ClassificationSynonym.class);
-        elasticsearchTemplate.putMapping(ClassificationSynonym.class);
+        elasticsearchTemplate.createIndex(ClassificationSuggestion.class);
+        elasticsearchTemplate.putMapping(ClassificationSuggestion.class);
 
         StopWatch watch = new StopWatch();
         watch.start();
 
         Flux.fromStream(classificationRepository.streamAll())
-            .map(classification -> new ClassificationSynonym()
+            .map(classification -> new ClassificationSuggestion()
                 .id(classification.getId())
                 .code(classification.getCode())
-                .language(classification.getLanguage())
-                .classification(classification.getName())
-                .classificationSuggestions(entityToSynonymMapper.extractSuggestionList(classification.getName()))
+                .classificationSuggestions(entityToSynonymMapper.extractSuggestions(classification.getLabels()))
             )
             .buffer(100)
             .subscribe(classificationSearchRepository::saveAll);
 
         watch.stop();
-        log.debug("Elasticsearch has indexed the {} index in {} ms", ClassificationSynonym.class.getSimpleName(), watch.getTotalTimeMillis());
+        log.debug("Elasticsearch has indexed the {} index in {} ms", ClassificationSuggestion.class.getSimpleName(), watch.getTotalTimeMillis());
 
-        log.info("Elasticsearch: Indexed {} of {} rows for {}", classificationSearchRepository.count(), classificationRepository.count(), ClassificationSynonym.class.getSimpleName());
+        log.info("Elasticsearch: Indexed {} of {} rows for {}", classificationSearchRepository.count(), classificationRepository.count(), ClassificationSuggestion.class.getSimpleName());
 
     }
 
@@ -158,7 +156,7 @@ public class ElasticsearchIndexServiceImpl implements ch.admin.seco.service.refe
         elasticsearchTemplate.putMapping(LocalitySynonym.class);
 
         Flux.fromStream(localityRepository.streamAll())
-            .map(entityToSynonymMapper::toSynonym)
+            .map(entityToSynonymMapper::toSuggestion)
             .buffer(100)
             .subscribe(localitySynonymSearchRepository::saveAll);
 

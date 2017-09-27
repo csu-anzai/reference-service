@@ -171,7 +171,7 @@ public class LocalityServiceImpl implements LocalityService {
 
     @Async
     public void index(Locality locality) {
-        localitySynonymSearchRepository.index(entityToSynonymMapper.toSynonym(locality));
+        localitySynonymSearchRepository.index(entityToSynonymMapper.toSuggestion(locality));
     }
 
     private <T> List<T> convertSuggestionToDto(int resultSize, SearchResponse searchResponse,

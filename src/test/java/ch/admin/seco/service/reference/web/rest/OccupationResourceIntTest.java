@@ -34,6 +34,7 @@ import ch.admin.seco.service.reference.domain.Language;
 import ch.admin.seco.service.reference.domain.Occupation;
 import ch.admin.seco.service.reference.domain.OccupationMapping;
 import ch.admin.seco.service.reference.domain.OccupationSynonym;
+import ch.admin.seco.service.reference.domain.valueobject.Labels;
 import ch.admin.seco.service.reference.repository.OccupationMappingRepository;
 import ch.admin.seco.service.reference.repository.OccupationRepository;
 import ch.admin.seco.service.reference.repository.OccupationSynonymRepository;
@@ -145,10 +146,11 @@ public class OccupationResourceIntTest {
         return new Occupation()
             .code(OCCUPATION_CODE)
             .classificationCode(CLASSIFICATION_CODE)
-            .labelDe(OCCUPATION_LABEL_DE)
-            .labelFr(OCCUPATION_LABEL_FR)
-            .labelIt(OCCUPATION_LABEL_IT)
-            .labelEn(OCCUPATION_LABEL_EN);
+            .labels(new Labels()
+                .de(OCCUPATION_LABEL_DE)
+                .fr(OCCUPATION_LABEL_FR)
+                .it(OCCUPATION_LABEL_IT)
+                .en(OCCUPATION_LABEL_EN));
     }
 
     @Before
@@ -388,14 +390,12 @@ public class OccupationResourceIntTest {
         classificationService.save(
             new Classification()
                 .code(CLASSIFICATION_CODE)
-                .name(CLASSIFICATION_NAME)
-                .language(DEFAULT_LANGUAGE)
+                .labels(new Labels().de(CLASSIFICATION_NAME))
         );
         classificationService.save(
             new Classification()
                 .code(CLASSIFICATION_CODE_2)
-                .name(CLASSIFICATION_NAME_2)
-                .language(DEFAULT_LANGUAGE)
+                .labels(new Labels().de(CLASSIFICATION_NAME_2))
         );
         occupationRepository.save(new Occupation().classificationCode(CLASSIFICATION_CODE_2).code(DEFAULT_CODE));
 
@@ -493,10 +493,10 @@ public class OccupationResourceIntTest {
             .andExpect(jsonPath("$.id").value(occupation.getId().toString()))
             .andExpect(jsonPath("$.code").value(OCCUPATION_CODE))
             .andExpect(jsonPath("$.classificationCode").value(CLASSIFICATION_CODE))
-            .andExpect(jsonPath("$.labelDe").value(OCCUPATION_LABEL_DE))
-            .andExpect(jsonPath("$.labelFr").value(OCCUPATION_LABEL_FR))
-            .andExpect(jsonPath("$.labelIt").value(OCCUPATION_LABEL_IT))
-            .andExpect(jsonPath("$.labelEn").value(OCCUPATION_LABEL_EN));
+            .andExpect(jsonPath("$.labels.de").value(OCCUPATION_LABEL_DE))
+            .andExpect(jsonPath("$.labels.fr").value(OCCUPATION_LABEL_FR))
+            .andExpect(jsonPath("$.labels.it").value(OCCUPATION_LABEL_IT))
+            .andExpect(jsonPath("$.labels.en").value(OCCUPATION_LABEL_EN));
     }
 
     @Test
@@ -518,10 +518,10 @@ public class OccupationResourceIntTest {
             .andExpect(jsonPath("$.id").value(occupation.getId().toString()))
             .andExpect(jsonPath("$.code").value(OCCUPATION_CODE))
             .andExpect(jsonPath("$.classificationCode").value(CLASSIFICATION_CODE))
-            .andExpect(jsonPath("$.labelDe").value(OCCUPATION_LABEL_DE))
-            .andExpect(jsonPath("$.labelFr").value(OCCUPATION_LABEL_FR))
-            .andExpect(jsonPath("$.labelIt").value(OCCUPATION_LABEL_IT))
-            .andExpect(jsonPath("$.labelEn").value(OCCUPATION_LABEL_EN));
+            .andExpect(jsonPath("$.labels.de").value(OCCUPATION_LABEL_DE))
+            .andExpect(jsonPath("$.labels.fr").value(OCCUPATION_LABEL_FR))
+            .andExpect(jsonPath("$.labels.it").value(OCCUPATION_LABEL_IT))
+            .andExpect(jsonPath("$.labels.en").value(OCCUPATION_LABEL_EN));
     }
 
     @Test
@@ -545,10 +545,10 @@ public class OccupationResourceIntTest {
             .andExpect(jsonPath("$.id").value(occupation.getId().toString()))
             .andExpect(jsonPath("$.code").value(OCCUPATION_CODE))
             .andExpect(jsonPath("$.classificationCode").value(CLASSIFICATION_CODE))
-            .andExpect(jsonPath("$.labelDe").value(OCCUPATION_LABEL_DE))
-            .andExpect(jsonPath("$.labelFr").value(OCCUPATION_LABEL_FR))
-            .andExpect(jsonPath("$.labelIt").value(OCCUPATION_LABEL_IT))
-            .andExpect(jsonPath("$.labelEn").value(OCCUPATION_LABEL_EN));
+            .andExpect(jsonPath("$.labels.de").value(OCCUPATION_LABEL_DE))
+            .andExpect(jsonPath("$.labels.fr").value(OCCUPATION_LABEL_FR))
+            .andExpect(jsonPath("$.labels.it").value(OCCUPATION_LABEL_IT))
+            .andExpect(jsonPath("$.labels.en").value(OCCUPATION_LABEL_EN));
     }
 
     @Test

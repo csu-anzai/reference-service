@@ -172,7 +172,7 @@ public class OccupationResource {
     public ResponseEntity<OccupationAutocompleteDto> searchOccupations(
         @RequestParam String prefix, @RequestParam Language language, @RequestParam int resultSize) {
         log.debug("REST request to search for a page of OccupationSynonyms for query {}", prefix);
-        OccupationAutocompleteDto result = occupationService.suggestOccupationSynonyms(prefix, language, resultSize);
+        OccupationAutocompleteDto result = occupationService.suggest(prefix, language, resultSize);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

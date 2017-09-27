@@ -19,17 +19,15 @@
             <column name="id" type="uuid">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
+
             <column name="code" type="integer">
                 <constraints nullable="false"/>
             </column>
 
-            <column name="language" type="varchar(2)">
-                <constraints nullable="false"/>
-            </column>
-
-            <column name="name" type="varchar(255)">
-                <constraints nullable="false"/>
-            </column>
+            <column name="label_de" type="varchar(255)"/>
+            <column name="label_fr" type="varchar(255)"/>
+            <column name="label_it" type="varchar(255)"/>
+            <column name="label_en" type="varchar(255)"/>
 
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>

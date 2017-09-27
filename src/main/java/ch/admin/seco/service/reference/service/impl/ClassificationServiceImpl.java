@@ -14,12 +14,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.context.ApplicationContext;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ch.admin.seco.service.reference.domain.Classification;
-import ch.admin.seco.service.reference.domain.search.ClassificationSynonym;
+import ch.admin.seco.service.reference.domain.search.ClassificationSuggestion;
 import ch.admin.seco.service.reference.repository.ClassificationRepository;
 import ch.admin.seco.service.reference.repository.search.ClassificationSearchRepository;
 import ch.admin.seco.service.reference.service.ClassificationService;
@@ -71,9 +73,9 @@ public class ClassificationServiceImpl implements ClassificationService {
      */
     @Override
     @Transactional(readOnly = true)
-    public List<Classification> findAll() {
+    public Page<Classification> findAll(Pageable pageable) {
         log.debug("Request to get all Classifications");
-        return classificationRepository.findAll();
+        return classificationRepository.findAll(pageable);
     }
 
     /**
@@ -113,7 +115,7 @@ public class ClassificationServiceImpl implements ClassificationService {
      */
     @Override
     @Transactional(readOnly = true)
-    public List<ClassificationSynonym> search(String query) {
+    public List<ClassificationSuggestion> search(String query) {
         log.debug("Request to search Classifications for query {}", query);
         return StreamSupport
             .stream(classificationSearchRepository.search(queryStringQuery(query)).spliterator(), false)
@@ -122,7 +124,7 @@ public class ClassificationServiceImpl implements ClassificationService {
 
     @Async
     void index(Classification classification) {
-        classificationSearchRepository.save(classificationMapper.toSynonym(classification));
+        classificationSearchRepository.save(classificationMapper.toSuggestion(classification));
     }
 
     @PostConstruct
