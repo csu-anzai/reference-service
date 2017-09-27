@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ch.admin.seco.service.reference.domain.Classification;
 import ch.admin.seco.service.reference.domain.Language;
+import ch.admin.seco.service.reference.domain.search.OccupationSynonymSuggestion;
 import ch.admin.seco.service.reference.repository.ClassificationRepository;
 import ch.admin.seco.service.reference.service.dto.ClassificationSuggestionDto;
 import ch.admin.seco.service.reference.service.dto.OccupationAutocompleteDto;
@@ -62,7 +63,7 @@ public class OccupationSuggestionImpl {
 
         SearchResponse suggestResponse = elasticsearchTemplate.suggest(
             buildSuggestRequest(prefix, language, resultSize),
-            ch.admin.seco.service.reference.domain.search.OccupationSynonym.class);
+            OccupationSynonymSuggestion.class);
 
         List<OccupationSuggestionDto> occupations = mapOccupations(suggestResponse);
         List<ClassificationSuggestionDto> classifications = mapClassifications(language, suggestResponse, occupations);

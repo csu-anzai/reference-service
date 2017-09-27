@@ -24,7 +24,7 @@ import org.springframework.util.StopWatch;
 import ch.admin.seco.service.reference.domain.Canton;
 import ch.admin.seco.service.reference.domain.search.ClassificationSuggestion;
 import ch.admin.seco.service.reference.domain.search.LocalitySynonym;
-import ch.admin.seco.service.reference.domain.search.OccupationSynonym;
+import ch.admin.seco.service.reference.domain.search.OccupationSynonymSuggestion;
 import ch.admin.seco.service.reference.repository.CantonRepository;
 import ch.admin.seco.service.reference.repository.ClassificationRepository;
 import ch.admin.seco.service.reference.repository.LocalityRepository;
@@ -85,7 +85,7 @@ public class ElasticsearchIndexServiceImpl implements ch.admin.seco.service.refe
 
     private void reindexOccupationIndex() {
         elasticsearchTemplate.deleteIndex(ClassificationSuggestion.class);
-        elasticsearchTemplate.deleteIndex(OccupationSynonym.class);
+        elasticsearchTemplate.deleteIndex(OccupationSynonymSuggestion.class);
         reindexClassification();
         reindexOccupationSynonym();
     }
@@ -114,27 +114,27 @@ public class ElasticsearchIndexServiceImpl implements ch.admin.seco.service.refe
     }
 
     private void reindexOccupationSynonym() {
-        elasticsearchTemplate.createIndex(OccupationSynonym.class);
-        elasticsearchTemplate.putMapping(OccupationSynonym.class);
+        elasticsearchTemplate.createIndex(OccupationSynonymSuggestion.class);
+        elasticsearchTemplate.putMapping(OccupationSynonymSuggestion.class);
 
         StopWatch watch = new StopWatch();
         watch.start();
 
         Flux.fromStream(occupationSynonymRepository.streamAll())
-            .map(occupationSynonym -> new OccupationSynonym()
+            .map(occupationSynonym -> new OccupationSynonymSuggestion()
                 .id(occupationSynonym.getId())
                 .code(occupationSynonym.getCode())
                 .language(occupationSynonym.getLanguage())
-                .occupation(occupationSynonym.getName())
+                .name(occupationSynonym.getName())
                 .occupationSuggestions(entityToSynonymMapper.extractSuggestionList(occupationSynonym.getName()))
             )
             .buffer(100)
             .subscribe(occupationSynonymSearchRepository::saveAll);
 
         watch.stop();
-        log.debug("Elasticsearch has indexed the {} index in {} ms", OccupationSynonym.class.getSimpleName(), watch.getTotalTimeMillis());
+        log.debug("Elasticsearch has indexed the {} index in {} ms", OccupationSynonymSuggestion.class.getSimpleName(), watch.getTotalTimeMillis());
 
-        log.info("Elasticsearch: Indexed {} of {} rows for {}", occupationSynonymSearchRepository.count(), occupationSynonymRepository.count(), OccupationSynonym.class.getSimpleName());
+        log.info("Elasticsearch: Indexed {} of {} rows for {}", occupationSynonymSearchRepository.count(), occupationSynonymRepository.count(), OccupationSynonymSuggestion.class.getSimpleName());
     }
 
     private void reindexLocalityIndex() {

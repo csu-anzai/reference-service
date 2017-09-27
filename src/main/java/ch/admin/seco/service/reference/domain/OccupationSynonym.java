@@ -27,7 +27,7 @@ import org.hibernate.annotations.GenericGenerator;
 @Entity
 @Table(name = "occupation_synonym")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class OccupationSynonym implements Serializable {
+public class OccupationSynonym<T extends OccupationSynonym<T>> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -67,6 +67,11 @@ public class OccupationSynonym implements Serializable {
         this.id = id;
     }
 
+    public T id(UUID id) {
+        this.id = id;
+        return (T) this;
+    }
+
     public int getCode() {
         return code;
     }
@@ -75,9 +80,9 @@ public class OccupationSynonym implements Serializable {
         this.code = code;
     }
 
-    public OccupationSynonym code(int code) {
+    public T code(int code) {
         this.code = code;
-        return this;
+        return (T) this;
     }
 
     public Language getLanguage() {
@@ -88,9 +93,9 @@ public class OccupationSynonym implements Serializable {
         this.language = language;
     }
 
-    public OccupationSynonym language(Language language) {
+    public T language(Language language) {
         this.language = language;
-        return this;
+        return (T) this;
     }
 
     public String getName() {
@@ -101,9 +106,9 @@ public class OccupationSynonym implements Serializable {
         this.name = name;
     }
 
-    public OccupationSynonym name(String name) {
+    public T name(String name) {
         this.name = name;
-        return this;
+        return (T) this;
     }
 
     public int getExternalId() {
@@ -114,9 +119,9 @@ public class OccupationSynonym implements Serializable {
         this.externalId = externalId;
     }
 
-    public OccupationSynonym externalId(int externalId) {
+    public T externalId(int externalId) {
         this.externalId = externalId;
-        return this;
+        return (T) this;
     }
 
     @Override
@@ -145,7 +150,7 @@ public class OccupationSynonym implements Serializable {
             "id=" + getId() +
             ", code='" + getCode() + "'" +
             ", language='" + getLanguage() + "'" +
-            ", occupation='" + getName() + "'" +
+            ", name='" + getName() + "'" +
             ", externalId='" + getExternalId() + "'" +
             "}";
     }

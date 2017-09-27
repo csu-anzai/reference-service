@@ -5,14 +5,14 @@ import java.util.UUID;
 
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 
-import ch.admin.seco.service.reference.domain.search.OccupationSynonym;
+import ch.admin.seco.service.reference.domain.search.OccupationSynonymSuggestion;
 
 /**
  * Spring Data Elasticsearch repository for the OccupationSynonym entity.
  */
-public interface OccupationSynonymSearchRepository extends ElasticsearchRepository<OccupationSynonym, UUID> {
+public interface OccupationSynonymSearchRepository extends ElasticsearchRepository<OccupationSynonymSuggestion, UUID> {
 
-    List<OccupationSynonym> findAllByCodeEquals(int code);
+    List<OccupationSynonymSuggestion> findAllByCodeEquals(int code);
 
     void deleteAllByCodeEquals(int code);
 }

@@ -19,6 +19,7 @@ import ch.admin.seco.service.reference.domain.Locality;
 import ch.admin.seco.service.reference.domain.OccupationSynonym;
 import ch.admin.seco.service.reference.domain.search.ClassificationSuggestion;
 import ch.admin.seco.service.reference.domain.search.LocalitySynonym;
+import ch.admin.seco.service.reference.domain.search.OccupationSynonymSuggestion;
 import ch.admin.seco.service.reference.domain.search.Suggestions;
 import ch.admin.seco.service.reference.domain.valueobject.Labels;
 import ch.admin.seco.service.reference.service.dto.CantonSuggestionDto;
@@ -45,12 +46,12 @@ public class EntityToSynonymMapper {
             .geoPoint(localitySynonym.getGeoPoint());
     }
 
-    ch.admin.seco.service.reference.domain.search.OccupationSynonym toSuggestion(OccupationSynonym occupationSynonym) {
-        return new ch.admin.seco.service.reference.domain.search.OccupationSynonym()
+    OccupationSynonymSuggestion toSuggestion(OccupationSynonym occupationSynonym) {
+        return new OccupationSynonymSuggestion()
             .id(occupationSynonym.getId())
             .code(occupationSynonym.getCode())
             .language(occupationSynonym.getLanguage())
-            .occupation(occupationSynonym.getName())
+            .name(occupationSynonym.getName())
             .occupationSuggestions(extractSuggestionList(occupationSynonym.getName()));
     }
 
@@ -90,7 +91,7 @@ public class EntityToSynonymMapper {
 
     OccupationSuggestionDto convertOccupationSuggestion(CompletionSuggestion.Entry.Option option) {
         Map<String, Object> source = option.getHit().getSourceAsMap();
-        return new OccupationSuggestionDto(String.class.cast(source.get("occupation")), Integer.class.cast(source.get("code")));
+        return new OccupationSuggestionDto(String.class.cast(source.get("name")), Integer.class.cast(source.get("code")));
     }
 
     ClassificationSuggestionDto convertClassificationSuggestion(CompletionSuggestion.Entry.Option option, Language language) {

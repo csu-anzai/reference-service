@@ -34,6 +34,7 @@ import ch.admin.seco.service.reference.domain.Language;
 import ch.admin.seco.service.reference.domain.Occupation;
 import ch.admin.seco.service.reference.domain.OccupationMapping;
 import ch.admin.seco.service.reference.domain.OccupationSynonym;
+import ch.admin.seco.service.reference.domain.search.OccupationSynonymSuggestion;
 import ch.admin.seco.service.reference.domain.valueobject.Labels;
 import ch.admin.seco.service.reference.repository.OccupationMappingRepository;
 import ch.admin.seco.service.reference.repository.OccupationRepository;
@@ -191,7 +192,7 @@ public class OccupationResourceIntTest {
         assertThat(testOccupationSynonym.getName()).isEqualTo(DEFAULT_NAME);
 
         // Validate the OccupationSynonym in Elasticsearch
-        List<ch.admin.seco.service.reference.domain.search.OccupationSynonym> occupationSynonymSynonym = occupationSynonymSearchRepository.findAllByCodeEquals(testOccupationSynonym.getCode());
+        List<OccupationSynonymSuggestion> occupationSynonymSynonym = occupationSynonymSearchRepository.findAllByCodeEquals(testOccupationSynonym.getCode());
         assertThat(occupationSynonymSynonym).hasSize(1);
     }
 
@@ -338,7 +339,7 @@ public class OccupationResourceIntTest {
         assertThat(testOccupationSynonym.getName()).isEqualTo(UPDATED_NAME);
 
         // Validate the OccupationSynonym in Elasticsearch
-        List<ch.admin.seco.service.reference.domain.search.OccupationSynonym> occupationSynonymSynonym = occupationSynonymSearchRepository.findAllByCodeEquals(testOccupationSynonym.getCode());
+        List<OccupationSynonymSuggestion> occupationSynonymSynonym = occupationSynonymSearchRepository.findAllByCodeEquals(testOccupationSynonym.getCode());
         assertThat(occupationSynonymSynonym).hasSize(1);
     }
 
