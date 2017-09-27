@@ -52,14 +52,14 @@ public class OccupationSuggestionImpl {
     /**
      * Search for the occupation synonym corresponding to the query.
      *
-     * @param prefix   the query of the search
+     * @param prefix   the query of the suggest
      * @param language the pagination information
      * @param resultSize the size of the resultList
      * @return the list of entities
      */
     @Transactional(readOnly = true)
     public OccupationAutocompleteDto suggest(String prefix, Language language, int resultSize) {
-        LOGGER.debug("Request to search for a page of Occupations for query {}", prefix);
+        LOGGER.debug("Request to suggest for a page of Occupations for query {}", prefix);
 
         SearchResponse suggestResponse = elasticsearchTemplate.suggest(
             buildSuggestRequest(prefix, language, resultSize),

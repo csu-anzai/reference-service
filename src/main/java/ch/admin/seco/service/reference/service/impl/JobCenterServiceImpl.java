@@ -38,7 +38,7 @@ public class JobCenterServiceImpl implements JobCenterService {
     @Override
     @Transactional(readOnly = true)
     public Optional<JobCenterDto> findJobCenterByCode(String code, Language language) {
-        log.debug("Request to search JobCenter by code : {} and language : {}", code, language);
+        log.debug("Request to suggest JobCenter by code : {} and language : {}", code, language);
         return jobCenterRepository.findOneByCode(code)
             .map(jobCenter -> jobCenterMapper.jobCenterToDto(jobCenter, language));
     }

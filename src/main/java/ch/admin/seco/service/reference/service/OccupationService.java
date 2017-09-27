@@ -79,8 +79,8 @@ public interface OccupationService {
     /**
      * Search for the occupationSynonym corresponding to the query.
      *
-     * @param prefix     the query of the search
-     * @param language   the language of the search
+     * @param prefix     the query of the suggest
+     * @param language   the language of the suggest
      * @param resultSize the pagination information
      * @return the lists of occupations and classifications
      */

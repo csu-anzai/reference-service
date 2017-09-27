@@ -49,7 +49,7 @@ public interface ClassificationService {
     /**
      * Search for the classification corresponding to the query.
      *
-     *  @param query the query of the search
+     *  @param query the query of the suggest
      *
      *  @return the list of entities
      */

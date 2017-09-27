@@ -137,16 +137,16 @@ public class ClassificationResource {
     }
 
     /**
-     * SEARCH  /_search/classifications?query=:query : search for the classification corresponding
+     * SEARCH  /_search/classifications?query=:query : suggest for the classification corresponding
      * to the query.
      *
-     * @param query the query of the classification search
-     * @return the result of the search
+     * @param query the query of the classification suggest
+     * @return the result of the suggest
      */
     @GetMapping("/_search/classifications")
     @Timed
-    public List<ClassificationSuggestion> searchClassifications(@RequestParam String query) {
-        log.debug("REST request to search Classifications for query {}", query);
+    public List<ClassificationSuggestion> suggestClassification(@RequestParam String query) {
+        log.debug("REST request to suggest Classifications for query {}", query);
         return classificationService.search(query);
     }
 

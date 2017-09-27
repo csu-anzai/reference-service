@@ -23,7 +23,7 @@ import org.springframework.util.StopWatch;
 
 import ch.admin.seco.service.reference.domain.Canton;
 import ch.admin.seco.service.reference.domain.search.ClassificationSuggestion;
-import ch.admin.seco.service.reference.domain.search.LocalitySynonym;
+import ch.admin.seco.service.reference.domain.search.LocalitySuggestion;
 import ch.admin.seco.service.reference.domain.search.OccupationSynonymSuggestion;
 import ch.admin.seco.service.reference.repository.CantonRepository;
 import ch.admin.seco.service.reference.repository.ClassificationRepository;
@@ -138,7 +138,7 @@ public class ElasticsearchIndexServiceImpl implements ch.admin.seco.service.refe
     }
 
     private void reindexLocalityIndex() {
-        elasticsearchTemplate.deleteIndex(LocalitySynonym.class);
+        elasticsearchTemplate.deleteIndex(LocalitySuggestion.class);
         elasticsearchTemplate.deleteIndex(Canton.class);
 
         StopWatch watch = new StopWatch();
@@ -152,15 +152,15 @@ public class ElasticsearchIndexServiceImpl implements ch.admin.seco.service.refe
     }
 
     private void reindexLocality() {
-        elasticsearchTemplate.createIndex(LocalitySynonym.class);
-        elasticsearchTemplate.putMapping(LocalitySynonym.class);
+        elasticsearchTemplate.createIndex(LocalitySuggestion.class);
+        elasticsearchTemplate.putMapping(LocalitySuggestion.class);
 
         Flux.fromStream(localityRepository.streamAll())
             .map(entityToSynonymMapper::toSuggestion)
             .buffer(100)
             .subscribe(localitySynonymSearchRepository::saveAll);
 
-        log.info("Elasticsearch: Indexed {} of {} rows for {}", localitySynonymSearchRepository.count(), localityRepository.count(), LocalitySynonym.class.getSimpleName());
+        log.info("Elasticsearch: Indexed {} of {} rows for {}", localitySynonymSearchRepository.count(), localityRepository.count(), LocalitySuggestion.class.getSimpleName());
     }
 
     private <T, ID extends Serializable> void reindexForClass(Class<T> entityClass, JpaRepository<T, ID> jpaRepository,

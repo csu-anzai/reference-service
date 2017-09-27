@@ -4,10 +4,10 @@ import java.util.UUID;
 
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 
-import ch.admin.seco.service.reference.domain.search.LocalitySynonym;
+import ch.admin.seco.service.reference.domain.search.LocalitySuggestion;
 
 /**
  * Spring Data Elasticsearch repository for the Locality entity.
  */
-public interface LocalitySynonymSearchRepository extends ElasticsearchRepository<LocalitySynonym, UUID> {
+public interface LocalitySynonymSearchRepository extends ElasticsearchRepository<LocalitySuggestion, UUID> {
 }

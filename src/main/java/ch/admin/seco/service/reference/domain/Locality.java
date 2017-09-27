@@ -30,7 +30,7 @@ import ch.admin.seco.service.reference.domain.valueobject.GeoPoint;
 @Entity
 @Table(name = "locality")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class Locality implements Serializable {
+public class Locality<T extends Locality<T>> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -70,39 +70,39 @@ public class Locality implements Serializable {
         return id;
     }
 
-    public Locality id(UUID id) {
-        this.id = id;
-        return this;
-    }
-
     public void setId(UUID id) {
         this.id = id;
+    }
+
+    public T id(UUID id) {
+        this.id = id;
+        return (T) this;
     }
 
     public String getCity() {
         return city;
     }
 
-    public Locality city(String city) {
-        this.city = city;
-        return this;
-    }
-
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public T city(String city) {
+        this.city = city;
+        return (T) this;
     }
 
     public String getZipCode() {
         return zipCode;
     }
 
-    public Locality zipCode(String zipCode) {
-        this.zipCode = zipCode;
-        return this;
-    }
-
     public void setZipCode(String zipCode) {
         this.zipCode = zipCode;
+    }
+
+    public T zipCode(String zipCode) {
+        this.zipCode = zipCode;
+        return (T) this;
     }
 
     public int getCommunalCode() {
@@ -113,22 +113,22 @@ public class Locality implements Serializable {
         this.communalCode = communalCode;
     }
 
-    public Locality communalCode(int communalCode) {
+    public T communalCode(int communalCode) {
         this.communalCode = communalCode;
-        return this;
+        return (T) this;
     }
 
     public String getCantonCode() {
         return cantonCode;
     }
 
-    public Locality cantonCode(String cantonCode) {
-        this.cantonCode = cantonCode;
-        return this;
-    }
-
     public void setCantonCode(String cantonCode) {
         this.cantonCode = cantonCode;
+    }
+
+    public T cantonCode(String cantonCode) {
+        this.cantonCode = cantonCode;
+        return (T) this;
     }
 
     public GeoPoint getGeoPoint() {
@@ -139,9 +139,14 @@ public class Locality implements Serializable {
         this.geoPoint = geoPoint;
     }
 
-    public Locality geoPoint(GeoPoint geoPoint) {
+    public T geoPoint(GeoPoint geoPoint) {
         this.geoPoint = geoPoint;
-        return this;
+        return (T) this;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getId());
     }
 
     @Override
@@ -157,11 +162,6 @@ public class Locality implements Serializable {
             return false;
         }
         return Objects.equals(getId(), locality.getId());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(getId());
     }
 
     @Override

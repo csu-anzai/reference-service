@@ -33,7 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ch.admin.seco.service.reference.ReferenceserviceApp;
 import ch.admin.seco.service.reference.domain.Locality;
-import ch.admin.seco.service.reference.domain.search.LocalitySynonym;
+import ch.admin.seco.service.reference.domain.search.LocalitySuggestion;
 import ch.admin.seco.service.reference.domain.valueobject.GeoPoint;
 import ch.admin.seco.service.reference.repository.CantonRepository;
 import ch.admin.seco.service.reference.repository.LocalityRepository;
@@ -136,7 +136,7 @@ public class LocalityResourceIntTest {
         assertThat(testLocality.getGeoPoint().getLatitude()).isEqualTo(DEFAULT_LAT);
         assertThat(testLocality.getGeoPoint().getLongitude()).isEqualTo(DEFAULT_LON);
         // Validate the Locality in Elasticsearch
-        Optional<LocalitySynonym> localitySynonym = localitySynonymSearchRepository.findById(testLocality.getId());
+        Optional<LocalitySuggestion> localitySynonym = localitySynonymSearchRepository.findById(testLocality.getId());
         assertThat(localitySynonym).isPresent();
     }
 
@@ -321,7 +321,7 @@ public class LocalityResourceIntTest {
         assertThat(testLocality.getGeoPoint().getLongitude()).isEqualTo(UPDATED_LON);
 
         // Validate the Locality in Elasticsearch
-        Optional<LocalitySynonym> localitySynonym = localitySynonymSearchRepository.findById(testLocality.getId());
+        Optional<LocalitySuggestion> localitySynonym = localitySynonymSearchRepository.findById(testLocality.getId());
         assertThat(localitySynonym).isPresent();
     }
 

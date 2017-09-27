@@ -159,19 +159,19 @@ public class OccupationResource {
     }
 
     /**
-     * SEARCH  /_search/occupations/synonym?query=:query : search for the occupationSynonym corresponding
+     * SEARCH  /_search/occupations/synonym?query=:query : suggest for the occupationSynonym corresponding
      * to the query.
      *
-     * @param prefix       the query of the occupationSynonym search
+     * @param prefix       the query of the occupationSynonym suggest
      * @param language     the language information
      * @param resultSize   the resultSize information
-     * @return the result of the search
+     * @return the result of the suggest
      */
     @GetMapping(OCCUPATION_SEARCH_PATH)
     @Timed
-    public ResponseEntity<OccupationAutocompleteDto> searchOccupations(
+    public ResponseEntity<OccupationAutocompleteDto> suggestOccupation(
         @RequestParam String prefix, @RequestParam Language language, @RequestParam int resultSize) {
-        log.debug("REST request to search for a page of OccupationSynonyms for query {}", prefix);
+        log.debug("REST request to suggest for a page of OccupationSynonyms for query {}", prefix);
         OccupationAutocompleteDto result = occupationService.suggest(prefix, language, resultSize);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

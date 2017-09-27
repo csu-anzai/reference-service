@@ -126,22 +126,22 @@ public class LocalityResource {
     }
 
     /**
-     * SEARCH  /_search/localities?prefix=:prefix&resultSize=:resultSize : search for the locality corresponding
+     * SEARCH  /_search/localities?prefix=:prefix&resultSize=:resultSize : suggest for the locality corresponding
      * to the prefix and limit result by resultSize.
      *
-     * @param prefix the prefix of the locality search
+     * @param prefix the prefix of the locality suggest
      * @param resultSize the resultSize information
-     * @return the result of the search
+     * @return the result of the suggest
      */
     @GetMapping("/_search/localities")
     @Timed
-    public LocalityAutocompleteDto searchLocalities(@RequestParam String prefix, @RequestParam int resultSize) {
-        log.debug("REST request to search Localities for prefix {}, resultSize {}", prefix, resultSize);
-        return localityService.search(prefix, resultSize);
+    public LocalityAutocompleteDto suggestLocality(@RequestParam String prefix, @RequestParam int resultSize) {
+        log.debug("REST request to suggest Localities for prefix {}, resultSize {}", prefix, resultSize);
+        return localityService.suggest(prefix, resultSize);
     }
 
     /**
-     * SEARCH  /_search/localities/nearest : search for the nearest
+     * SEARCH  /_search/localities/nearest : suggest for the nearest
      * locality to corresponding coordinates.
      *
      * @param latitude the latitude for which obtain nearest locality
@@ -151,14 +151,14 @@ public class LocalityResource {
     @GetMapping("/_search/localities/nearest")
     @Timed
     public ResponseEntity<Locality> searchNearestLocality(@RequestParam Double latitude, @RequestParam Double longitude) {
-        log.debug("REST request to search Locality nearest to geo point (latitude={}, longitude={})", latitude, longitude);
-        return ResponseUtil.wrapOrNotFound(localityService.searchNearestLocality(new GeoPoint(latitude, longitude)));
+        log.debug("REST request to suggest Locality nearest to geo point (latitude={}, longitude={})", latitude, longitude);
+        return ResponseUtil.wrapOrNotFound(localityService.findNearestLocality(new GeoPoint(latitude, longitude)));
     }
 
     @GetMapping(value = "/localities", params = "zipCode")
     @Timed
     public List<Locality> findLocalitiesByZipCode(@RequestParam String zipCode) {
-        log.debug("REST request to search Locality by zipCode({})", zipCode);
+        log.debug("REST request to suggest Locality by zipCode({})", zipCode);
         return localityService.findOneByZipCode(zipCode);
 
     }

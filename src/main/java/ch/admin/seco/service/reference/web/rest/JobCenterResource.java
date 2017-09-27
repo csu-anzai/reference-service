@@ -33,7 +33,7 @@ public class JobCenterResource {
     @Timed
     public ResponseEntity<JobCenterDto> searchJobCenterByCode(@RequestParam String code,
         @RequestParam Language language) {
-        log.debug("REST request to search JobCenter by code {} and language {}", code, language);
+        log.debug("REST request to suggest JobCenter by code {} and language {}", code, language);
         Optional<JobCenterDto> jobCenter = jobCenterService.findJobCenterByCode(code, language);
         return ResponseUtil.wrapOrNotFound(jobCenter);
     }

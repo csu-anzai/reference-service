@@ -47,19 +47,19 @@ public interface LocalityService {
      * Search for the locality corresponding
      * to the prefix and limit result by resultSize.
      *
-     * @param prefix the prefix of the locality search
+     * @param prefix the prefix of the locality suggest
      * @param resultSize the response size information
-     * @return the result of the search
+     * @return the result of the suggest
      */
-    LocalityAutocompleteDto search(String prefix, int resultSize);
+    LocalityAutocompleteDto suggest(String prefix, int resultSize);
 
     /**
      * Search for the nearest locality to the geo point.
      *
-     * @param geoPoint the geo point from which to search
+     * @param geoPoint the geo point from which to suggest
      * @return nearest entity to geo point
      */
-    Optional<Locality> searchNearestLocality(GeoPoint geoPoint);
+    Optional<Locality> findNearestLocality(GeoPoint geoPoint);
 
     List<Locality> findOneByZipCode(String zipCode);
 }

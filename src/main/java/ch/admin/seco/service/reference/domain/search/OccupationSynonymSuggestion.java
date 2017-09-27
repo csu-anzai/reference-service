@@ -1,6 +1,5 @@
 package ch.admin.seco.service.reference.domain.search;
 
-import java.util.Objects;
 import java.util.Set;
 
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -28,26 +27,6 @@ public class OccupationSynonymSuggestion extends OccupationSynonym<OccupationSyn
     public OccupationSynonymSuggestion occupationSuggestions(Set<String> occupationSuggestions) {
         this.occupationSuggestions = occupationSuggestions;
         return this;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), getOccupationSuggestions());
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        if (!super.equals(o)) {
-            return false;
-        }
-        OccupationSynonymSuggestion that = (OccupationSynonymSuggestion) o;
-        return Objects.equals(getOccupationSuggestions(), that.getOccupationSuggestions());
     }
 
     @Override

@@ -18,7 +18,7 @@ import ch.admin.seco.service.reference.domain.Language;
 import ch.admin.seco.service.reference.domain.Locality;
 import ch.admin.seco.service.reference.domain.OccupationSynonym;
 import ch.admin.seco.service.reference.domain.search.ClassificationSuggestion;
-import ch.admin.seco.service.reference.domain.search.LocalitySynonym;
+import ch.admin.seco.service.reference.domain.search.LocalitySuggestion;
 import ch.admin.seco.service.reference.domain.search.OccupationSynonymSuggestion;
 import ch.admin.seco.service.reference.domain.search.Suggestions;
 import ch.admin.seco.service.reference.domain.valueobject.Labels;
@@ -36,7 +36,7 @@ public class EntityToSynonymMapper {
         this.elasticsearchTemplate = elasticsearchTemplate;
     }
 
-    public Locality fromSynonym(LocalitySynonym localitySynonym) {
+    public Locality fromSynonym(LocalitySuggestion localitySynonym) {
         return new Locality()
             .id(localitySynonym.getId())
             .city(localitySynonym.getCity())
@@ -63,8 +63,8 @@ public class EntityToSynonymMapper {
             .classificationSuggestions(extractSuggestions(classification.getLabels()));
     }
 
-    LocalitySynonym toSuggestion(Locality locality) {
-        return new LocalitySynonym()
+    LocalitySuggestion toSuggestion(Locality locality) {
+        return new LocalitySuggestion()
             .id(locality.getId())
             .city(locality.getCity())
             .zipCode(locality.getZipCode())

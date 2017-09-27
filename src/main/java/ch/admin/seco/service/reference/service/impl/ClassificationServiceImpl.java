@@ -110,13 +110,13 @@ public class ClassificationServiceImpl implements ClassificationService {
     /**
      * Search for the classification corresponding to the query.
      *
-     *  @param query the query of the search
+     *  @param query the query of the suggest
      *  @return the list of entities
      */
     @Override
     @Transactional(readOnly = true)
     public List<ClassificationSuggestion> search(String query) {
-        log.debug("Request to search Classifications for query {}", query);
+        log.debug("Request to suggest Classifications for query {}", query);
         return StreamSupport
             .stream(classificationSearchRepository.search(queryStringQuery(query)).spliterator(), false)
             .collect(Collectors.toList());
