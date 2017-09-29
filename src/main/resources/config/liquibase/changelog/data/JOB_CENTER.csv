@@ -1,0 +1,291 @@
+ID                                  ,CODE ,EMAIL                              ,PHONE             ,FAX
+6ff2b62a-3e2d-4ab9-841d-c3cee08fb65a,SGA10,info.vdawa@sg.ch                   ,+41 58 229 35 47  ,+41 58 229 22 03
+55cd1066-1e9b-4708-90ac-f0dc1bf11fe3,SGA20,info.vdawa@sg.ch                   ,+41 58 229 47 61  ,+41 58 229 47 75
+8c0a8f16-55b6-4745-9f1e-ed3968d92af6,SGB10,info.ravstg@sg.ch                  ,+41 58 229 25 35  ,
+456d9800-7385-4751-bf5d-2454c67fd9a1,SGO10,info.ravobu@sg.ch                  ,+41 58 229 93 93  ,+41 58 229 93 83
+687983e2-5e53-4c93-ac71-12181fc33f5a,SGP10,info.ravsar@sg.ch                  ,+41 58 229 82 68  ,+41 43 888 17 79
+fc0ed4ed-3c81-4ea0-8218-4e3502ac36af,SGQ10,info.ravher@sg.ch                  ,+41 58 229 97 77  ,+41 58 229 97 67
+ae098b2e-b0cb-4a87-80c4-b75ba031b835,SGR10,info.ravrap@sg.ch                  ,+41 58 229 76 56  ,
+107bbc24-2a48-4c86-84f7-d04b26e1d134,SGT10,info.ravwat@sg.ch                  ,+41 58 229 91 71  ,+41 58 229 91 81
+c46be4b8-49bf-4e23-91ef-43202d644ae9,SHA10,arbeitsamt@ktsh.ch                 ,+41 52 632 72 62  ,+41 52 632 77 23
+b4ad1a6a-35a7-4c9a-84b7-3ed42f96dbfc,SHA20,rav@ktsh.ch                        ,+41 52 632 70 24  ,+41 52 632 70 23
+afe48545-0197-4390-b30f-52efbfd0e774,SHA30,lam@ktsh.ch                        ,+41 52 632 74 69  ,+41 52 632 77 23
+b6f39918-1e2c-40b6-8f73-6ed9ed499f25,SHA40,kast@ktsh.ch                       ,+41 52 632 78 39  ,+41 52 632 77 23
+10290044-7c87-476e-8618-240e9f6cf660,SOAA0,rav.olten@awa.so.ch                ,+41 62 311 29 60  ,+41 62 311 29 50
+050040c0-5453-4470-b93f-a5a444280778,SOAB0,rav.solothurn@awa.so.ch            ,+41 32 627 96 11  ,+41 32 627 96 00
+0570bab9-904a-43a1-b08a-88f152136397,SOAH0,                                   ,+41 62 287 33 39  ,+41 62 287 33 34
+1d593b60-cba3-4ae8-afdd-faf8c0ad7eb4,SOA10,awa@awa.so.ch                      ,+41 32 627 94 11  ,+41 32 627 95 90
+cb193546-da12-4c5d-a51e-d7ecd83cfb1c,SOA30,rav.solothurn@awa.so.ch            ,+41 32 627 96 11  ,+41 32 627 96 00
+406b021f-61b6-4947-a3ac-245a4df3d81c,SOA40,rav.olten@awa.so.ch                ,+41 62 311 92 00  ,+41 62 311 92 10
+7a3f1f02-1445-4849-9fa8-10afa22d1157,SOA90,rav.plus@awa.so.ch                 ,+41 32 627 85 61  ,+41 32 627 85 51
+aff9b449-422f-4137-81f2-da19cf6556d2,SZA10,afa@sz.ch                          ,+4141 819 11 24   ,+4141 819 16 29
+23ac1b50-b3ce-4c47-a2cc-c31194ca5534,SZA20,ravgoldau.vd@sz.ch                 ,+4141 859 09 19   ,+4141 859 09 29
+0862f306-453b-4f27-8fd0-7f3a729925aa,SZA30,ravlachen.vd@sz.ch                 ,+4155 451 60 20   ,+4155 451 60 30
+ee8752ac-c94c-4c0a-8d10-81699ba5a7c7,TGA10,daniel.wessner@tg.ch               ,+41 58 345 54 07  ,+41 58 345 54 01
+b4331586-2f1f-4105-8d44-03638c5d82f8,TGA30,                                   ,+41 58 345 17 45  ,+41 58 345 17 46
+d9fdc078-494f-4c9b-92f8-b1d433693bb3,TGA40,marcel.schaer@tg.ch                ,+41 58 345 55 70  ,+41 58 345 55 71
+21848b42-f210-4adf-977b-045878aa67c3,TGA50,                                   ,+41 58 345 55 80  ,+41 58 345 56 21
+2cb88e22-6ef5-4ba9-8bab-f480348a5c94,TGO10,rav.frauenfeld@tg.ch               ,+41 58 345 55 20  ,+41 58 345 55 21
+e29a174b-7348-4179-95dd-17b4a07c6f7c,TGP10,rav.kreuzlingen@tg.ch              ,+41 58 345 55 80  ,+41 58 345 55 81
+a9ffcdd4-17a8-43fc-8252-782bf412c14e,TGQ10,rav.amriswil@tg.ch                 ,+41 58 345 17 45  ,+41 58 345 17 46
+c44f8101-d04c-40a8-9f15-b40d20ced451,URA10,markus.indergand@ur.ch             ,041 875 24 18     ,041 875 24 37
+4e1a24d2-f2d1-4e96-a7d8-875071679c64,URA20,peter.marent@ur.ch                 ,041 875 24 39     ,041 875 24 37
+83f49110-5670-4473-86ea-d01b3d25bb12,VSP10,ravoberwallis@admin.vs.ch          ,+41 27 606 94 50  ,+41 27 606 94 54
+d66d6f70-d104-41e0-ac19-e1cf4bd68ef4,ZGA10,                                   ,+41 (41) 728 55 20,+41 (41) 728 55 29
+a3bd9eea-0e53-478e-84b6-94994f2c5fb4,ZGA40,info@rav.zg.ch                     ,+41 41 728 25 88  ,+41 41 728 25 99
+2bc6d2d2-a703-482d-ae94-dbb1268939a7,ZHAA0,hotline.ravopfikon@vd.zh.ch        ,+41 43 259 64 20  ,+41 43 259 64 58
+f5fb8725-9dd1-4bdb-ae30-cd73d427e140,ZHAC0,hotline.ravwinterthur@vd.zh.ch     ,+41 43 259 67 00  ,+41 43 259 67 01
+c3ea352c-04b9-4f36-8e7d-1e868b08907c,ZHAE0,hotline.ravfehraltorf@vd.zh.ch     ,+41 43 259 66 66  ,+41 43 259 66 99
+162fc25e-9eef-4beb-9f59-5f1f71a89988,ZHAF0,hotline.ravuster@vd.zh.ch          ,+41 43 258 43 43  ,+41 43 258 43 44
+ca6301d2-d313-4a18-8923-53e549dd6f5c,ZHAG0,hotline.ravrueti@vd.zh.ch          ,+41 43 259 62 00  ,+41 43 259 62 01
+b31c0e08-8826-426a-a16e-96d03a38615a,ZHAH0,hotline.ravbuelach@vd.zh.ch        ,+41 43 259 63 00  ,+41 43 259 63 01
+94b9a199-f903-44a3-9318-295c3b334b36,ZHAI0,hotline.ravmeilen@vd.zh.ch         ,+41 43 259 65 00  ,+41 43 259 65 01
+f3e35bf7-1775-4ec3-b609-6502881cf0e1,ZHAJ0,hotline.ravthalwil@vd.zh.ch        ,+41 43 258 43 60  ,+41 43 258 43 61
+c19cf2a9-c207-4b1b-8d3d-5e7dea95ad58,ZHAL0,hotline.ravdietikon@vd.zh.ch       ,+41 43 258 44 44  ,+41 43 258 44 45
+0284ed5d-03d8-4291-a1a4-ae4627107eca,ZHAM0,hotline.ravregensdorf@vd.zh.ch     ,+41 43 259 62 62  ,+41 43 259 62 82
+b9ca79b7-47b3-41ff-b654-cca1451ff14e,ZHAN0,hotline.ravhardturmstrasse@vd.zh.ch,+41 43 259 63 63  ,+41 43 259 63 64
+e03a0cb3-7872-45aa-93a8-9db770b4a765,ZHAP0,hotline.ravstaffelstrasse@vd.zh.ch ,+41 43 258 42 00  ,+41 43 258 42 01
+422fa269-2b9f-44d3-aa97-27583f4ebc83,ZHAV0,hotline.ravbadenerstrasse@vd.zh.ch ,+41 43 258 45 45  ,+41 43 258 45 49
+716d9714-1af7-41eb-9649-7b5372251c05,ZHAW0,hotline.raveggbuehlstrasse@vd.zh.ch,+41 43 258 45 50  ,+41 43 258 45 99
+b6068b5b-a1ad-4d03-8e4d-4244dccab782,ZHAX0,hotline.ravlagerstrasse@vd.zh.ch   ,+41 43 259 65 65  ,+41 43 259 65 99
+cb461981-abca-4edd-8775-584f992a8220,ZHA10,bruno.sauter@vd.zh.ch              ,+41 43 259 26 26  ,+41 43 259 51 04
+c0915a77-6667-4119-9e69-9a5f1f6e9a0e,ZHA70,hotline.ravnansenstrasse@vd.zh.ch  ,+41 43 259 90 00  ,+41 43 259 90 70
+edb3a289-a531-43a0-8e3d-c782ae7a6362,CHA20,hotline.avam@seco.admin.ch         ,+41 58 462 28 35  ,+41 58 462 29 83
+086e08dd-5221-4f6c-aa01-c1d9ce6d1baf,FRA10,SPE@fr.ch                          ,+41 26 305 96 77  ,+41 26 305 95 99
+b359de92-ea94-4acb-8168-8bf8b62bdbd1,FRA30,spe@fr.ch                          ,+41 26 305 96 05  ,+41 26 305 95 96
+0676cf45-bffb-447f-b205-264efc7188d1,FRF40,ore@fr.ch                          ,+41 26 305 96 18  ,+41 26 305 95 67
+411421ad-c904-4559-a7da-87e13b2930e4,FRL10,orf@fr.ch                          ,+41 26 305 96 06  ,+41 26 305 95 89
+5ba20a00-5e29-4f29-a98c-c6a8a4de9a26,AGAA0,rav.zofingen@ag.ch                 ,+41 62 745 05 80  ,+41 62 745 05 75
+235143e0-bb5a-4811-ad68-e9247121e15d,AGAF0,                                   ,+41 62 835 16 80  ,
+16772234-356d-44f4-8d6a-41f35d443655,AGAG0,                                   ,+41 62 835 18 60  ,
+c18eab23-617f-4ee5-adf8-c3ddd98eb8a5,AGA10,urs.keller@ag.ch                   ,+41 62 835 16 80  ,+41 62 835 17 29
+4ff93c21-6945-4410-b2b8-b8652de4ae41,AGA20,                                   ,+41 62 835 16 80  ,+41 62 835 17 29
+8f8f5284-7683-4a8a-b4d7-03f9d41a61f7,AGA30,rav.suhr@ag.ch                     ,+41 62 855 02 02  ,+41 62 855 02 00
+4c1d7dda-eae4-44db-ac90-6f308340fb27,AGA40,rav.baden@ag.ch                    ,+41 56 200 01 01  ,+41 56 200 01 00
+dc1f2a82-bef2-4dd0-a070-2a2c7921fc43,AGA70,rav.brugg@ag.ch                    ,+41 56 460 90 40  ,+41 56 460 90 48
+96ad3db2-d755-4a7b-8612-2e672f75d159,AGA80,rav.wohlen@ag.ch                   ,+41 56 619 50 80  ,+41 56 619 50 88
+27e7f669-e892-4d49-95b9-a82b206924ba,AGA90,rav.rheinfelden@ag.ch              ,+41 61 836 94 44  ,+41 61 836 94 48
+a88f032f-6413-4c52-8c5d-4d1f52cabed1,AIA10,                                   ,+41 71 788 96 21  ,+41 71 788 96 29
+d14499e8-f483-4d83-a4c6-a2cff4a0cc81,AIA20,info@rav.ai.ch                     ,+41 71 788 18 50  ,+41 71 788 18 40
+cc806127-ecf9-4bc7-b527-c71f00f52706,ARA10,chk59tn8@ibmmail.com               ,+41 71 353 61 11  ,+41 71 353 63 69
+ab4502e8-ab41-4a73-a664-6db8b720795e,ARA20,rav.herisau@ar.ch                  ,071 353 63 60     ,071 353 63 64
+8bf405fc-c073-4067-a168-5c78d1b0bfe6,BEAA0,rav.guemligen@vol.be.ch            ,+41 31 636 02 31  ,
+df212015-9537-4a27-9cb1-359606cdf43e,BEAB0,rav.zollikofen@vol.be.ch           ,+41 31 636 08 00  ,
+405cef2d-8e55-4b8e-8f52-bec2f0a26a47,BEAD0,info.ams@vol.be.ch                 ,+41 31 635 37 80  ,
+169cd8bb-5efe-49b3-879b-2bdeb46129ba,BEAE0,rav.interlaken@vol.be.ch           ,+41 31 636 20 01  ,
+a70f6156-d91a-412d-85f5-440914e34b6e,BEAF0,info.ams@vol.be.ch                 ,+41 31 635 37 80  ,
+4634512d-e3de-4696-8094-6f155d59339c,BEAG0,info.ams@vol.be.ch                 ,+41 31 635 37 80  ,
+d25a7578-0264-485a-858e-69c0cc30c9e0,BEAI0,rav.spiez@vol.be.ch                ,+41 31 636 03 20  ,
+b33b7501-cfdf-4292-8f80-280d6cda650f,BEAP0,rav.lyss@vol.be.ch                 ,+41 31 636 04 70  ,
+026abbb4-c708-46e2-9d9e-b50feba7f915,BEAQ0,rav.buempliz-bethlehem@vol.be.ch   ,+41 31 636 02 90  ,
+cb529787-2482-46db-a4ce-03b23dbcf7ae,BEAV0,info.ams@vol.be.ch                 ,+41 31 635 37 80  ,
+81eb7e6f-6ee3-4652-9c24-bc38a743e09f,BEAW0,rav.bernwest@vol.be.ch             ,+41 31 636 03 40  ,
+84c72059-e008-478a-9d7b-b8be7cc1bba6,BEAX0,rav.bernzentrum@vol.be.ch          ,+41 31 636 02 62  ,
+68111deb-485e-46ea-8428-f601e5fce6d7,BEA10,info.rav@vol.be.ch                 ,+41 31 633 56 89  ,
+a421eff1-3eaa-444c-a9b3-91f4ad7213e7,BEA40,rav.biel@vol.be.ch                 ,+41 31 635 35 30  ,
+e4efbc36-5f6e-46ca-b105-0b79722ccbb2,BEA70,rav.burgdorf@vol.be.ch             ,+41 31 636 13 22  ,
+da6f6d37-1a2e-4f32-8c2b-467d5de439a6,BEA80,rav.langenthal@vol.be.ch           ,+41 31 636 13 00  ,
+2baae146-f482-44f5-bdc4-20e86381cabb,BEA90,rav.thun@vol.be.ch                 ,+41 31 636 34 60  ,
+2df9fd6e-f7f9-43d8-b7c4-e7fe7225a530,BEB80,                                   ,+41 (31) 321 64 12,+41 (31) 321 77 90
+0870687d-e3c6-467d-a603-acfb2c232801,BLAB0,rav.muenchenstein@bl.ch            ,+41 61 552 05 40  ,+41 61 552 05 41
+05de8799-d34e-4230-be11-48b162600eda,BLAC0,rav.oberwil@bl.ch                  ,+41 61 552 05 80  ,+41 61 552 05 81
+c24f6f67-beb7-44cb-86ed-dc8ca8500689,BLAD0,rav.laufen@bl.ch                   ,+41 61 552 06 20  ,+41 61 552 06 21
+0531a9e6-12b6-4530-a6d2-7f1895f2c481,BLAE0,rav.gelterkinden@bl.ch             ,+41 61 552 06 60  ,+41 61 552 06 61
+71bfc05a-2df4-45c3-8e7b-cf90f07204f2,BLAF0,rav.liestal@bl.ch                  ,+41 61 552 07 00  ,+41 61 552 07 01
+a446ce69-b7ff-43c8-8f5a-44110adcd69b,BLA10,thomas.keller@bl.ch                ,+41 (61) 552 77 77,+41 (61) 552 77 00
+58a27490-bdb1-4fa7-bbd6-828e1c543235,BLA50,rav.pratteln@bl.ch                 ,+41 61 552 05 00  ,+41 61 552 05 01
+e66ee50d-7c37-4ebb-be1d-0de2923c2965,BSA10,alessandro.tani@bs.ch              ,+41 61 267 88 26  ,
+a28b8cbd-02be-40c3-9f33-5d9824b6c801,BSA20,alessandro.tani@bs.ch              ,+41 61 267 88 26  ,+41 61 267 51 64
+b3eca8be-d1d4-4ab6-97ea-86546c79ed86,BSA30,beat.lippuner@bs.ch                ,+41 61 267 50 13  ,+41 61 267 50 80
+45127730-5a98-495e-844d-261a4c3f5dce,BSA40,detlef.zipperer@bs.ch              ,+41 61 267 67 07  ,+41 61 267 99 39
+38cdb282-caf2-4581-8af4-be32f25346c5,BSA60,andreas.bammatter@bs.ch            ,+41 61 267 51 79  ,+41 61 267 50 77
+8f3a1204-5aae-4d84-84f4-69fb6460c187,BSA70,loredana.fuso@bs.ch                ,+41 61 267 50 06  ,+41 61 267 50 80
+5ae2bb35-38ea-48e4-9085-0f9608a686ef,BSA80,jobroom.rav@bs.ch                  ,+41 61 267 50 33  ,+41 61 267 50 52
+edbb7946-d30e-47cb-bf7c-9b736a206921,BSA90,girolamo.pecoraro@bs.ch            ,+41 61 267 50 03  ,+41 61 267 50 80
+986fc68d-0a8d-40dd-91e3-d0defd493286,CHA30,swiss.emigration@bfm.admin.ch      ,+41 31 322 42 02  ,
+072be483-abcf-43ec-9a92-9c789358a776,CHB30,                                   ,+41 31 322 28 16  ,+41 31 312 29 83
+087caea6-f269-4692-bdd6-4edd5fb9a547,CHB60,werner.tanner@seco.admin.ch        ,+41 58 480 62 73  ,
+2a0befcc-8b56-41c6-b323-d759472218f3,CHEF0,                                   ,+41 (31) 322 32 97,+41 (31) 322 31 79
+45022b79-ba55-4533-ab60-ac971949d909,CHEG0,                                   ,+41 (31) 322 80 41,+41 (31) 322 79 01
+63cdf15a-3094-47d1-9b75-b868dc32f690,CHEI0,                                   ,+41 (31) 322 48 36,+41 (31) 325 80 23
+0f6a7feb-1bbc-4f21-bcc7-3c4118c6d357,CHEJ0,kurt.zuppinger@gs-efd.admin.ch     ,+41 (31) 323 39 95,+41 (31) 322 61 87
+43ec80c4-b9d8-493b-8a3b-3d8680503937,CHEL0,kurt.durrer@gs-evd.admin.ch        ,+41 (31) 322 20 23,+41 (31) 322 20 96
+e19e09f8-6fe9-4535-ab98-4d9166a9aac5,CHEM0,dora.wettstein@blw.admin.ch        ,+41 (31) 322 25 83,+41 (31) 322 26 34
+d7b8f3c3-ce3f-41a5-904b-06cd045d4dec,CHEN0,Rene.Brunner@gs-uvek.admin.ch      ,+41 (31) 322 62 98,+41 (31) 322 78 06
+66141ae8-eba4-4520-8498-d50448af0fd1,CHEO0,jurg.leuenberger@bk.admin.ch       ,+41 (31) 322 37 22,+41 (31) 322 38 95
+a9d57dd1-0153-4bf2-9a43-f37c4f4bd80e,CHET0,                                   ,+41 (31)          ,
+2b29b94d-f17e-4298-ade5-0291487572d3,CHS10,                                   ,+41 (32) 713 60 10,+41 (32) 713 60 11
+c46c732e-4070-45aa-9d34-6b7b57278e3e,CHW10,                                   ,+41 (31) 322 21 72,+41 (31) 322 20 57
+92a850ea-210c-4620-8b3a-bddb3b2a86bb,CHZ10,                                   ,+41 (31) 322 24 72,
+adaebb2f-ff46-4a66-8534-fb9ac72e3c39,FRF10,ort@fr.ch                          ,+41 26 305 96 15  ,+41 26 305 95 69
+7ede1fee-22c2-4ae0-aece-891672daf1df,FRF30,orm@fr.ch                          ,+41 26 305 96 17  ,+41 26 305 95 68
+ac2c796a-03c0-4918-aec1-7f02c896b87a,GLA10,heinz.martinelli@gl.ch             ,+41 (55) 646 66 26,+41 (55) 646 66 28
+c1f749b8-c331-4590-a9c8-9d31b004c0a5,GLA20,rav.sekretariat@gl.ch              ,+41 55 646 66 70  ,+41 55 646 66 79
+10ec523e-dcdf-4869-b878-5da08107e194,GRA10,                                   ,+41 81 257 23 45  ,+41 81 257 21 73
+ab1c7568-7384-468b-9d81-8cc86d97c9ee,GRA20,                                   ,+41 81 257 30 63  ,+41 81 257 20 24
+ca4dedf9-8da4-4688-afbb-93472b0d6100,GRD10,info.ravchur@kiga.gr.ch            ,+41 81 257 31 13  ,+41 81 257 20 23
+3b99a7c8-9d38-4ad0-8052-203e19657063,GRE10,info.ravthusis@kiga.gr.ch          ,+41 81 257 53 30  ,+41 81 257 53 39
+d0e7be8f-7a2c-4935-9032-d992864d6cb1,GRF10,info.ravilanz@kiga.gr.ch           ,+41 81 257 62 14  ,+41 81 257 62 19
+c9a5d8bc-b09d-4d4b-86de-38fad2193f5e,GRH10,info.ravdavos@kiga.gr.ch           ,+41 81 257 63 20  ,+41 81 257 63 26
+b0b33183-e3d3-4bd6-91f7-9d6c4e28577a,GRI10,info.ravsamedan@kiga.gr.ch         ,+41 81 257 49 20  ,+41 81 257 49 29
+962493ef-b5a2-44f6-bc11-c5cb408edfe0,LUA10,wira@lu.ch                         ,+41 41 228 68 88  ,+41 41 228 69 35
+d583a835-9cb6-4a73-af1e-c24d55d0b398,LUA20,arbeitsmarktliche.angebote@lu.ch   ,+41 41 228 32 80  ,+41 41 228 32 90
+3836aa7a-832f-4ec9-82c0-dbee9fff3168,LUA40,rav-emmen@lu.ch                    ,+41 41 228 32 00  ,+41 41 228 32 01
+2a825c0d-b99f-4077-b8af-cf33429ed782,LUA50,rav-luzern@lu.ch                   ,+41 41 228 37 47  ,+41 41 228 37 48
+565531d9-2552-48a2-987f-f175338ed8f8,LUA60,rav-pilatus@lu.ch                  ,+41 41 228 43 60  ,+41 41 228 43 98
+6c2d00f7-b8b8-4b36-9d6a-e28fc0957ac7,LUA70,rav-sursee@lu.ch                   ,+41 41 228 37 00  ,+41 41 228 37 01
+7d841110-aab1-455a-9d65-7f7ea89936ad,LUA80,rav-wolhusen@lu.ch                 ,+41 41 228 38 00  ,+41 41 228 38 01
+32d30aa1-7906-42eb-ae39-a60ccfeff089,LUA90,bjb@lu.ch                          ,+41 41 228 32 00  ,+41 41 228 32 02
+8dfd8e2c-74e6-45a5-bfc8-2df7fac304e4,NWA10,                                   ,+41 41 618 76 52  ,+41 41 618 76 58
+22ff5c6c-47ed-4683-9f3d-908e63242624,NWA20,info@ravownw.ch                    ,+41 41 632 56 26  ,+41 41 632 56 27
+1c4dbc3a-0fb9-4cc4-9a14-e7c984abb80f,OWA10,amtfuerarbeit@ow.ch                ,+41 (41) 666 63 33,+41 (41) 660 11 49
+99e2b02e-d773-4913-8486-74070617cf60,OWA20,info@ravownw.ch                    ,+41 41 632 56 26  ,+41 41 632 56 27
+b5f19c3f-4f61-4ee0-be24-8dd9a3e11bf2,FRL30,                                   ,+41 26 402 04 74  ,+41 26 402 04 06
+83eb24a1-f203-42c0-ac44-eafab57f1efa,FRL60,Officedutravail@ville-fr.ch        ,+41 26 351 76 40  ,+41 26 351 76 09
+a8b876d3-fac3-419c-9878-67323ac25fa4,FRM10,orb@fr.ch                          ,+41 26 305 96 10  ,+41 26 305 95 79
+2dc4548e-ab7a-4862-9cd6-f586821df84f,FRM30,orc@fr.ch                          ,+41 26 305 96 12  ,+41 26 305 95 78
+21cf93db-c4f2-4f61-ad8a-592d4c8ecc89,FRM40,orr@fr.ch                          ,+41 26 305 96 13  ,+41 26 305 95 77
+cd6480cc-1532-4ab9-89c9-12ea4561688b,GEAG0,info.oce@etat.ge.ch                ,+41 22 388 27 58  ,+41 22 546 97 00
+7cf93e58-f8c0-4715-af50-45d3f42be443,GEAJ0,caroll.singarella@etat.ge.ch       ,+41 22 546 37 61  ,+41 22 546 97 00
+afa2f430-4744-4da5-bb48-4622474fdd42,GEAM0,laurence.crastan-evrard@etat.ge.ch ,+41 22 546 36 50  ,+41 22 546 96 99
+ebfd7fd8-055e-4952-b130-dafa97d707b9,GEA10,veronique.mudry-surdez@etat.ge.ch  ,+41 22 546 36 80  ,+41 22 546 97 01
+db87f2bf-19ba-4613-9460-054b04a09c8b,GEA40,patrick.jeanbourquin@etat.ge.ch    ,+41 22 546 36 66  ,+41 22 546 97 00
+81bd9ad3-cb27-4a8a-aa9d-d695d66f0f7e,GEA50,dominique.ansermet@etat.ge.ch      ,+41 22 546 36 66  ,+41 22 546 97 00
+dd427f75-637d-4926-961b-b638c5d7ef57,GEA60,carlos.roch@etat.ge.ch             ,+41 22 546 36 66  ,+41 22 546 97 00
+bfa265be-e328-4fd5-8afc-4bdd70d7bbec,GEA70,dominique.borgeat@etat.ge.ch       ,+41 22 546 36 66  ,+41 22 546 97 00
+81c83773-6c2f-43e7-9462-11b280f1de9a,JUA10,                                   ,+41 32 420 52 30  ,+41 32 420 52 31
+25ba5734-684b-4c27-a895-e6bf8118319e,JUA20,orp.delemont@jura.ch               ,+41 32 420 88 30  ,+41 32 420 88 31
+768f2947-e96b-4ce0-800d-a37cb08302fb,JUA30,orp.porrentruy@jura.ch             ,+41 32 420 39 40  ,+41 32 420 39 41
+04f79ed4-fc4f-4e2d-82af-dbe07a3951dd,JUA40,orp.saignelegier@jura.ch           ,+41 32 420 47 30  ,+41 32 420 47 31
+a275c754-9066-4259-8147-56e749be1624,JUA80,                                   ,+41 32 427 35 90  ,
+e543e74d-f7c8-4a7c-8db6-424399a75d0e,NEAC0,lmmt@ne.ch                         ,+41 32 889 68 16  ,+41 32 889 61 31
+39f571be-0a1b-49a9-8370-36eb68d08828,NEA10,service.emploi@ne.ch               ,+41 32 889 68 12  ,+41 32 889 60 81
+98c4e864-e700-457e-b14c-7a3ab557b878,NEA20,orpcdf@ne.ch                       ,+41 32 889 68 13  ,+41 32 889 62 71
+93313b63-529c-440f-8ade-d969e48d17ab,NEA30,orpneu@ne.ch                       ,+41 32 889 68 18  ,+41 32 889 60 57
+fe95f8cb-271e-44d7-919b-ccc479c27e58,NEA40,OJSU@ne.ch                         ,+41 32 889 68 14  ,+41 32 889 62 72
+5450d027-8910-43b0-8d6d-25348d64928c,NEA80,ofet@ne.ch                         ,+41 32 889 68 15  ,+41 32 889 60 81
+5763e3d6-8cc0-4580-ac09-6d4c6af84f7e,VDAJ0,info.sde@vd.ch                     ,+41 21 316 60 93  ,+41 21 316 60 71
+a0b89db2-86aa-450c-b4a4-a2e931eae9da,VDAK0,info.stat@vd.ch                    ,+41 21 316 29 99  ,+41 21 316 29 50
+920ef1fb-d93e-4797-897e-e8d602f90277,VDAM0,info.sde@vd.ch                     ,+41 21 316 61 23  ,+41 21 316 60 36
+91b3f153-caca-4b8b-88f1-85fdf24ede5c,VDA10,info.sde@vd.ch                     ,+41 21 316 61 04  ,+41 21 316 60 36
+2484dde5-7fa1-4cae-8345-d1fabacf6e95,VDB10,orp@lausanne.ch                    ,+41 21 315 78 99  ,+41 21 315 70 30
+1f11e520-254a-4a3d-8747-cc21e9f5f8b8,VDC10,orp.echallens@vd.ch                ,+41 21 557 18 90  ,
+3a474b99-ab4b-407f-b548-3303371c56ff,VDD10,orp.riviera@vd.ch                  ,+41 21 557 15 00  ,
+06ad4f5a-8eca-477a-af14-50740ff81b8c,VDH10,orp.aigle@vd.ch                    ,+41 24 557 77 40  ,
+52e773cd-ef67-43b9-b329-b1a32e033785,VDJ10,orp.morges@vd.ch                   ,+41 21 557 92 00  ,
+7b610024-1513-43c4-850e-a79d2ef8e22e,VDL10,orp.orpol@vd.ch                    ,+41 21 557 04 50  ,
+f0cf18f9-8989-4b7a-a558-2f674c09df6e,VDQ10,orp.pully@vd.ch                    ,+41 21 557 19 10  ,
+c77e7b40-3f2d-47be-93a8-268036ae4274,VDU10,orp.yverdon@vd.ch                  ,+41 24 557 69 00  ,
+dafa64c2-3f4f-4201-be11-0d083b8ca8a5,VDV10,orp.nyon@vd.ch                     ,+41 22 557 53 60  ,
+62a86f99-51f4-4cb0-9c11-018c10d7b577,VSL10,orpmonthey@admin.vs.ch             ,+41 27 606 92 50  ,+41 27 606 92 51
+702d0cf2-d6b5-40c4-872d-7160e2a0278d,VSM10,orpmartigny@admin.vs.ch            ,+41 27 606 92 21  ,+41 27 606 92 22
+b9569c4f-18f0-4bea-a528-41e2966fbb20,VSN10,orpsierre@admin.vs.ch              ,+41 27 606 94 00  ,+41 27 606 94 04
+7457e52d-0484-4208-bc29-a5b5655fea72,VSO10,orpsion@admin.vs.ch                ,+41 27 606 93 00  ,+41 27 606 93 03
+cd878f6e-5bb2-4221-b2e4-77a35a3459f7,GRG10,info.ravroveredo@kiga.gr.ch        ,+41 81 257 65 47  ,+41 81 257 65 52
+159ddf66-a760-4257-9295-fdc2138a554a,TIA10,dfe-ug@ti.ch                       ,+41 91 814 31 03  ,+41 91 814 44 96
+e2548539-9258-4baf-9059-ffbb66b0eb02,TIA20,dfe-uma@ti.ch                      ,+41 91 814 48 11  ,+41 91 814 44 08
+95893089-fd92-48ad-806c-9db9118043ca,TIB10,dfe-urcbel@ti.ch                   ,+41 91 814 52 01  ,+41 91 814 52 09
+dae5096a-db99-4792-bc89-2b0c5abeabdd,TIC10,dfe-urcloc@ti.ch                   ,+41 91 816 14 11  ,+41 91 816 14 19
+e4f2ca3e-bfd0-463f-9229-7ea70ad822f5,TID10,dfe-urclug@ti.ch                   ,+41 91 815 77 81  ,+41 91 815 77 89
+88243354-f496-4998-911d-7f120a62897d,TIE10,dfe-urcchi@ti.ch                   ,+41 91 815 76 11  ,+41 91 815 76 19
+39f81d7e-93af-4892-ae28-6388bd061a12,TIF10,dfe-urcbia@ti.ch                   ,+41 91 816 29 11  ,+41 91 816 29 19
+fb1e6553-87e0-401b-8186-623b317c1107,BEAL0,orp.bienne@vol.be.ch               ,+41 31 635 35 60  ,
+b7ff2f46-150f-4a4a-b8c2-3ad68c1529d3,BEAS0,orp.moutier@vol.be.ch              ,+41 31 636 17 00  ,
+d7456c1e-9c73-4c46-9fe0-606df57d3b0c,BEAT0,orp.neuveville@vol.be.ch           ,+41 31 636 17 00  ,
+d755dd54-8d71-4402-926d-23ca0fcab1d0,BEAU0,orp.stimier@vol.be.ch              ,+41 31 636 17 00  ,
+70997928-5395-486a-8dd7-45d879a6fe90,BEA20,orp.tavannes@vol.be.ch             ,+41 31 636 17 00  ,
+609ef676-0573-4018-8dd6-5ecba02b0f43,VDW10,orp.payerne@vd.ch                  ,+41 26 557 31 30  ,
+f68e28d8-3c93-423a-a4f2-24a127925779,VSA10,sict-diha@admin.vs.ch              ,+41 27 606 73 10  ,+41 27 606 73 04
+eb443ece-b802-41de-904a-68ac24a5363c,SOAJ0,rav.solothurn@awa.so.ch            ,+41 32 627 96 11  ,+41 32 627 96 00
+630d47e2-e0bf-4daf-b7ed-68c6ef0cb14d,SGA11,info.scan-center@sg.ch             ,+41 58 229 20 52  ,+41 58 229 27 99
+f4c4576c-3275-4e85-b9f0-e8e4f3aede56,VSP11,ravoberwallis@admin.vs.ch          ,+41 27 606 94 50  ,+41 27 606 94 54
+855fafe6-2208-4312-8a54-4f6d3f863353,VSN11,orpsierre@admin.vs.ch              ,+41 27 606 94 00  ,+41 27 606 94 04
+990f6450-9e07-438d-94ed-993154ee5dc6,VSO11,orpsion@admin.vs.ch                ,+41 27 606 93 00  ,+41 27 606 93 03
+f9432162-f81b-4e85-9810-e7e9cb1e9c8d,VSM11,orpmartigny@admin.vs.ch            ,+41 27 606 92 21  ,+41 27 606 92 22
+262c39fd-c5fd-4b23-ac74-60acbb8a8051,VSL11,orpmonthey@admin.vs.ch             ,+41 27 606 92 50  ,+41 27 606 92 51
+52329588-caa3-47e3-b956-881c11166d60,TIA30,dfe-sdl@ti.ch                      ,+41 91 814 33 03  ,+41 91 814 44 96
+a91674d6-068a-4be1-885b-5f48f3c7a72b,TIA90,dfe-sdl@ti.ch                      ,+41 91 814 33 03  ,+41 91 814 44 96
+47b7c287-3f44-4c84-972d-4da1250fdf96,ZHA12,qus@vd.zh.ch                       ,+41 43 259 46 46  ,+41 43 259 46 90
+a5bdbe8a-ab90-43c3-8e0d-b03a955fb8af,ZHA13,ursula.richrath@vd.zh.ch           ,+41 43 259 26 54  ,+41 43 259 51 27
+42329a0a-aafe-4f6b-b9e7-84e30e679ea6,ZHA14,donato.ponzio@vd.zh.ch             ,+41 43 259 66 36  ,+41 43 259 66 39
+fc101647-6813-44a0-9e88-de1b4d89ce63,ZHA15,yvonne.wechsler@vd.zh.ch           ,+41 43 259 66 42  ,+41 43 259 66 49
+3dde426e-2f7d-4f97-9c30-5b5a64d7cd97,ZHA16,                                   ,+41 43 259 26 27  ,+41 43 259 51 34
+99e3d3a6-1340-44a4-95ab-7b192ef48fa4,BEAF1,                                   ,+41 31 636 02 31  ,
+cc1c1047-803f-4f1e-ae8c-00e97ac0672c,BEAF2,                                   ,+41 31 636 02 31  ,
+fba90516-75d9-4503-95e7-6bcc25d3c6eb,BEAD1,                                   ,+41 31 636 34 60  ,
+c12561e0-9edf-43f2-a75e-e4590eafaf66,BEAD2,                                   ,+41 31 636 34 60  ,
+05e154ec-2f98-4657-92fe-0873906a9259,BEAG1,rav.biel@vol.be.ch                 ,+41 31 635 35 30  ,
+50ce715b-675d-4fae-84f7-b343559b1130,BEAG2,rav.biel@vol.be.ch                 ,+41 31 635 35 30  ,
+33dc9ab5-8b67-4a87-9e5a-d43136fa7bf0,BEA11,info.rechtsdienst@vol.be.ch        ,+41 31 633 58 41  ,031 633 58 55
+5363bcd8-2b13-4c42-b8e0-11555fcb696d,BEA12,info.rechtsdienst@vol.be.ch        ,+41 31 633 58 41  ,031 633 58 55
+0e822154-d006-4871-8891-20bbe611a1a4,BEA15,info.rav@vol.be.ch                 ,+41 31 633 58 50  ,
+70898f9d-9544-442d-a6d9-bb58b6fd6336,BEAV1,                                   ,+41 31 636 13 22  ,
+a969218f-d949-4549-a457-96d8a609ba74,BEAV2,                                   ,+41 31 636 13 22  ,
+3eba48a9-20cc-41ef-aa55-c04c5bc41fcc,AGAH0,caroline.steinmann@ag.ch           ,+41 62 835 16 80  ,+41 62 835 17 29
+299157ef-cc16-41a6-9b55-19dff2b44210,AGAA1,rav.zofingen@ag.ch                 ,+41 62 745 05 80  ,+41 62 745 05 75
+1680d698-2b3e-4992-9e8b-193e04b84ccc,AGA91,rav.rheinfelden@ag.ch              ,+41 61 836 94 44  ,+41 61 836 94 48
+e1d849ca-b87b-4244-a7eb-b9cbf04c8fc9,AGA81,rav.wohlen@ag.ch                   ,+41 56 619 50 80  ,+41 56 619 50 88
+b3c1f934-e5aa-4839-88e4-0a66e1489c5a,AGA71,                                   ,+41 56 460 90 40  ,+41 56 460 90 48
+c6bc270f-ae88-4744-935c-39e076fff4a6,AGA41,rav.baden@ag.ch                    ,+41 56 200 01 01  ,+41 56 200 01 00
+27b81424-865b-4476-9a23-e81ac5040558,AGA31,rav.suhr@ag.ch                     ,+41 62 855 02 02  ,+41 62 855 02 00
+bd1b8684-08ec-44b4-bbaa-8e5b563a524c,AGA11,urs.keller@ag.ch                   ,+41 62 835 16 80  ,+41 62 835 17 29
+57ef0d96-7c9d-470b-8bc0-f2d375eaea93,AGA22,urs.schmid@ag.ch                   ,+41 62 835 16 80  ,+41 62 8835 17 29
+fd54224b-e9ee-4b7f-b7c4-e35f2b567d9c,AGAI0,lam.leitung@ag.ch                  ,+41 62 835 16 80  ,+41 62 835 17 29
+272ee05a-c4c8-4639-ad89-88a625dcfe6b,SHA21,rav@ktsh.ch                        ,+41 52 632 70 24  ,+41 52 632 70 23
+cc9fa517-273a-425d-a600-d873ea7f0a35,TGA90,                                   ,                  ,
+39ad9e7d-892a-4e2d-a21b-304e55e2642d,ZHA17,ursula.richrath@vd.zh.ch           ,+41 43 259 26 54  ,+41 43 259 51 27
+ed058355-77bc-4ee7-8616-b241445eb5bc,ZHA18,ursula.richrath@vd.zh.ch           ,+41 43 259 26 54  ,+41 43 259 51 27
+116cbcd7-358f-4e36-89ff-56bddba1e769,ZHA19,ursula.richrath@vd.zh.ch           ,+41 43 259 26 54  ,+41 43 259 51 27
+e38a9b0b-6505-48ce-8859-644008fa1874,GEAO0,christian.ducret@etat.ge.ch        ,+41 22 546 37 26  ,+41 22 546 97 00
+158e7d0a-4dae-4640-9ee7-881ec02d8522,ZHA21,ursula.richrath@vd.zh.ch           ,+41 43 259 26 54  ,+41 43 259 51 27
+84efc171-69fe-4ef6-836c-f61ad8c414de,CHA50,tcrd@seco.admin.ch                 ,058 46 22991      ,
+cf670b1a-06e1-4032-b1e7-cdae816e9113,GEAP0,se@etat.ge.ch                      ,+41 22 388 10 18  ,+41 22 546 97 00
+15d62589-213a-4b1e-895f-1aab352e0f30,BLS00,                                   ,                  ,
+22b2daae-47d5-4d69-a4fd-170c480be95b,SGS00,                                   ,                  ,
+b722639c-7bd9-4815-9450-f58582ac84a5,SGS01,                                   ,                  ,
+0b47f32d-95b3-45c2-aa5e-65f35f2abfcb,SGS04,                                   ,                  ,
+26e5ff7d-892a-4281-8f72-df54d4ea46b7,SGS05,                                   ,                  ,
+93a1357a-0bd7-4564-a2f7-acf5854c218b,AGS00,                                   ,+41 62 836 05 80  ,
+1707c435-e77d-48bf-8ae8-ac27e6605642,SGS06,                                   ,                  ,
+f7df3c27-97eb-4d2b-9c32-6305ebf15130,SGS07,                                   ,                  ,
+31afdaea-e9ba-4fd4-a3f0-9a2100464801,BSA71,reto.frey@bs.ch                    ,+41 61 267 50 91  ,+41 61 267 50 80
+174c5b10-0f9d-4c35-984a-c7dac30f3ed1,JUS00,jean-marc.veya@jura.ch             ,+41 32 420 51 42  ,+41 32 420 51 41
+892c6f87-8f99-493d-ba7a-a60c678b2831,AGAJ0,pfortearbeitsmarkt@ag.ch           ,+41 62 765 95 95  ,+41 62 765 95 96
+ec172397-2dd2-434d-9fb0-fdc688498e1c,AGAJ1,                                   ,                  ,
+29bc23b7-4c75-4bf8-acee-7cb7abf53bc7,GEA09,valerie.riccardi@etat.ge.ch        ,+41 22 546 36 66  ,+41 22 546 97 00
+7a294014-8dcf-4068-813e-1cb4ca4a7456,TIS00,dss-ussi@ti.ch                     ,+41 91 814 70 51  ,+41 91 814 70 19
+39f52f7e-7ae5-49bc-9c06-0f6669524116,NEA25,orpvdt@ne.ch                       ,+41 32 889 61 50  ,+41 32 889 61 59
+39dbbc0a-35ef-459d-bf27-aad9c38a17e2,VDS00,olivier.guex@aras.vd.ch            ,+41 21 632 77 20  ,+41 21 632 77 98
+11e613c2-e34a-45af-84b7-18b2fc0965ad,BES00,andreas.vonwartburg@nidau.ch       ,+41 32 332 94 50  ,+41 32 332 94 59
+54096fc0-46aa-4d1d-9a4f-e60e425586d9,ZHS00,armin.manser@stadt-uster.ch        ,+41 44 944 73 51  ,+41 44 941 61 27
+5a16da9b-fa86-4739-9dcd-52b789358124,ZHS01,johannes.felber@dietikon.ch        ,+41 44 744 36 83  ,
+5ebc1502-ecc0-432c-8de1-2057b1ccec10,BES01,sozialdienst@saanen.ch             ,033 748 92 70     ,033 748 92 75
+b20092e4-5199-43b2-a8f2-eb0eabbff5a5,ZHS02,                                   ,+41 43 259 24 56  ,
+eb3f3dd0-07f3-48cc-b389-1e57923d030c,SGA12,info.vdawa@sg.ch                   ,+41 58 229 35 47  ,+41 58 229 47 40
+294b0c23-dc73-456c-80dc-055b1312301e,VDS01,csr.bex@vd.ch                      ,+41 24 557 27 27  ,+41 24 557 27 28
+63744111-3c08-4708-9d02-974fd929f883,VDS02,csr.broye-vully@vd.ch              ,+41 26 557 30 50  ,+41 26 557 30 59
+c9ac32a0-9017-49f1-971f-04ea326a0021,VDS03,alain.perreten@aras.vd.ch          ,+41 21 557 84 00  ,+41 21 557 84 01
+212e6d7e-92db-4d86-9975-eaf50d157475,VDS04,claude.borgeaud@aras.vd.ch         ,+41 24 423 69 00  ,+41 24 423 69 03
+c45865ac-0341-480c-80bc-5a723808f896,VDS05,antoine.steiner@aras.vd.ch         ,+41 22 365 77 00  ,+41 22 365 77 39
+6000dfdb-121b-4909-9a28-24a363e9e9c7,VDS06,csr@morges.ch                      ,+41 21 804 98 98  ,+41 21 804 98 05
+26f57afa-6991-49b2-8817-948fa3d8d40b,VDS07,csr@prilly.ch                      ,+41 21 316 52 57  ,+41 21 316 51 55
+c91a7b03-0bb8-4f10-8b8f-db4e28bc1d32,VDS08,csrriviera@aras.vd.ch              ,+41 21 962 78 60  ,+41 21 962 78 40
+8f00aa5e-0d6f-4e80-94f0-90acae55aca5,VDS09,ssl@lausanne.ch                    ,+41 21 315 11 11  ,+41 21 315 70 39
+ddb9d260-ca38-4a01-97db-57deab9de681,VDS11,karin.crottaz@vd.ch                ,+41 21 316 03 86  ,+41 21 316 03 81
+a59f7a2c-37f4-4b37-a1f6-cf1f51738f7a,VDS12,jean-francois.perregaux@fvp.vd.ch  ,+41 21 321 48 00  ,+41 21 321 48 01
+bca425b0-fb34-4615-8458-51be7185f012,CHA40,swissemigration@eda.admin.ch       ,+41 31 322 29 03  ,+41 31 322 78 66
+a238a34d-4fb5-4580-866c-b34e181726cd,SZS00,erich.rickenbacher@sz.ch           ,041 819 16 23     ,041 819 16 29
+27127096-e295-46fd-995e-fd07821b87b3,GEA05,                                   ,+41 22 388 44 00  ,+41 22 388 44 70
+54d3682b-3401-407b-a3cd-f849041df690,TIS01,dss-ussi.inserimentoafi-api@ti.ch  ,+41 91 814 70 51  ,+41 91 814 47 43
+b7c2946b-4f6b-413d-844f-a7e8ddc69b6c,SGS08,silvia.hilber@au.ch                ,+41 71 747 02 40  ,
+cb0844c3-512e-4ce2-8954-f66910d36b81,TIS02,servizio.pc@ias.ti.ch              ,+41 91 821 91 11  ,+41 91 821 92 99
+5e1877ef-a260-429b-82fb-534cd302164c,BES03,kompetenzzentrum-arbeit@bern.ch    ,+41 31 321 62 72  ,
+541a78b7-1416-49e3-a3ee-3905da202391,BSA42,josef.birchler@bs.ch               ,061 267 87 62     ,
+b842c82f-844b-4aed-be0c-3e944a186b3a,BSA82,jobroom.rav@bs.ch                  ,+41 61 267 50 33  ,+41 61 267 50 52
+aa3af9a2-1d9b-4c61-af3c-e2adafde3d76,BSA72,reto.frey@bs.ch                    ,+41 61 267 50 91  ,+41 61 267 50 80
+98166388-d06e-4094-bdb4-6c82886b9f09,ZHS03,                                   ,043 336 10 80     ,
+bc495378-03a4-4b4e-8d91-75a75cd8205a,AGA32,rav.suhr@ag.ch                     ,+41 62 855 02 02  ,+41 62 855 02 00
+1da2e340-45e9-4dde-97fe-de0b670f8990,LUA25,                                   ,+41 41 228 32 80  ,+41 41 228 32 90
+fa4d6209-afb5-4db8-b9c2-d69a9c00ef28,GES01,srp@hospicegeneral.ch              ,+41 22 420 58 58  ,+41 22 420 58 59
+0ca55353-9b83-4b96-8944-65425128e158,GEHG0,valerie.riccardi@etat.ge.ch        ,+41 22 546 33 90  ,
+2c6f6ad8-a1af-47ad-a7be-eedc8742eeac,AGA72,rav.brugg@ag.ch                    ,+41 56 460 90 40  ,+41 56 460 90 48

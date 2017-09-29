@@ -62,6 +62,9 @@ public class LocalityResourceIntTest {
     private static final String DEFAULT_CANTON_CODE = "BE";
     private static final String UPDATED_CANTON_CODE = "ZH";
 
+    private static final String DEFAULT_REGION_CODE = "BE05";
+    private static final String UPDATED_REGION_CODE = "ZH08";
+
     private static final Double DEFAULT_LAT = 47.506D;
     private static final Double UPDATED_LAT = 47.501D;
 
@@ -111,6 +114,7 @@ public class LocalityResourceIntTest {
             .zipCode(DEFAULT_ZIP_CODE)
             .communalCode(DEFAULT_COMMUNAL_CODE)
             .cantonCode(DEFAULT_CANTON_CODE)
+            .regionCode(DEFAULT_REGION_CODE)
             .geoPoint(new GeoPoint(DEFAULT_LAT, DEFAULT_LON));
     }
 
@@ -133,6 +137,7 @@ public class LocalityResourceIntTest {
         assertThat(testLocality.getZipCode()).isEqualTo(DEFAULT_ZIP_CODE);
         assertThat(testLocality.getCommunalCode()).isEqualTo(DEFAULT_COMMUNAL_CODE);
         assertThat(testLocality.getCantonCode()).isEqualTo(DEFAULT_CANTON_CODE);
+        assertThat(testLocality.getRegionCode()).isEqualTo(DEFAULT_REGION_CODE);
         assertThat(testLocality.getGeoPoint().getLatitude()).isEqualTo(DEFAULT_LAT);
         assertThat(testLocality.getGeoPoint().getLongitude()).isEqualTo(DEFAULT_LON);
         // Validate the Locality in Elasticsearch
@@ -264,6 +269,7 @@ public class LocalityResourceIntTest {
             .andExpect(jsonPath("$.[*].zipCode").value(hasItem(DEFAULT_ZIP_CODE)))
             .andExpect(jsonPath("$.[*].communalCode").value(hasItem(DEFAULT_COMMUNAL_CODE)))
             .andExpect(jsonPath("$.[*].cantonCode").value(hasItem(DEFAULT_CANTON_CODE)))
+            .andExpect(jsonPath("$.[*].regionCode").value(hasItem(DEFAULT_REGION_CODE)))
             .andExpect(jsonPath("$.[*].geoPoint.lat").value(hasItem(DEFAULT_LAT)))
             .andExpect(jsonPath("$.[*].geoPoint.lon").value(hasItem(DEFAULT_LON)));
     }
@@ -283,6 +289,7 @@ public class LocalityResourceIntTest {
             .andExpect(jsonPath("$.zipCode").value(DEFAULT_ZIP_CODE))
             .andExpect(jsonPath("$.communalCode").value(DEFAULT_COMMUNAL_CODE))
             .andExpect(jsonPath("$.cantonCode").value(DEFAULT_CANTON_CODE))
+            .andExpect(jsonPath("$.regionCode").value(DEFAULT_REGION_CODE))
             .andExpect(jsonPath("$.geoPoint.lat").value(DEFAULT_LAT))
             .andExpect(jsonPath("$.geoPoint.lon").value(DEFAULT_LON));
     }
@@ -302,6 +309,7 @@ public class LocalityResourceIntTest {
             .zipCode(UPDATED_ZIP_CODE)
             .communalCode(UPDATED_COMMUNAL_CODE)
             .cantonCode(UPDATED_CANTON_CODE)
+            .regionCode(UPDATED_REGION_CODE)
             .geoPoint(new GeoPoint(UPDATED_LAT, UPDATED_LON));
 
         restLocalityMockMvc.perform(put("/api/localities")
@@ -317,6 +325,7 @@ public class LocalityResourceIntTest {
         assertThat(testLocality.getZipCode()).isEqualTo(UPDATED_ZIP_CODE);
         assertThat(testLocality.getCommunalCode()).isEqualTo(UPDATED_COMMUNAL_CODE);
         assertThat(testLocality.getCantonCode()).isEqualTo(UPDATED_CANTON_CODE);
+        assertThat(testLocality.getRegionCode()).isEqualTo(UPDATED_REGION_CODE);
         assertThat(testLocality.getGeoPoint().getLatitude()).isEqualTo(UPDATED_LAT);
         assertThat(testLocality.getGeoPoint().getLongitude()).isEqualTo(UPDATED_LON);
 
@@ -339,6 +348,7 @@ public class LocalityResourceIntTest {
             .andExpect(jsonPath("$.localities[*].city").value(hasItem(DEFAULT_CITY)))
             .andExpect(jsonPath("$.localities[*].communalCode").value(hasItem(DEFAULT_COMMUNAL_CODE)))
             .andExpect(jsonPath("$.localities[*].cantonCode").value(hasItem(DEFAULT_CANTON_CODE)))
+            .andExpect(jsonPath("$.localities[*].regionCode").value(hasItem(DEFAULT_REGION_CODE)))
             .andExpect(jsonPath("$.cantons[*].code").value(hasItem(DEFAULT_CANTON_CODE)));
     }
 
@@ -358,6 +368,7 @@ public class LocalityResourceIntTest {
             .zipCode(UPDATED_ZIP_CODE)
             .communalCode(UPDATED_COMMUNAL_CODE)
             .cantonCode(UPDATED_CANTON_CODE)
+            .regionCode(UPDATED_REGION_CODE)
             .geoPoint(new GeoPoint(UPDATED_LAT, UPDATED_LON));
         localityService.save(locality2);
 
@@ -372,6 +383,7 @@ public class LocalityResourceIntTest {
             .andExpect(jsonPath("$.zipCode").value(UPDATED_ZIP_CODE))
             .andExpect(jsonPath("$.communalCode").value(UPDATED_COMMUNAL_CODE))
             .andExpect(jsonPath("$.cantonCode").value(UPDATED_CANTON_CODE))
+            .andExpect(jsonPath("$.regionCode").value(UPDATED_REGION_CODE))
             .andExpect(jsonPath("$.geoPoint.lat").value(UPDATED_LAT))
             .andExpect(jsonPath("$.geoPoint.lon").value(UPDATED_LON));
     }

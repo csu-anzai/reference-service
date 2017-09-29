@@ -43,6 +43,9 @@
                 <constraints nullable="false"/>
             </column>
 
+            <column name="region_code" type="varchar(4)">
+                <constraints nullable="true"/>
+            </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
 
@@ -50,7 +53,7 @@
 
     <changeSet id="20170808101801-2" author="varu" context="!test">
         <loadData tableName="locality"
-                  file="config/liquibase/changelog/data/REFERENCESERVICE_PUBLIC_LOCALITY.csv"/>
+                  file="config/liquibase/changelog/data/LOCALITY.csv"/>
     </changeSet>
 
     <!--
@@ -73,7 +76,7 @@
                              tableName="canton" columnNames="code"/>
 
         <loadData tableName="canton"
-                  file="config/liquibase/changelog/data/REFERENCESERVICE_PUBLIC_CANTON.csv"/>
+                  file="config/liquibase/changelog/data/CANTON.csv"/>
     </changeSet>
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->
 </databaseChangeLog>

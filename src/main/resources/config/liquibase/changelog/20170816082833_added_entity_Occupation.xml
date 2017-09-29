@@ -38,7 +38,7 @@
 
     <changeSet id="20170816082833-2" author="varu" context="!test">
         <loadData tableName="occupation_mapping"
-                  file="config/liquibase/changelog/data/REFERENCESERVICE_PUBLIC_OCCUPATION_MAPPING.csv"/>
+                  file="config/liquibase/changelog/data/OCCUPATION_MAPPING.csv"/>
     </changeSet>
 
     <!--
@@ -73,7 +73,7 @@
 
     <changeSet id="20170816082833-4" author="varu">
         <loadData tableName="occupation"
-                  file="config/liquibase/changelog/data/REFERENCESERVICE_PUBLIC_OCCUPATION.csv"/>
+                  file="config/liquibase/changelog/data/OCCUPATION.csv"/>
     </changeSet>
 
     <!--
@@ -108,7 +108,7 @@
 
     <changeSet id="20170816082833-6" author="miwr" context="!test">
         <loadData
-            file="config/liquibase/changelog/data/REFERENCESERVICE_PUBLIC_OCCUPATION_SYNONYM.csv"
+            file="config/liquibase/changelog/data/OCCUPATION_SYNONYM.csv"
             tableName="occupation_synonym">
         </loadData>
     </changeSet>

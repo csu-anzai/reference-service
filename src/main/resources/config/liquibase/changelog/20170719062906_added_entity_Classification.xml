@@ -35,7 +35,7 @@
 
     <changeSet id="20170719062906-2" author="mabi" context="!test">
         <loadData encoding="UTF-8"
-                  file="config/liquibase/changelog/data/REFERENCESERVICE_PUBLIC_CLASSIFICATION.csv"
+                  file="config/liquibase/changelog/data/CLASSIFICATION.csv"
                   tableName="classification">
         </loadData>
     </changeSet>

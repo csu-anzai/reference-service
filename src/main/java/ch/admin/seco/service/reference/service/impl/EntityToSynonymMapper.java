@@ -43,6 +43,7 @@ public class EntityToSynonymMapper {
             .zipCode(localitySynonym.getZipCode())
             .communalCode(localitySynonym.getCommunalCode())
             .cantonCode(localitySynonym.getCantonCode())
+            .regionCode(localitySynonym.getRegionCode())
             .geoPoint(localitySynonym.getGeoPoint());
     }
 
@@ -70,6 +71,7 @@ public class EntityToSynonymMapper {
             .zipCode(locality.getZipCode())
             .communalCode(locality.getCommunalCode())
             .cantonCode(locality.getCantonCode())
+            .regionCode(locality.getRegionCode())
             .geoPoint(locality.getGeoPoint())
             .citySuggestions(extractSuggestionList(locality.getCity()));
     }
@@ -91,7 +93,9 @@ public class EntityToSynonymMapper {
 
     OccupationSuggestionDto convertOccupationSuggestion(CompletionSuggestion.Entry.Option option) {
         Map<String, Object> source = option.getHit().getSourceAsMap();
-        return new OccupationSuggestionDto(String.class.cast(source.get("name")), Integer.class.cast(source.get("code")));
+        return new OccupationSuggestionDto(
+            String.class.cast(source.get("name")),
+            Integer.class.cast(source.get("code")));
     }
 
     ClassificationSuggestionDto convertClassificationSuggestion(CompletionSuggestion.Entry.Option option, Language language) {
@@ -106,12 +110,15 @@ public class EntityToSynonymMapper {
         return new LocalitySuggestionDto()
             .city(String.class.cast(source.get("city")))
             .communalCode(Integer.class.cast(source.get("communalCode")))
-            .cantonCode(String.class.cast(source.get("cantonCode")));
+            .cantonCode(String.class.cast(source.get("cantonCode")))
+            .regionCode(String.class.cast(source.get("regionCode")));
     }
 
     CantonSuggestionDto convertCantonSuggestion(CompletionSuggestion.Entry.Option option) {
         Map<String, Object> source = option.getHit().getSourceAsMap();
-        return new CantonSuggestionDto().code(String.class.cast(source.get("code"))).name(String.class.cast(source.get("name")));
+        return new CantonSuggestionDto()
+            .code(String.class.cast(source.get("code")))
+            .name(String.class.cast(source.get("name")));
     }
 
     Suggestions extractSuggestions(Labels labels) {

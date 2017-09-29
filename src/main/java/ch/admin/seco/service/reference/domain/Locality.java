@@ -61,6 +61,11 @@ public class Locality<T extends Locality<T>> implements Serializable {
     @Column(name = "canton_code", length = 2, nullable = false)
     private String cantonCode;
 
+    @NotNull
+    @Size(max = 4)
+    @Column(name = "region_code", length = 2, nullable = true)
+    private String regionCode;
+
     @Valid
     @NotNull
     @Embedded
@@ -128,6 +133,19 @@ public class Locality<T extends Locality<T>> implements Serializable {
 
     public T cantonCode(String cantonCode) {
         this.cantonCode = cantonCode;
+        return (T) this;
+    }
+
+    public String getRegionCode() {
+        return regionCode;
+    }
+
+    public void setRegionCode(String regionCode) {
+        this.regionCode = regionCode;
+    }
+
+    public T regionCode(String regionCode) {
+        this.regionCode = regionCode;
         return (T) this;
     }
 

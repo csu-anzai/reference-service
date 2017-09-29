@@ -10,6 +10,8 @@ public class LocalitySuggestionDto {
 
     private String cantonCode;
 
+    private String regionCode;
+
     public String getCity() {
         return city;
     }
@@ -46,6 +48,19 @@ public class LocalitySuggestionDto {
 
     public LocalitySuggestionDto cantonCode(String cantonCode) {
         this.cantonCode = cantonCode;
+        return this;
+    }
+
+    public String getRegionCode() {
+        return regionCode;
+    }
+
+    public void setRegionCode(String regionCode) {
+        this.regionCode = regionCode;
+    }
+
+    public LocalitySuggestionDto regionCode(String regionCode) {
+        this.regionCode = regionCode;
         return this;
     }
 
