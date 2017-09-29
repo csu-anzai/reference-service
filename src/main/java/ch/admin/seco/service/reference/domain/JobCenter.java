@@ -47,6 +47,9 @@ public class JobCenter implements Serializable {
     @Column(name = "fax", length = 20)
     private String fax;
 
+    @Column(name = "show_contact_details_to_public")
+    private boolean showContactDetailsToPublic;
+
     @Valid
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "job_center_addresses", joinColumns = @JoinColumn(name = "job_center_id"))
@@ -56,17 +59,21 @@ public class JobCenter implements Serializable {
         return id;
     }
 
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
     public JobCenter id(UUID id) {
         this.id = id;
         return this;
     }
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
     public String getCode() {
         return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public JobCenter code(String code) {
@@ -74,12 +81,12 @@ public class JobCenter implements Serializable {
         return this;
     }
 
-    public void setCode(String code) {
-        this.code = code;
-    }
-
     public String getEmail() {
         return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public JobCenter email(String email) {
@@ -87,12 +94,12 @@ public class JobCenter implements Serializable {
         return this;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getPhone() {
         return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public JobCenter phone(String phone) {
@@ -100,12 +107,12 @@ public class JobCenter implements Serializable {
         return this;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
     public String getFax() {
         return fax;
+    }
+
+    public void setFax(String fax) {
+        this.fax = fax;
     }
 
     public JobCenter fax(String fax) {
@@ -113,12 +120,25 @@ public class JobCenter implements Serializable {
         return this;
     }
 
-    public void setFax(String fax) {
-        this.fax = fax;
+    public boolean isShowContactDetailsToPublic() {
+        return showContactDetailsToPublic;
+    }
+
+    public void setShowContactDetailsToPublic(boolean showContactDetailsToPublic) {
+        this.showContactDetailsToPublic = showContactDetailsToPublic;
+    }
+
+    public JobCenter showContactDetailsToPublic(boolean showContactDetailsToPublic) {
+        this.showContactDetailsToPublic = showContactDetailsToPublic;
+        return this;
     }
 
     public Set<Address> getAddresses() {
         return addresses;
+    }
+
+    public void setAddresses(Set<Address> addresses) {
+        this.addresses = addresses;
     }
 
     public JobCenter addresses(Set<Address> addresses) {
@@ -126,8 +146,9 @@ public class JobCenter implements Serializable {
         return this;
     }
 
-    public void setAddresses(Set<Address> addresses) {
-        this.addresses = addresses;
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 
     @Override
@@ -142,10 +163,5 @@ public class JobCenter implements Serializable {
         JobCenter jobCenter = (JobCenter) o;
 
         return id.equals(jobCenter.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
     }
 }

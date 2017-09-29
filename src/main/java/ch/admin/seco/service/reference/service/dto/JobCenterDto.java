@@ -14,10 +14,16 @@ public class JobCenterDto {
 
     private String fax;
 
+    private boolean showContactDetailsToPublic;
+
     private AddressDto address;
 
     public UUID getId() {
         return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public JobCenterDto id(UUID id) {
@@ -25,12 +31,12 @@ public class JobCenterDto {
         return this;
     }
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
     public String getCode() {
         return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public JobCenterDto code(String code) {
@@ -38,12 +44,12 @@ public class JobCenterDto {
         return this;
     }
 
-    public void setCode(String code) {
-        this.code = code;
-    }
-
     public String getEmail() {
         return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public JobCenterDto email(String email) {
@@ -51,12 +57,12 @@ public class JobCenterDto {
         return this;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getPhone() {
         return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public JobCenterDto phone(String phone) {
@@ -64,12 +70,12 @@ public class JobCenterDto {
         return this;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
     public String getFax() {
         return fax;
+    }
+
+    public void setFax(String fax) {
+        this.fax = fax;
     }
 
     public JobCenterDto fax(String fax) {
@@ -77,21 +83,30 @@ public class JobCenterDto {
         return this;
     }
 
-    public void setFax(String fax) {
-        this.fax = fax;
+    public boolean isShowContactDetailsToPublic() {
+        return showContactDetailsToPublic;
+    }
+
+    public void setShowContactDetailsToPublic(boolean showContactDetailsToPublic) {
+        this.showContactDetailsToPublic = showContactDetailsToPublic;
+    }
+
+    public JobCenterDto showContactDetailsToPublic(boolean showContactDetailsToPublic) {
+        this.showContactDetailsToPublic = showContactDetailsToPublic;
+        return this;
     }
 
     public AddressDto getAddress() {
         return address;
     }
 
+    public void setAddress(AddressDto address) {
+        this.address = address;
+    }
+
     public JobCenterDto address(AddressDto address) {
         this.address = address;
         return this;
-    }
-
-    public void setAddress(AddressDto address) {
-        this.address = address;
     }
 
     @Override

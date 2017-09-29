@@ -21,6 +21,7 @@
             </column>
 
             <column name="fax" type="varchar(20)"/>
+            <column name="show_contact_details_to_public" type="boolean"/>
         </createTable>
 
         <createTable tableName="job_center_addresses">

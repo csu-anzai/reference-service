@@ -27,6 +27,7 @@ public class JobCenterMapper {
             .email(jobCenter.getEmail())
             .phone(jobCenter.getPhone())
             .fax(jobCenter.getFax())
+            .showContactDetailsToPublic(jobCenter.isShowContactDetailsToPublic())
             .address(findAddressDtoByLanguageOrDefault(jobCenter.getAddresses(), language, Language.de));
     }
 
