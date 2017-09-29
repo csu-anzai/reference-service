@@ -1,26 +1,26 @@
-﻿id                                  ,name                            ,code
-8fcbc95c-5413-4be1-920c-3434e0bcd172,Bern / Berne                    ,BE
-17191cbf-65bd-4be4-8b11-be4fad591280,Luzern                          ,LU
-3ec0fd71-e630-48ab-ad2a-c7e6baeb8bdd,Uri                             ,UR
-7235b7ea-fadc-4c3c-b768-c8e7339b3dac,Schwyz                          ,SZ
-7c6bc3d1-e30a-4952-9c2f-9455b25814fa,Nidwalden                       ,OW
-bf0063ae-ca8e-43c8-aab8-3cd93b364de6,Glarus                          ,GL
-83f02322-0a6a-45f8-99b1-f7ba27a2e1b6,Zug                             ,ZG
-0ad18a99-be41-42f5-b8a2-e50904d3830f,Fribourg / Freiburg             ,FR
-67d5c15b-2c79-424e-855f-3c4327ff4555,Solothurn                       ,SO
-464f81a7-fcbf-4213-a926-e85346b316de,Basel-Stadt                     ,BS
-75dd8ef2-6ad2-4d04-ab9c-5a0e01680f09,Zürich                          ,ZH
-f27783e7-b705-4cfa-a153-ca42a1e1416b,Basel-Landschaft                ,BL
-634e9813-a405-45db-a449-4971869798df,Schaffhausen                    ,SH
-35e9a47d-ef89-46db-9096-914838872474,Appenzell Ausserrhoden          ,AR
-d262ebbc-5e12-48dc-bd01-04612e779647,Appenzell Innerrhoden           ,AI
-a4036ef7-2c76-4bde-a006-e0b9fd04af08,St. Gallen                      ,SG
+﻿id,name,code
+8fcbc95c-5413-4be1-920c-3434e0bcd172,Bern / Berne,BE
+17191cbf-65bd-4be4-8b11-be4fad591280,Luzern,LU
+3ec0fd71-e630-48ab-ad2a-c7e6baeb8bdd,Uri,UR
+7235b7ea-fadc-4c3c-b768-c8e7339b3dac,Schwyz,SZ
+7c6bc3d1-e30a-4952-9c2f-9455b25814fa,Nidwalden,OW
+bf0063ae-ca8e-43c8-aab8-3cd93b364de6,Glarus,GL
+83f02322-0a6a-45f8-99b1-f7ba27a2e1b6,Zug,ZG
+0ad18a99-be41-42f5-b8a2-e50904d3830f,Fribourg / Freiburg,FR
+67d5c15b-2c79-424e-855f-3c4327ff4555,Solothurn,SO
+464f81a7-fcbf-4213-a926-e85346b316de,Basel-Stadt,BS
+75dd8ef2-6ad2-4d04-ab9c-5a0e01680f09,Zürich,ZH
+f27783e7-b705-4cfa-a153-ca42a1e1416b,Basel-Landschaft,BL
+634e9813-a405-45db-a449-4971869798df,Schaffhausen,SH
+35e9a47d-ef89-46db-9096-914838872474,Appenzell Ausserrhoden,AR
+d262ebbc-5e12-48dc-bd01-04612e779647,Appenzell Innerrhoden,AI
+a4036ef7-2c76-4bde-a006-e0b9fd04af08,St. Gallen,SG
 d875ae70-f0a6-4b22-880b-f3c652c3aae3,Graubünden / Grigioni / Grischun,GR
-c933b062-7a0a-4f09-8238-e50c998a43a0,Aargau                          ,AG
-4bdc2149-d936-4bb3-bd62-dd8d8e01c122,Thurgau                         ,TG
-8ddec23f-62bf-4659-b29c-cd2db055b8f9,Ticino                          ,TI
-19609a8c-37c6-449d-9e87-4111f400edd9,Vaud                            ,VD
-68543cff-0d22-43e2-8e8d-32db94652ec7,Valais / Wallis                 ,VS
-ea56dcc7-45ac-429b-b40e-52e940e4ac12,Neuchâtel                       ,NE
-1840646e-84e9-4a0a-9c10-f5fb2a7a28f6,Genève                          ,GE
-62dd14b2-add4-4a43-a7b3-0af90c4edc5e,Jura                            ,JU
+c933b062-7a0a-4f09-8238-e50c998a43a0,Aargau,AG
+4bdc2149-d936-4bb3-bd62-dd8d8e01c122,Thurgau,TG
+8ddec23f-62bf-4659-b29c-cd2db055b8f9,Ticino,TI
+19609a8c-37c6-449d-9e87-4111f400edd9,Vaud,VD
+68543cff-0d22-43e2-8e8d-32db94652ec7,Valais / Wallis,VS
+ea56dcc7-45ac-429b-b40e-52e940e4ac12,Neuchâtel,NE
+1840646e-84e9-4a0a-9c10-f5fb2a7a28f6,Genève,GE
+62dd14b2-add4-4a43-a7b3-0af90c4edc5e,Jura,JU
