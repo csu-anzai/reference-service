@@ -10,7 +10,7 @@ import ch.admin.seco.service.reference.domain.OccupationSynonym;
 /**
  * A Occupation2.
  */
-@Document(indexName = "occupation", type = "occupations")
+@Document(indexName = "occupations", type = "occupation")
 @Mapping(mappingPath = "config/elasticsearch/mappings/occupation.json")
 public class OccupationSynonymSuggestion extends OccupationSynonym<OccupationSynonymSuggestion> {
 

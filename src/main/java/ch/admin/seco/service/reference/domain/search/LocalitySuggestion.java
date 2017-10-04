@@ -8,7 +8,7 @@ import org.springframework.data.elasticsearch.annotations.Setting;
 
 import ch.admin.seco.service.reference.domain.Locality;
 
-@Document(indexName = "locality", type = "localities")
+@Document(indexName = "localities", type = "locality")
 @Mapping(mappingPath = "config/elasticsearch/mappings/locality.json")
 @Setting(settingPath = "config/elasticsearch/settings/folding-analyzer.json")
 public class LocalitySuggestion extends Locality<LocalitySuggestion> {

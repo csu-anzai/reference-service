@@ -5,7 +5,7 @@ import org.springframework.data.elasticsearch.annotations.Mapping;
 
 import ch.admin.seco.service.reference.domain.Classification;
 
-@Document(indexName = "occupation", type = "classifications")
+@Document(indexName = "occupations", type = "classification")
 @Mapping(mappingPath = "config/elasticsearch/mappings/classification.json")
 public class ClassificationSuggestion extends Classification<ClassificationSuggestion> {
     private Suggestions classificationSuggestions;

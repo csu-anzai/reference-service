@@ -27,7 +27,7 @@ import org.springframework.data.elasticsearch.annotations.Setting;
 @Entity
 @Table(name = "canton")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-@Document(indexName = "locality", type = "cantons")
+@Document(indexName = "localities", type = "canton")
 @Mapping(mappingPath = "config/elasticsearch/mappings/canton.json")
 @Setting(settingPath = "config/elasticsearch/settings/folding-analyzer.json")
 public class Canton implements Serializable {

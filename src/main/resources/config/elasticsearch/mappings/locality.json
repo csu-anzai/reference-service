@@ -1,5 +1,5 @@
 {
-    "localities": {
+    "locality": {
         "properties": {
             "city": {
                 "type": "text",

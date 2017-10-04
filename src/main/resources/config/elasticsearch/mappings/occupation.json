@@ -1,5 +1,5 @@
 {
-    "occupations": {
+    "occupation": {
         "properties": {
             "code": {
                 "type": "keyword"

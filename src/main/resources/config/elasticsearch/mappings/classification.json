@@ -1,5 +1,5 @@
 {
-    "classifications": {
+    "classification": {
         "properties": {
             "code": {
                 "type": "keyword"

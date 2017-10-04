@@ -30,7 +30,7 @@ import ch.admin.seco.service.reference.domain.valueobject.Labels;
 @Entity
 @Table(name = "classification")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-@Document(indexName = "classification")
+@Document(type = "classifications", indexName = "classification")
 public class Classification<T extends Classification<T>> implements Serializable {
 
     private static final long serialVersionUID = 1L;

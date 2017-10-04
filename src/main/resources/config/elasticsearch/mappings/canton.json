@@ -1,5 +1,5 @@
 {
-    "cantons": {
+    "canton": {
         "properties": {
             "name": {
                 "type": "text",
