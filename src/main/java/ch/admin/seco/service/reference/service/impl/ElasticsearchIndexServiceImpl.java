@@ -98,11 +98,7 @@ public class ElasticsearchIndexServiceImpl implements ch.admin.seco.service.refe
         watch.start();
 
         Flux.fromStream(classificationRepository.streamAll())
-            .map(classification -> new ClassificationSuggestion()
-                .id(classification.getId())
-                .code(classification.getCode())
-                .classificationSuggestions(entityToSynonymMapper.extractSuggestions(classification.getLabels()))
-            )
+            .map(entityToSynonymMapper::toSuggestion)
             .buffer(100)
             .subscribe(classificationSearchRepository::saveAll);
 
@@ -121,13 +117,7 @@ public class ElasticsearchIndexServiceImpl implements ch.admin.seco.service.refe
         watch.start();
 
         Flux.fromStream(occupationSynonymRepository.streamAll())
-            .map(occupationSynonym -> new OccupationSynonymSuggestion()
-                .id(occupationSynonym.getId())
-                .code(occupationSynonym.getCode())
-                .language(occupationSynonym.getLanguage())
-                .name(occupationSynonym.getName())
-                .occupationSuggestions(entityToSynonymMapper.extractSuggestionList(occupationSynonym.getName()))
-            )
+            .map(entityToSynonymMapper::toSuggestion)
             .buffer(100)
             .subscribe(occupationSynonymSearchRepository::saveAll);
 

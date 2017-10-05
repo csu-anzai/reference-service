@@ -74,10 +74,10 @@ public class OccupationSuggestionImpl {
     private List<ClassificationSuggestionDto> mapClassifications(Language language, SearchResponse suggestResponse, List<OccupationSuggestionDto> occupations) {
         return Stream.of(
             suggestResponse.getSuggest()
-                .<CompletionSuggestion>getSuggestion("classifications").getEntries().stream()
+                .<CompletionSuggestion>getSuggestion("classification").getEntries().stream()
                 .flatMap(item -> item.getOptions().stream())
                 .map(option -> occupationSynonymMapper.convertClassificationSuggestion(option, language)),
-            getClassificationsFromOccupatonAsStream(occupations)
+            getClassificationsFromOccupationAsStream(occupations)
                 .map(classification -> new ClassificationSuggestionDto(classification.getLabels().get(language), classification.getCode())))
             .flatMap(Function.identity())
             .distinct()
@@ -86,7 +86,7 @@ public class OccupationSuggestionImpl {
 
     private List<OccupationSuggestionDto> mapOccupations(SearchResponse suggestResponse) {
         return suggestResponse.getSuggest()
-            .<CompletionSuggestion>getSuggestion("occupations").getEntries().stream()
+            .<CompletionSuggestion>getSuggestion("occupation").getEntries().stream()
             .flatMap(item -> item.getOptions().stream())
             .map(occupationSynonymMapper::convertOccupationSuggestion)
             .collect(Collectors.toList());
@@ -94,7 +94,7 @@ public class OccupationSuggestionImpl {
 
     private SuggestBuilder buildSuggestRequest(String prefix, Language language, int resultSize) {
         return new SuggestBuilder()
-            .addSuggestion("occupations",
+            .addSuggestion("occupation",
                 completionSuggestion("occupationSuggestions." + language.name())
                     .prefix(prefix)
                     .size(resultSize)
@@ -103,16 +103,16 @@ public class OccupationSuggestionImpl {
                             .setCategory(language.name())
                             .build())))
             )
-            .addSuggestion("classifications",
+            .addSuggestion("classification",
                 completionSuggestion("classificationSuggestions." + language.name())
                     .prefix(prefix)
                     .size(resultSize)
             );
     }
 
-    private Stream<Classification> getClassificationsFromOccupatonAsStream(List<OccupationSuggestionDto> occupations) {
+    private Stream<Classification> getClassificationsFromOccupationAsStream(List<OccupationSuggestionDto> occupations) {
         List<Integer> occupationCodes = occupations.stream()
-            .map(occupationSuggestionDto -> occupationSuggestionDto.getCode())
+            .map(OccupationSuggestionDto::getCode)
             .collect(Collectors.toList());
         return classificationRepository.findAllByOccupationCodes(occupationCodes);
     }

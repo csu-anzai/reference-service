@@ -20,8 +20,6 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 
-import org.springframework.data.elasticsearch.annotations.Document;
-
 import ch.admin.seco.service.reference.domain.valueobject.Labels;
 
 /**
@@ -30,7 +28,6 @@ import ch.admin.seco.service.reference.domain.valueobject.Labels;
 @Entity
 @Table(name = "classification")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-@Document(type = "classifications", indexName = "classification")
 public class Classification<T extends Classification<T>> implements Serializable {
 
     private static final long serialVersionUID = 1L;
