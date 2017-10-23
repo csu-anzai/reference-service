@@ -67,7 +67,7 @@ public class LocalitySuggestionImpl {
         SuggestBuilder suggestBuilder = new SuggestBuilder()
             .addSuggestion("localities", citySuggestions)
             .addSuggestion("cantonCodes", new CompletionSuggestionBuilder("code.canton-suggestions").prefix(prefix))
-            .addSuggestion("cantonNames", new CompletionSuggestionBuilder("name.canton-suggestions").prefix(prefix));
+            .addSuggestion("cantonNames", new CompletionSuggestionBuilder("cantonSuggestions").prefix(prefix));
         SearchResponse searchResponse = elasticsearchTemplate.suggest(suggestBuilder, LocalitySuggestion.class);
 
         List<LocalitySuggestionDto> localities = convertSuggestionToDto(resultSize, searchResponse, entityToSynonymMapper::convertLocalitySuggestion, "localities");

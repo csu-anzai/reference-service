@@ -14,9 +14,11 @@ import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.stereotype.Component;
 
+import ch.admin.seco.service.reference.domain.Canton;
 import ch.admin.seco.service.reference.domain.Language;
 import ch.admin.seco.service.reference.domain.Locality;
 import ch.admin.seco.service.reference.domain.OccupationSynonym;
+import ch.admin.seco.service.reference.domain.search.CantonSuggestion;
 import ch.admin.seco.service.reference.domain.search.ClassificationSuggestion;
 import ch.admin.seco.service.reference.domain.search.LocalitySuggestion;
 import ch.admin.seco.service.reference.domain.search.OccupationSynonymSuggestion;
@@ -36,7 +38,7 @@ public class EntityToSynonymMapper {
         this.elasticsearchTemplate = elasticsearchTemplate;
     }
 
-    public Locality fromSynonym(LocalitySuggestion localitySynonym) {
+    Locality fromSynonym(LocalitySuggestion localitySynonym) {
         return new Locality()
             .id(localitySynonym.getId())
             .city(localitySynonym.getCity())
@@ -74,6 +76,14 @@ public class EntityToSynonymMapper {
             .regionCode(locality.getRegionCode())
             .geoPoint(locality.getGeoPoint())
             .citySuggestions(extractSuggestionList(locality.getCity()));
+    }
+
+    CantonSuggestion toSuggestion(Canton canton) {
+        return new CantonSuggestion()
+            .id(canton.getId())
+            .code(canton.getCode())
+            .name(canton.getName())
+            .cantonSuggestions(extractSuggestionList(canton.getName()));
     }
 
     Set<String> extractSuggestionList(String term) {

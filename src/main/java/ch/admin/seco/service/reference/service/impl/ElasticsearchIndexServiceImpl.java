@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StopWatch;
 
-import ch.admin.seco.service.reference.domain.Canton;
+import ch.admin.seco.service.reference.domain.search.CantonSuggestion;
 import ch.admin.seco.service.reference.domain.search.ClassificationSuggestion;
 import ch.admin.seco.service.reference.domain.search.LocalitySuggestion;
 import ch.admin.seco.service.reference.domain.search.OccupationSynonymSuggestion;
@@ -46,12 +46,10 @@ public class ElasticsearchIndexServiceImpl implements ch.admin.seco.service.refe
     private final LocalitySynonymSearchRepository localitySynonymSearchRepository;
     private final CantonRepository cantonRepository;
     private final CantonSearchRepository cantonSearchRepository;
-
-
     private final ElasticsearchTemplate elasticsearchTemplate;
     private final EntityToSynonymMapper entityToSynonymMapper;
 
-    public ElasticsearchIndexServiceImpl(
+    ElasticsearchIndexServiceImpl(
         ClassificationRepository classificationRepository, ClassificationSearchRepository classificationSearchRepository,
         OccupationSynonymRepository occupationSynonymRepository, OccupationSynonymSearchRepository occupationSynonymSearchRepository,
         LocalityRepository localityRepository, LocalitySynonymSearchRepository localitySynonymSearchRepository,
@@ -129,13 +127,13 @@ public class ElasticsearchIndexServiceImpl implements ch.admin.seco.service.refe
 
     private void reindexLocalityIndex() {
         elasticsearchTemplate.deleteIndex(LocalitySuggestion.class);
-        elasticsearchTemplate.deleteIndex(Canton.class);
+        elasticsearchTemplate.deleteIndex(CantonSuggestion.class);
 
         StopWatch watch = new StopWatch();
         watch.start();
 
         reindexLocality();
-        reindexForClass(Canton.class, cantonRepository, cantonSearchRepository);
+        reindexCanton();
 
         watch.stop();
         log.debug("Elasticsearch has indexed the Locality index in {} ms", watch.getTotalTimeMillis());
@@ -151,6 +149,18 @@ public class ElasticsearchIndexServiceImpl implements ch.admin.seco.service.refe
             .subscribe(localitySynonymSearchRepository::saveAll);
 
         log.info("Elasticsearch: Indexed {} of {} rows for {}", localitySynonymSearchRepository.count(), localityRepository.count(), LocalitySuggestion.class.getSimpleName());
+    }
+
+    private void reindexCanton() {
+        elasticsearchTemplate.createIndex(CantonSuggestion.class);
+        elasticsearchTemplate.putMapping(CantonSuggestion.class);
+
+        Flux.fromIterable(cantonRepository.findAll())
+            .map(entityToSynonymMapper::toSuggestion)
+            .buffer(100)
+            .subscribe(cantonSearchRepository::saveAll);
+
+        log.info("Elasticsearch: Indexed {} of {} rows for {}", cantonSearchRepository.count(), cantonRepository.count(), CantonSuggestion.class.getSimpleName());
     }
 
     private <T, ID extends Serializable> void reindexForClass(Class<T> entityClass, JpaRepository<T, ID> jpaRepository,

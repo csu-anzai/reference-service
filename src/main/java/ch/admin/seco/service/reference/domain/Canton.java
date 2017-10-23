@@ -17,20 +17,13 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 
-import org.springframework.data.elasticsearch.annotations.Document;
-import org.springframework.data.elasticsearch.annotations.Mapping;
-import org.springframework.data.elasticsearch.annotations.Setting;
-
 /**
  * A Canton.
  */
 @Entity
 @Table(name = "canton")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-@Document(indexName = "localities", type = "canton")
-@Mapping(mappingPath = "config/elasticsearch/mappings/canton.json")
-@Setting(settingPath = "config/elasticsearch/settings/folding-analyzer.json")
-public class Canton implements Serializable {
+public class Canton<T extends Canton<T>> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -58,9 +51,9 @@ public class Canton implements Serializable {
         this.id = id;
     }
 
-    public Canton id(UUID id) {
+    public T id(UUID id) {
         this.id = id;
-        return this;
+        return (T) this;
     }
 
     public String getName() {
@@ -71,9 +64,9 @@ public class Canton implements Serializable {
         this.name = name;
     }
 
-    public Canton name(String name) {
+    public T name(String name) {
         this.name = name;
-        return this;
+        return (T) this;
     }
 
     public String getCode() {
@@ -84,9 +77,9 @@ public class Canton implements Serializable {
         this.code = code;
     }
 
-    public Canton code(String code) {
+    public T code(String code) {
         this.code = code;
-        return this;
+        return (T) this;
     }
 
     @Override
