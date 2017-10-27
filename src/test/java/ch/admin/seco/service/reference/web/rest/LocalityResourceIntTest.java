@@ -105,16 +105,20 @@ public class LocalityResourceIntTest {
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
-    @Before
-    public void initTest() {
-        localitySynonymSearchRepository.deleteAll();
-        locality = new Locality()
+    private static Locality createLocalityEntity() {
+        return new Locality()
             .city(DEFAULT_CITY)
             .zipCode(DEFAULT_ZIP_CODE)
             .communalCode(DEFAULT_COMMUNAL_CODE)
             .cantonCode(DEFAULT_CANTON_CODE)
             .regionCode(DEFAULT_REGION_CODE)
             .geoPoint(new GeoPoint(DEFAULT_LAT, DEFAULT_LON));
+    }
+
+    @Before
+    public void initTest() {
+        localitySynonymSearchRepository.deleteAll();
+        locality = createLocalityEntity();
     }
 
     @Test
@@ -347,6 +351,7 @@ public class LocalityResourceIntTest {
             .andExpect(jsonPath("$.localities[*].communalCode").value(hasItem(DEFAULT_COMMUNAL_CODE)))
             .andExpect(jsonPath("$.localities[*].cantonCode").value(hasItem(DEFAULT_CANTON_CODE)))
             .andExpect(jsonPath("$.localities[*].regionCode").value(hasItem(DEFAULT_REGION_CODE)))
+            .andExpect(jsonPath("$.localities[*].zipCode").value(hasItem(DEFAULT_ZIP_CODE)))
             .andExpect(jsonPath("$.cantons[*].code").value(hasItem(DEFAULT_CANTON_CODE)));
 
         // Search the locality
@@ -354,6 +359,27 @@ public class LocalityResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.cantons[*].code").value(hasItem("FR")));
+    }
+
+    @Test
+    @Transactional
+    public void searchLocalityByZipCode() throws Exception {
+        Locality locality1 = createLocalityEntity().zipCode("3001");
+        localityService.save(locality1);
+        Locality locality2 = createLocalityEntity().city("Ebersecken").zipCode("3002");
+        localityService.save(locality2);
+        Locality locality3 = createLocalityEntity().city("Dachsen").zipCode("4001");
+        localityService.save(locality3);
+
+        restLocalityMockMvc.perform(
+            get("/api/_search/localities")
+                .param("prefix", "30")
+                .param("resultSize", "10")
+        )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.localities[0].zipCode").value("3001"))
+            .andExpect(jsonPath("$.localities[1].zipCode").value("3002"));
     }
 
     @Test

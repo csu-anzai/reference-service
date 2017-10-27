@@ -66,6 +66,16 @@ public class EntityToSynonymMapper {
             .classificationSuggestions(extractSuggestions(classification.getLabels()));
     }
 
+    LocalitySuggestionDto convertLocalitySuggestion(CompletionSuggestion.Entry.Option option) {
+        Map<String, Object> source = option.getHit().getSourceAsMap();
+        return new LocalitySuggestionDto()
+            .city(String.class.cast(source.get("city")))
+            .communalCode(Integer.class.cast(source.get("communalCode")))
+            .cantonCode(String.class.cast(source.get("cantonCode")))
+            .regionCode(String.class.cast(source.get("regionCode")))
+            .zipCode(String.class.cast(source.get("zipCode")));
+    }
+
     LocalitySuggestion toSuggestion(Locality locality) {
         return new LocalitySuggestion()
             .id(locality.getId())
@@ -86,7 +96,15 @@ public class EntityToSynonymMapper {
             .cantonSuggestions(extractSuggestionList(canton.getName()));
     }
 
-    Set<String> extractSuggestionList(String term) {
+    private Suggestions extractSuggestions(Labels labels) {
+        return new Suggestions()
+            .de(extractSuggestionList(labels.getDe()))
+            .fr(extractSuggestionList(labels.getFr()))
+            .it(extractSuggestionList(labels.getIt()))
+            .en(extractSuggestionList(labels.getEn()));
+    }
+
+    private Set<String> extractSuggestionList(String term) {
         if (isNull(term)) {
             return Collections.emptySet();
         }
@@ -115,30 +133,6 @@ public class EntityToSynonymMapper {
         return new ClassificationSuggestionDto(label, code);
     }
 
-    LocalitySuggestionDto convertLocalitySuggestion(CompletionSuggestion.Entry.Option option) {
-        Map<String, Object> source = option.getHit().getSourceAsMap();
-        return new LocalitySuggestionDto()
-            .city(String.class.cast(source.get("city")))
-            .communalCode(Integer.class.cast(source.get("communalCode")))
-            .cantonCode(String.class.cast(source.get("cantonCode")))
-            .regionCode(String.class.cast(source.get("regionCode")));
-    }
-
-    CantonSuggestionDto convertCantonSuggestion(CompletionSuggestion.Entry.Option option) {
-        Map<String, Object> source = option.getHit().getSourceAsMap();
-        return new CantonSuggestionDto()
-            .code(String.class.cast(source.get("code")))
-            .name(String.class.cast(source.get("name")));
-    }
-
-    Suggestions extractSuggestions(Labels labels) {
-        return new Suggestions()
-            .de(extractSuggestionList(labels.getDe()))
-            .fr(extractSuggestionList(labels.getFr()))
-            .it(extractSuggestionList(labels.getIt()))
-            .en(extractSuggestionList(labels.getEn()));
-    }
-
     private void nextSubTerm(String term, Set<String> suggestions, Pattern pattern) {
         Matcher matcher = pattern.matcher(term);
         if (matcher.find()) {
@@ -146,5 +140,12 @@ public class EntityToSynonymMapper {
             suggestions.add(term);
             nextSubTerm(term, suggestions, pattern);
         }
+    }
+
+    CantonSuggestionDto convertCantonSuggestion(CompletionSuggestion.Entry.Option option) {
+        Map<String, Object> source = option.getHit().getSourceAsMap();
+        return new CantonSuggestionDto()
+            .code(String.class.cast(source.get("code")))
+            .name(String.class.cast(source.get("name")));
     }
 }

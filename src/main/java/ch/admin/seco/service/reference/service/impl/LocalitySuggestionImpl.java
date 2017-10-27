@@ -65,14 +65,17 @@ public class LocalitySuggestionImpl {
             .size(Math.min(resultSize + 20, 10000)); // to factor in duplicate entries as 'Zürich' we increase the result size
 
         SuggestBuilder suggestBuilder = new SuggestBuilder()
-            .addSuggestion("localities", citySuggestions)
+            .addSuggestion("cities", citySuggestions)
+            .addSuggestion("zipCodes", new CompletionSuggestionBuilder("zipCode").prefix(prefix))
             .addSuggestion("cantonCodes", new CompletionSuggestionBuilder("code.canton-suggestions").prefix(prefix))
             .addSuggestion("cantonNames", new CompletionSuggestionBuilder("cantonSuggestions").prefix(prefix));
         SearchResponse searchResponse = elasticsearchTemplate.suggest(suggestBuilder, LocalitySuggestion.class);
 
-        List<LocalitySuggestionDto> localities = convertSuggestionToDto(resultSize, searchResponse, entityToSynonymMapper::convertLocalitySuggestion, "localities");
+        List<LocalitySuggestionDto> localities = convertSuggestionToDto(resultSize, searchResponse,
+            entityToSynonymMapper::convertLocalitySuggestion, "cities", "zipCodes");
 
-        List<CantonSuggestionDto> cantons = convertSuggestionToDto(resultSize, searchResponse, entityToSynonymMapper::convertCantonSuggestion, "cantonCodes", "cantonNames");
+        List<CantonSuggestionDto> cantons = convertSuggestionToDto(resultSize, searchResponse,
+            entityToSynonymMapper::convertCantonSuggestion, "cantonCodes", "cantonNames");
 
         return new LocalityAutocompleteDto(localities, cantons);
     }

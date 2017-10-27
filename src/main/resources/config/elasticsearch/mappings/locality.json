@@ -20,6 +20,10 @@
             "geoPoint": {
                 "type": "geo_point"
             },
+            "zipCode": {
+                "type": "completion",
+                "analyzer": "keyword"
+            },
             "citySuggestions": {
                 "type": "completion",
                 "analyzer": "ascii_and_german_folding",

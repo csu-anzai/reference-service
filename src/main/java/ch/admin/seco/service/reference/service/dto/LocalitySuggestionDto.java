@@ -12,6 +12,8 @@ public class LocalitySuggestionDto {
 
     private String regionCode;
 
+    private String zipCode;
+
     public String getCity() {
         return city;
     }
@@ -61,6 +63,19 @@ public class LocalitySuggestionDto {
 
     public LocalitySuggestionDto regionCode(String regionCode) {
         this.regionCode = regionCode;
+        return this;
+    }
+
+    public String getZipCode() {
+        return zipCode;
+    }
+
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
+    }
+
+    public LocalitySuggestionDto zipCode(String zipCode) {
+        this.zipCode = zipCode;
         return this;
     }
 
