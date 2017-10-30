@@ -124,7 +124,7 @@ public class ClassificationServiceImpl implements ClassificationService {
 
     @Async
     void index(Classification classification) {
-        classificationSearchRepository.save(classificationMapper.toSuggestion(classification));
+        classificationSearchRepository.save(classificationMapper.toClassificationSuggestion(classification));
     }
 
     @PostConstruct

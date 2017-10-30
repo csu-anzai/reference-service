@@ -1,6 +1,7 @@
 package ch.admin.seco.service.reference.web.rest;
 
 import static java.util.Objects.isNull;
+import static org.springframework.context.i18n.LocaleContextHolder.getLocale;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -8,6 +9,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import javax.validation.Valid;
 
@@ -19,6 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +42,7 @@ import ch.admin.seco.service.reference.domain.OccupationMapping;
 import ch.admin.seco.service.reference.domain.OccupationSynonym;
 import ch.admin.seco.service.reference.service.OccupationService;
 import ch.admin.seco.service.reference.service.dto.OccupationAutocompleteDto;
+import ch.admin.seco.service.reference.service.dto.OccupationDto;
 import ch.admin.seco.service.reference.web.rest.util.HeaderUtil;
 import ch.admin.seco.service.reference.web.rest.util.PaginationUtil;
 
@@ -162,17 +166,17 @@ public class OccupationResource {
      * SEARCH  /_search/occupations/synonym?query=:query : suggest for the occupationSynonym corresponding
      * to the query.
      *
-     * @param prefix       the query of the occupationSynonym suggest
-     * @param language     the language information
-     * @param resultSize   the resultSize information
+     * @param prefix          the query of the occupationSynonym suggest
+     * @param includeSynonyms include synonyms in the search - default=true
+     * @param resultSize      the resultSize information
      * @return the result of the suggest
      */
     @GetMapping(OCCUPATION_SEARCH_PATH)
     @Timed
     public ResponseEntity<OccupationAutocompleteDto> suggestOccupation(
-        @RequestParam String prefix, @RequestParam Language language, @RequestParam int resultSize) {
+        @RequestParam String prefix, @RequestParam(defaultValue = "true") boolean includeSynonyms, @RequestParam int resultSize) {
         log.debug("REST request to suggest for a page of OccupationSynonyms for query {}", prefix);
-        OccupationAutocompleteDto result = occupationService.suggest(prefix, language, resultSize);
+        OccupationAutocompleteDto result = occupationService.suggest(prefix, getLanguage(), includeSynonyms, resultSize);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -202,35 +206,49 @@ public class OccupationResource {
     public ResponseEntity<OccupationMapping> getOccupationMapping(@PathVariable UUID id) {
         log.debug("REST request to get OccupationMapping : {}", id);
         Optional<OccupationMapping> occupationMapping = occupationService.findOneOccupationMapping(id);
-        return ResponseUtil.wrapOrNotFound(occupationMapping);
+        return ResponseUtil.wrapOrNotFound(occupationMapping, createCacheHeader());
     }
 
     @GetMapping(value = "/occupations", params = "code")
     @Timed
-    public ResponseEntity<Occupation> getOccupationByCode(@RequestParam int code) {
+    public ResponseEntity<OccupationDto> getOccupationByCode(@RequestParam int code) {
         return ResponseUtil.wrapOrNotFound(
-            occupationService.findOneOccupationByCode(code));
+            occupationService.findOneOccupationByCode(code, getLanguage()), createCacheHeader());
     }
 
     @GetMapping(value = "/occupations", params = "avamCode")
     @Timed
-    public ResponseEntity<Occupation> getOccupationByAvamCode(@RequestParam int avamCode) {
+    public ResponseEntity<OccupationDto> getOccupationByAvamCode(@RequestParam int avamCode) {
         return ResponseUtil.wrapOrNotFound(
-            occupationService.findOneOccupationByAvamCode(avamCode));
+            occupationService.findOneOccupationByAvamCode(avamCode, getLanguage()), createCacheHeader());
     }
 
     @GetMapping(value = "/occupations", params = "x28Code")
     @Timed
-    public ResponseEntity<Occupation> getOccupationByX28Code(@RequestParam int x28Code) {
+    public ResponseEntity<OccupationDto> getOccupationByX28Code(@RequestParam int x28Code) {
         return ResponseUtil.wrapOrNotFound(
-            occupationService.findOneOccupationByX28Code(x28Code));
+            occupationService.findOneOccupationByX28Code(x28Code, getLanguage()), createCacheHeader());
+    }
+
+    @PatchMapping("/occupations")
+    @Timed
+    public ResponseEntity updateOccuptions(@Valid @RequestBody Collection<Occupation> occupations) {
+        occupationService.saveOccupations(occupations);
+        return ResponseEntity.ok().build();
+    }
+
+    private Language getLanguage() {
+        return Language.safeValueOf(getLocale().getLanguage());
+    }
+
+    private HttpHeaders createCacheHeader() {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setCacheControl(CacheControl.maxAge(5, TimeUnit.MINUTES).cachePublic().getHeaderValue());
+        return httpHeaders;
     }
 
     private Optional<OccupationSynonym> getOccupationSynonymByExternalId(OccupationSynonym occupationSynonym) {
         return occupationService.findOneOccupationSynonymByExternalId(occupationSynonym.getExternalId())
-            .map(item -> {
-                occupationSynonym.setId(item.getId());
-                return occupationSynonym;
-            });
+            .map(item -> occupationSynonym.id(item.getId()));
     }
 }

@@ -1,15 +1,18 @@
 package ch.admin.seco.service.reference.service.impl;
 
 import static java.util.Collections.singletonList;
-import static java.util.Collections.singletonMap;
+import static java.util.stream.Collectors.toSet;
 import static org.elasticsearch.search.suggest.SuggestBuilders.completionSuggestion;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.google.common.collect.ImmutableMap;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.common.xcontent.ToXContent;
 import org.elasticsearch.search.suggest.SuggestBuilder;
 import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
 import org.elasticsearch.search.suggest.completion.context.CategoryQueryContext;
@@ -22,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ch.admin.seco.service.reference.domain.Classification;
 import ch.admin.seco.service.reference.domain.Language;
-import ch.admin.seco.service.reference.domain.search.OccupationSynonymSuggestion;
+import ch.admin.seco.service.reference.domain.search.OccupationSuggestion;
 import ch.admin.seco.service.reference.repository.ClassificationRepository;
 import ch.admin.seco.service.reference.service.dto.ClassificationSuggestionDto;
 import ch.admin.seco.service.reference.service.dto.OccupationAutocompleteDto;
@@ -39,7 +42,7 @@ public class OccupationSuggestionImpl {
     private final EntityToSynonymMapper occupationSynonymMapper;
     private final ClassificationRepository classificationRepository;
 
-    public OccupationSuggestionImpl(
+    OccupationSuggestionImpl(
         ElasticsearchTemplate elasticsearchTemplate,
         EntityToSynonymMapper occupationSynonymMapper,
         ClassificationRepository classificationRepository) {
@@ -49,23 +52,15 @@ public class OccupationSuggestionImpl {
         this.classificationRepository = classificationRepository;
     }
 
-    /**
-     * Search for the occupation synonym corresponding to the query.
-     *
-     * @param prefix   the query of the suggest
-     * @param language the pagination information
-     * @param resultSize the size of the resultList
-     * @return the list of entities
-     */
     @Transactional(readOnly = true)
-    public OccupationAutocompleteDto suggest(String prefix, Language language, int resultSize) {
+    public OccupationAutocompleteDto suggest(String prefix, Language language, boolean includeSynonyms, int resultSize) {
         LOGGER.debug("Request to suggest for a page of Occupations for query {}", prefix);
 
         SearchResponse suggestResponse = elasticsearchTemplate.suggest(
-            buildSuggestRequest(prefix, language, resultSize),
-            OccupationSynonymSuggestion.class);
+            buildSuggestRequest(prefix, language, includeSynonyms, resultSize * 2),
+            OccupationSuggestion.class);
 
-        List<OccupationSuggestionDto> occupations = mapOccupations(suggestResponse);
+        List<OccupationSuggestionDto> occupations = mapOccupations(suggestResponse, resultSize);
         List<ClassificationSuggestionDto> classifications = mapClassifications(language, suggestResponse, occupations);
 
         return new OccupationAutocompleteDto(occupations, classifications);
@@ -76,32 +71,33 @@ public class OccupationSuggestionImpl {
             suggestResponse.getSuggest()
                 .<CompletionSuggestion>getSuggestion("classification").getEntries().stream()
                 .flatMap(item -> item.getOptions().stream())
-                .map(option -> occupationSynonymMapper.convertClassificationSuggestion(option, language)),
+                .map(option -> occupationSynonymMapper.toClassificationSuggestion(option, language)),
             getClassificationsFromOccupationAsStream(occupations)
                 .map(classification -> new ClassificationSuggestionDto(classification.getLabels().get(language), classification.getCode())))
             .flatMap(Function.identity())
             .distinct()
+            .sorted((a, b) -> a.getName().compareTo(b.getName()))
             .collect(Collectors.toList());
     }
 
-    private List<OccupationSuggestionDto> mapOccupations(SearchResponse suggestResponse) {
+    private List<OccupationSuggestionDto> mapOccupations(SearchResponse suggestResponse, int resultSize) {
         return suggestResponse.getSuggest()
             .<CompletionSuggestion>getSuggestion("occupation").getEntries().stream()
             .flatMap(item -> item.getOptions().stream())
             .map(occupationSynonymMapper::convertOccupationSuggestion)
+            .distinct()
+            .limit(resultSize)
+            .sorted((a, b) -> a.getName().compareTo(b.getName()))
             .collect(Collectors.toList());
     }
 
-    private SuggestBuilder buildSuggestRequest(String prefix, Language language, int resultSize) {
+    private SuggestBuilder buildSuggestRequest(String prefix, Language language, boolean includeSynonyms, int resultSize) {
         return new SuggestBuilder()
             .addSuggestion("occupation",
                 completionSuggestion("occupationSuggestions." + language.name())
                     .prefix(prefix)
                     .size(resultSize)
-                    .contexts(singletonMap("lang",
-                        singletonList(CategoryQueryContext.builder()
-                            .setCategory(language.name())
-                            .build())))
+                    .contexts(createContext(language, includeSynonyms))
             )
             .addSuggestion("classification",
                 completionSuggestion("classificationSuggestions." + language.name())
@@ -110,11 +106,22 @@ public class OccupationSuggestionImpl {
             );
     }
 
+    private Map<String, List<? extends ToXContent>> createContext(Language language, boolean includeSynonyms) {
+        if (includeSynonyms) {
+            return ImmutableMap.of("lang", singletonList(CategoryQueryContext.builder()
+                .setCategory(language.name())
+                .build()));
+        } else {
+            return ImmutableMap.of("lang_syno", singletonList(CategoryQueryContext.builder()
+                .setCategory(language.name() + "_false")
+                .build()));
+        }
+    }
+
     private Stream<Classification> getClassificationsFromOccupationAsStream(List<OccupationSuggestionDto> occupations) {
-        List<Integer> occupationCodes = occupations.stream()
+        return classificationRepository.findAllByOccupationCodes(occupations.stream()
             .map(OccupationSuggestionDto::getCode)
-            .collect(Collectors.toList());
-        return classificationRepository.findAllByOccupationCodes(occupationCodes);
+            .collect(toSet()));
     }
 }
 

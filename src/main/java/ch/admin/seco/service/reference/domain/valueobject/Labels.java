@@ -1,5 +1,7 @@
 package ch.admin.seco.service.reference.domain.valueobject;
 
+import static org.springframework.util.StringUtils.hasText;
+
 import java.util.Objects;
 
 import javax.persistence.Column;
@@ -11,19 +13,19 @@ import ch.admin.seco.service.reference.domain.Language;
 @Embeddable
 public class Labels {
 
-    @Size(min = 2, max = 255)
+    @Size(max = 100)
     @Column(name = "label_de")
     private String de;
 
-    @Size(min = 2, max = 255)
+    @Size(max = 100)
     @Column(name = "label_fr")
     private String fr;
 
-    @Size(min = 2, max = 255)
+    @Size(max = 100)
     @Column(name = "label_it")
     private String it;
 
-    @Size(min = 2, max = 255)
+    @Size(max = 100)
     @Column(name = "label_en")
     private String en;
 
@@ -111,6 +113,11 @@ public class Labels {
     }
 
     public String get(Language language) {
+        String label = getInternal(language);
+        return hasText(label) ? label : getInternal(Language.de);
+    }
+
+    private String getInternal(Language language) {
         switch (language) {
             case de:
                 return de;

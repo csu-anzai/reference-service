@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 import org.junit.Before;
@@ -34,12 +35,12 @@ import ch.admin.seco.service.reference.domain.Language;
 import ch.admin.seco.service.reference.domain.Occupation;
 import ch.admin.seco.service.reference.domain.OccupationMapping;
 import ch.admin.seco.service.reference.domain.OccupationSynonym;
-import ch.admin.seco.service.reference.domain.search.OccupationSynonymSuggestion;
+import ch.admin.seco.service.reference.domain.search.OccupationSuggestion;
 import ch.admin.seco.service.reference.domain.valueobject.Labels;
 import ch.admin.seco.service.reference.repository.OccupationMappingRepository;
 import ch.admin.seco.service.reference.repository.OccupationRepository;
 import ch.admin.seco.service.reference.repository.OccupationSynonymRepository;
-import ch.admin.seco.service.reference.repository.search.OccupationSynonymSearchRepository;
+import ch.admin.seco.service.reference.repository.search.OccupationSearchRepository;
 import ch.admin.seco.service.reference.service.ClassificationService;
 import ch.admin.seco.service.reference.service.OccupationService;
 import ch.admin.seco.service.reference.web.rest.errors.ExceptionTranslator;
@@ -91,7 +92,7 @@ public class OccupationResourceIntTest {
     private ClassificationService classificationService;
 
     @Autowired
-    private OccupationSynonymSearchRepository occupationSynonymSearchRepository;
+    private OccupationSearchRepository occupationSynonymSearchRepository;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -147,7 +148,12 @@ public class OccupationResourceIntTest {
         return new Occupation()
             .code(OCCUPATION_CODE)
             .classificationCode(CLASSIFICATION_CODE)
-            .labels(new Labels()
+            .maleLabels(new Labels()
+                .de(OCCUPATION_LABEL_DE)
+                .fr(OCCUPATION_LABEL_FR)
+                .it(OCCUPATION_LABEL_IT)
+                .en(OCCUPATION_LABEL_EN))
+            .femaleLabels(new Labels()
                 .de(OCCUPATION_LABEL_DE)
                 .fr(OCCUPATION_LABEL_FR)
                 .it(OCCUPATION_LABEL_IT)
@@ -192,7 +198,7 @@ public class OccupationResourceIntTest {
         assertThat(testOccupationSynonym.getName()).isEqualTo(DEFAULT_NAME);
 
         // Validate the OccupationSynonym in Elasticsearch
-        List<OccupationSynonymSuggestion> occupationSynonymSynonym = occupationSynonymSearchRepository.findAllByCodeEquals(testOccupationSynonym.getCode());
+        List<OccupationSuggestion> occupationSynonymSynonym = occupationSynonymSearchRepository.findAllByCodeEquals(testOccupationSynonym.getCode());
         assertThat(occupationSynonymSynonym).hasSize(1);
     }
 
@@ -339,7 +345,7 @@ public class OccupationResourceIntTest {
         assertThat(testOccupationSynonym.getName()).isEqualTo(UPDATED_NAME);
 
         // Validate the OccupationSynonym in Elasticsearch
-        List<OccupationSynonymSuggestion> occupationSynonymSynonym = occupationSynonymSearchRepository.findAllByCodeEquals(testOccupationSynonym.getCode());
+        List<OccupationSuggestion> occupationSynonymSynonym = occupationSynonymSearchRepository.findAllByCodeEquals(testOccupationSynonym.getCode());
         assertThat(occupationSynonymSynonym).hasSize(1);
     }
 
@@ -401,15 +407,15 @@ public class OccupationResourceIntTest {
         occupationRepository.save(new Occupation().classificationCode(CLASSIFICATION_CODE_2).code(DEFAULT_CODE));
 
         // Search the occupationSynonym
-        restOccupationMockMvc.perform(get("/api/_search/occupations/synonym?prefix=Gaert&language=de&resultSize=10"))
+        restOccupationMockMvc.perform(get("/api/_search/occupations/synonym?prefix=Gaert&language=de&resultSize=10").locale(Locale.GERMAN))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.occupations.[*].code").value(hasItem(DEFAULT_CODE)))
             .andExpect(jsonPath("$.occupations.[*].name").value(hasItem(DEFAULT_NAME)))
-            .andExpect(jsonPath("$.classifications.[0].code").value(CLASSIFICATION_CODE))
-            .andExpect(jsonPath("$.classifications.[0].name").value(CLASSIFICATION_NAME))
-            .andExpect(jsonPath("$.classifications.[1].code").value(CLASSIFICATION_CODE_2))
-            .andExpect(jsonPath("$.classifications.[1].name").value(CLASSIFICATION_NAME_2));
+            .andExpect(jsonPath("$.classifications.[1].code").value(CLASSIFICATION_CODE))
+            .andExpect(jsonPath("$.classifications.[1].name").value(CLASSIFICATION_NAME))
+            .andExpect(jsonPath("$.classifications.[0].code").value(CLASSIFICATION_CODE_2))
+            .andExpect(jsonPath("$.classifications.[0].name").value(CLASSIFICATION_NAME_2));
     }
 
     @Test
@@ -494,10 +500,8 @@ public class OccupationResourceIntTest {
             .andExpect(jsonPath("$.id").value(occupation.getId().toString()))
             .andExpect(jsonPath("$.code").value(OCCUPATION_CODE))
             .andExpect(jsonPath("$.classificationCode").value(CLASSIFICATION_CODE))
-            .andExpect(jsonPath("$.labels.de").value(OCCUPATION_LABEL_DE))
-            .andExpect(jsonPath("$.labels.fr").value(OCCUPATION_LABEL_FR))
-            .andExpect(jsonPath("$.labels.it").value(OCCUPATION_LABEL_IT))
-            .andExpect(jsonPath("$.labels.en").value(OCCUPATION_LABEL_EN));
+            .andExpect(jsonPath("$.labels.male").value(OCCUPATION_LABEL_EN))
+            .andExpect(jsonPath("$.labels.female").value(OCCUPATION_LABEL_EN));
     }
 
     @Test
@@ -519,10 +523,8 @@ public class OccupationResourceIntTest {
             .andExpect(jsonPath("$.id").value(occupation.getId().toString()))
             .andExpect(jsonPath("$.code").value(OCCUPATION_CODE))
             .andExpect(jsonPath("$.classificationCode").value(CLASSIFICATION_CODE))
-            .andExpect(jsonPath("$.labels.de").value(OCCUPATION_LABEL_DE))
-            .andExpect(jsonPath("$.labels.fr").value(OCCUPATION_LABEL_FR))
-            .andExpect(jsonPath("$.labels.it").value(OCCUPATION_LABEL_IT))
-            .andExpect(jsonPath("$.labels.en").value(OCCUPATION_LABEL_EN));
+            .andExpect(jsonPath("$.labels.male").value(OCCUPATION_LABEL_EN))
+            .andExpect(jsonPath("$.labels.female").value(OCCUPATION_LABEL_EN));
     }
 
     @Test
@@ -546,10 +548,8 @@ public class OccupationResourceIntTest {
             .andExpect(jsonPath("$.id").value(occupation.getId().toString()))
             .andExpect(jsonPath("$.code").value(OCCUPATION_CODE))
             .andExpect(jsonPath("$.classificationCode").value(CLASSIFICATION_CODE))
-            .andExpect(jsonPath("$.labels.de").value(OCCUPATION_LABEL_DE))
-            .andExpect(jsonPath("$.labels.fr").value(OCCUPATION_LABEL_FR))
-            .andExpect(jsonPath("$.labels.it").value(OCCUPATION_LABEL_IT))
-            .andExpect(jsonPath("$.labels.en").value(OCCUPATION_LABEL_EN));
+            .andExpect(jsonPath("$.labels.male").value(OCCUPATION_LABEL_EN))
+            .andExpect(jsonPath("$.labels.female").value(OCCUPATION_LABEL_EN));
     }
 
     @Test

@@ -36,7 +36,7 @@ import ch.admin.seco.service.reference.domain.search.LocalitySuggestion;
 import ch.admin.seco.service.reference.domain.valueobject.GeoPoint;
 import ch.admin.seco.service.reference.repository.CantonRepository;
 import ch.admin.seco.service.reference.repository.LocalityRepository;
-import ch.admin.seco.service.reference.repository.search.LocalitySynonymSearchRepository;
+import ch.admin.seco.service.reference.repository.search.LocalitySearchRepository;
 import ch.admin.seco.service.reference.service.LocalityService;
 import ch.admin.seco.service.reference.web.rest.errors.ExceptionTranslator;
 
@@ -80,7 +80,7 @@ public class LocalityResourceIntTest {
     private LocalityService localityService;
 
     @Autowired
-    private LocalitySynonymSearchRepository localitySynonymSearchRepository;
+    private LocalitySearchRepository localitySynonymSearchRepository;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;

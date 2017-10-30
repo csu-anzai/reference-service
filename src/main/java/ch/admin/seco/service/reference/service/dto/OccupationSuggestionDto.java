@@ -1,5 +1,7 @@
 package ch.admin.seco.service.reference.service.dto;
 
+import java.util.Objects;
+
 public class OccupationSuggestionDto {
 
     private String name;
@@ -19,5 +21,23 @@ public class OccupationSuggestionDto {
 
     public int getCode() {
         return code;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getName(), getCode());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        OccupationSuggestionDto that = (OccupationSuggestionDto) o;
+        return getCode() == that.getCode() &&
+            Objects.equals(getName(), that.getName());
     }
 }

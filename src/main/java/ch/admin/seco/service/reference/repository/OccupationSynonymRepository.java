@@ -1,5 +1,6 @@
 package ch.admin.seco.service.reference.repository;
 
+import static org.hibernate.jpa.QueryHints.HINT_CACHE_MODE;
 import static org.hibernate.jpa.QueryHints.HINT_FETCH_SIZE;
 
 import java.util.Optional;
@@ -22,7 +23,9 @@ import ch.admin.seco.service.reference.domain.OccupationSynonym;
 @SuppressWarnings("unused")
 @Repository
 public interface OccupationSynonymRepository extends JpaRepository<OccupationSynonym, UUID> {
-    @QueryHints(@QueryHint(name = HINT_FETCH_SIZE, value = "" + Integer.MAX_VALUE))
+    @QueryHints({
+        @QueryHint(name = HINT_FETCH_SIZE, value = "1000"),
+        @QueryHint(name = HINT_CACHE_MODE, value = "IGNORE")})
     @Query("select o from OccupationSynonym o")
     Stream<OccupationSynonym> streamAll();
 

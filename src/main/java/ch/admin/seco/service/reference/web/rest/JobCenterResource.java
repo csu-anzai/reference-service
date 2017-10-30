@@ -7,6 +7,7 @@ import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,8 +32,8 @@ public class JobCenterResource {
 
     @GetMapping("/job-centers")
     @Timed
-    public ResponseEntity<JobCenterDto> searchJobCenterByCode(@RequestParam String code,
-        @RequestParam Language language) {
+    public ResponseEntity<JobCenterDto> searchJobCenterByCode(@RequestParam String code) {
+        Language language = Language.safeValueOf(LocaleContextHolder.getLocale().getLanguage());
         log.debug("REST request to suggest JobCenter by code {} and language {}", code, language);
         Optional<JobCenterDto> jobCenter = jobCenterService.findJobCenterByCode(code, language);
         return ResponseUtil.wrapOrNotFound(jobCenter);

@@ -13,6 +13,7 @@ import ch.admin.seco.service.reference.domain.Occupation;
 import ch.admin.seco.service.reference.domain.OccupationMapping;
 import ch.admin.seco.service.reference.domain.OccupationSynonym;
 import ch.admin.seco.service.reference.service.dto.OccupationAutocompleteDto;
+import ch.admin.seco.service.reference.service.dto.OccupationDto;
 
 /**
  * Service Interface for managing Occupations.
@@ -66,11 +67,11 @@ public interface OccupationService {
      */
     Page<OccupationMapping> findAllOccupationMappings(Pageable pageable);
 
-    Optional<Occupation> findOneOccupationByCode(int code);
+    Optional<OccupationDto> findOneOccupationByCode(int code, Language language);
 
-    Optional<Occupation> findOneOccupationByAvamCode(int avamCode);
+    Optional<OccupationDto> findOneOccupationByAvamCode(int avamCode, Language language);
 
-    Optional<Occupation> findOneOccupationByX28Code(int x28Code);
+    Optional<OccupationDto> findOneOccupationByX28Code(int x28Code, Language language);
 
     Optional<OccupationSynonym> findOneOccupationSynonymByExternalId(int externalId);
 
@@ -81,9 +82,11 @@ public interface OccupationService {
      *
      * @param prefix     the query of the suggest
      * @param language   the language of the suggest
+     * @param includeSynonyms   include synonym into the search
      * @param resultSize the pagination information
      * @return the lists of occupations and classifications
      */
-    OccupationAutocompleteDto suggest(String prefix, Language language, int resultSize);
+    OccupationAutocompleteDto suggest(String prefix, Language language, boolean includeSynonyms, int resultSize);
 
+    List<Occupation> saveOccupations(Collection<Occupation> occupations);
 }

@@ -73,7 +73,7 @@ public class ClassificationResource {
     /**
      * PUT  /classifications : Updates an existing classification.
      *
-     * @param classification the classification to update
+     * @param classification the classification to saveOccupations
      * @return the ResponseEntity with status 200 (OK) and with body the updated classification,
      * or with status 400 (Bad Request) if the classification is not valid,
      * or with status 500 (Internal Server Error) if the classification couldn't be updated
@@ -82,7 +82,7 @@ public class ClassificationResource {
     @PutMapping("/classifications")
     @Timed
     public ResponseEntity<ch.admin.seco.service.reference.domain.Classification> updateClassification(@Valid @RequestBody ch.admin.seco.service.reference.domain.Classification classification) throws URISyntaxException {
-        log.debug("REST request to update Classification : {}", classification);
+        log.debug("REST request to saveOccupations Classification : {}", classification);
         if (classification.getId() == null) {
             return createClassification(classification);
         }

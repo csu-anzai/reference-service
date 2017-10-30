@@ -19,13 +19,14 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 
+import ch.admin.seco.service.reference.domain.Language;
 import ch.admin.seco.service.reference.domain.Occupation;
 import ch.admin.seco.service.reference.domain.OccupationMapping;
 import ch.admin.seco.service.reference.repository.ClassificationRepository;
 import ch.admin.seco.service.reference.repository.OccupationMappingRepository;
 import ch.admin.seco.service.reference.repository.OccupationRepository;
 import ch.admin.seco.service.reference.repository.OccupationSynonymRepository;
-import ch.admin.seco.service.reference.repository.search.OccupationSynonymSearchRepository;
+import ch.admin.seco.service.reference.repository.search.OccupationSearchRepository;
 
 @RunWith(MockitoJUnitRunner.class)
 public class OccupationServiceImplTest {
@@ -48,7 +49,7 @@ public class OccupationServiceImplTest {
     @Mock
     private OccupationSynonymRepository occupationSynonymRepository;
     @Mock
-    private OccupationSynonymSearchRepository occupationSynonymSearchRepository;
+    private OccupationSearchRepository occupationSynonymSearchRepository;
     @Mock
     private ElasticsearchTemplate elasticsearchTemplate;
     @Mock
@@ -96,21 +97,21 @@ public class OccupationServiceImplTest {
     public void shouldReturnEmpty_whenOccupationNotFoundByCode() {
         when(occupationRepository.findOneByCode(CODE)).thenReturn(Optional.empty());
 
-        checkResultIsEmpty(() -> occupationService.findOneOccupationByCode(CODE));
+        checkResultIsEmpty(() -> occupationService.findOneOccupationByCode(CODE, Language.de));
     }
 
     @Test
     public void shouldReturnOccupation_whenOccupationFoundByCode() {
         when(occupationRepository.findOneByCode(CODE)).thenReturn(Optional.of(occupation));
 
-        checkResultIsNotEmpty(() -> occupationService.findOneOccupationByCode(CODE), occupation);
+        checkResultIsNotEmpty(() -> occupationService.findOneOccupationByCode(CODE, Language.de), occupation);
     }
 
     @Test
     public void shouldReturnEmpty_whenOccupationMappingNotFoundByAvamCode() {
         when(occupationMappingRepository.findByAvamCode(AVAM_CODE)).thenReturn(Collections.emptyList());
 
-        checkResultIsEmpty(() -> occupationService.findOneOccupationByAvamCode(AVAM_CODE));
+        checkResultIsEmpty(() -> occupationService.findOneOccupationByAvamCode(AVAM_CODE, Language.de));
     }
 
     @Test
@@ -120,14 +121,14 @@ public class OccupationServiceImplTest {
         when(occupationMappingRepository.findByAvamCode(AVAM_CODE)).thenReturn(occupationMappings);
         when(occupationRepository.findOneByCode(CODE)).thenReturn(Optional.ofNullable(occupation));
 
-        checkResultIsNotEmpty(() -> occupationService.findOneOccupationByAvamCode(AVAM_CODE), occupation);
+        checkResultIsNotEmpty(() -> occupationService.findOneOccupationByAvamCode(AVAM_CODE, Language.de), occupation);
     }
 
     @Test
     public void shouldReturnEmpty_whenMappingNotFoundByX28Code() {
         when(occupationMappingRepository.findByX28Code(X28_CODE)).thenReturn(Optional.empty());
 
-        checkResultIsEmpty(() -> occupationService.findOneOccupationByX28Code(X28_CODE));
+        checkResultIsEmpty(() -> occupationService.findOneOccupationByX28Code(X28_CODE, Language.de));
     }
 
     @Test
@@ -136,7 +137,7 @@ public class OccupationServiceImplTest {
             .thenReturn(Optional.of(createOccupationMapping(CODE, AVAM_CODE, X28_CODE)));
         when(occupationRepository.findOneByCode(CODE)).thenReturn(Optional.empty());
 
-        checkResultIsEmpty(() -> occupationService.findOneOccupationByX28Code(X28_CODE));
+        checkResultIsEmpty(() -> occupationService.findOneOccupationByX28Code(X28_CODE, null));
     }
 
     @Test
@@ -145,17 +146,17 @@ public class OccupationServiceImplTest {
             .thenReturn(Optional.of(createOccupationMapping(CODE, AVAM_CODE, X28_CODE)));
         when(occupationRepository.findOneByCode(CODE)).thenReturn(Optional.of(occupation));
 
-        checkResultIsNotEmpty(() -> occupationService.findOneOccupationByX28Code(X28_CODE), occupation);
+        checkResultIsNotEmpty(() -> occupationService.findOneOccupationByX28Code(X28_CODE, null), occupation);
     }
 
-    private void checkResultIsEmpty(Supplier<Optional<Occupation>> supplier) {
-        Optional<Occupation> result = supplier.get();
+    private void checkResultIsEmpty(Supplier<Optional<?>> supplier) {
+        Optional<?> result = supplier.get();
 
         assertThat(result).isEmpty();
     }
 
-    private void checkResultIsNotEmpty(Supplier<Optional<Occupation>> supplier, Occupation expectedResult) {
-        Optional<Occupation> result = supplier.get();
+    private void checkResultIsNotEmpty(Supplier<Optional> supplier, Object expectedResult) {
+        Optional result = supplier.get();
 
         assertThat(result).isNotEmpty();
         assertThat(result).contains(expectedResult);

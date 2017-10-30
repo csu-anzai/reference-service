@@ -16,6 +16,12 @@
             "occupation": {
                 "type": "text"
             },
+            "synonym": {
+                "type": "boolean"
+            },
+            "combinedContext": {
+                "type": "text"
+            },
             "occupationSuggestions": {
                 "type": "text",
                 "fields": {
@@ -27,6 +33,16 @@
                                 "name": "lang",
                                 "type": "CATEGORY",
                                 "path": "language"
+                            },
+                            {
+                                "name": "syno",
+                                "type": "CATEGORY",
+                                "path": "synonym"
+                            },
+                            {
+                                "name": "lang_syno",
+                                "type": "CATEGORY",
+                                "path": "combinedContext"
                             }
                         ]
                     },
@@ -38,6 +54,16 @@
                                 "name": "lang",
                                 "type": "CATEGORY",
                                 "path": "language"
+                            },
+                            {
+                                "name": "syno",
+                                "type": "CATEGORY",
+                                "path": "synonym"
+                            },
+                            {
+                                "name": "lang_syno",
+                                "type": "CATEGORY",
+                                "path": "combinedContext"
                             }
                         ]
                     },
@@ -49,6 +75,16 @@
                                 "name": "lang",
                                 "type": "CATEGORY",
                                 "path": "language"
+                            },
+                            {
+                                "name": "syno",
+                                "type": "CATEGORY",
+                                "path": "synonym"
+                            },
+                            {
+                                "name": "lang_syno",
+                                "type": "CATEGORY",
+                                "path": "combinedContext"
                             }
                         ]
                     },
@@ -60,6 +96,16 @@
                                 "name": "lang",
                                 "type": "CATEGORY",
                                 "path": "language"
+                            },
+                            {
+                                "name": "syno",
+                                "type": "CATEGORY",
+                                "path": "synonym"
+                            },
+                            {
+                                "name": "lang_syno",
+                                "type": "CATEGORY",
+                                "path": "combinedContext"
                             }
                         ]
                     }

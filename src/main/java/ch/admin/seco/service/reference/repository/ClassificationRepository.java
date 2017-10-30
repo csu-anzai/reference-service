@@ -2,7 +2,7 @@ package ch.admin.seco.service.reference.repository;
 
 import static org.hibernate.jpa.QueryHints.HINT_FETCH_SIZE;
 
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -24,15 +24,14 @@ import ch.admin.seco.service.reference.domain.Classification;
 @Repository
 public interface ClassificationRepository extends JpaRepository<Classification, UUID> {
     @QueryHints(@QueryHint(name = HINT_FETCH_SIZE, value = "" + Integer.MAX_VALUE))
-    @Query("select j from Classification j")
+    @Query("select c from Classification c")
     Stream<Classification> streamAll();
 
     @Query(nativeQuery = true, value =
-        "SELECT c.* FROM classification c LEFT JOIN occupation o ON c.code = o.classification_code" +
-            " WHERE o.code IN (?1)")
-    Stream<Classification> _findAllByOccupationCodes(List<Integer> classificationCodes);
+        "SELECT c.* FROM classification c WHERE c.code IN (SELECT o.classification_code FROM occupation o WHERE o.code IN (?1))")
+    Stream<Classification> _findAllByOccupationCodes(Set<Integer> classificationCodes);
 
-    default Stream<Classification> findAllByOccupationCodes(List<Integer> classificationCodes) {
+    default Stream<Classification> findAllByOccupationCodes(Set<Integer> classificationCodes) {
         return CollectionUtils.isEmpty(classificationCodes)
             ? Stream.empty()
             : _findAllByOccupationCodes(classificationCodes);

@@ -1,9 +1,13 @@
 package ch.admin.seco.service.reference.domain;
 
+import static java.util.Objects.nonNull;
+
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
 
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -27,7 +31,7 @@ import ch.admin.seco.service.reference.domain.valueobject.Labels;
 @Entity
 @Table(name = "occupation")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class Occupation implements Serializable {
+public class Occupation<T extends Occupation<T>> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -49,7 +53,21 @@ public class Occupation implements Serializable {
 
     @Valid
     @Embedded
-    private Labels labels;
+    private Labels maleLabels;
+
+    @Valid
+    @Embedded
+    @AttributeOverrides({
+        @AttributeOverride(name = "de",
+            column = @Column(name = "label_de_f")),
+        @AttributeOverride(name = "fr",
+            column = @Column(name = "label_fr_f")),
+        @AttributeOverride(name = "it",
+            column = @Column(name = "label_it_f")),
+        @AttributeOverride(name = "en",
+            column = @Column(name = "label_en_f"))
+    })
+    private Labels femaleLabels;
 
     public UUID getId() {
         return id;
@@ -67,9 +85,9 @@ public class Occupation implements Serializable {
         this.code = code;
     }
 
-    public Occupation code(int code) {
+    public T code(int code) {
         this.code = code;
-        return this;
+        return (T) this;
     }
 
     public int getClassificationCode() {
@@ -80,22 +98,36 @@ public class Occupation implements Serializable {
         this.classificationCode = classificationCode;
     }
 
-    public Occupation classificationCode(int classificationCode) {
+    public T classificationCode(int classificationCode) {
         this.classificationCode = classificationCode;
-        return this;
+        return (T) this;
     }
 
-    public Labels getLabels() {
-        return labels;
+    public Labels getMaleLabels() {
+        return nonNull(maleLabels) ? maleLabels : new Labels();
     }
 
-    public void setLabels(Labels labels) {
-        this.labels = labels;
+    public void setMaleLabels(Labels maleLabels) {
+        this.maleLabels = maleLabels;
     }
 
-    public Occupation labels(Labels labels) {
-        this.labels = labels;
-        return this;
+    public T maleLabels(Labels maleLabels) {
+        this.maleLabels = maleLabels;
+        return (T) this;
+    }
+
+    public Labels getFemaleLabels() {
+        return nonNull(femaleLabels) ? femaleLabels : new Labels();
+
+    }
+
+    public void setFemaleLabels(Labels femaleLabels) {
+        this.femaleLabels = femaleLabels;
+    }
+
+    public T femaleLabels(Labels femaleLabels) {
+        this.femaleLabels = femaleLabels;
+        return (T) this;
     }
 
     @Override
@@ -123,7 +155,7 @@ public class Occupation implements Serializable {
             "id=" + id +
             ", code=" + code +
             ", classificationCode=" + classificationCode +
-            ", labels=" + labels +
+            ", labelDe=" + maleLabels.getDe() +
             '}';
     }
 }

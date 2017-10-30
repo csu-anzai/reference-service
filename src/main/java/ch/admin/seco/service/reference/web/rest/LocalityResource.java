@@ -67,7 +67,7 @@ public class LocalityResource {
     /**
      * PUT  /localities : Updates an existing locality.
      *
-     * @param locality the locality to update
+     * @param locality the locality to saveOccupations
      * @return the ResponseEntity with status 200 (OK) and with body the updated locality,
      * or with status 400 (Bad Request) if the locality is not valid,
      * or with status 500 (Internal Server Error) if the locality couldn't be updated
@@ -76,7 +76,7 @@ public class LocalityResource {
     @PutMapping("/localities")
     @Timed
     public ResponseEntity<Locality> updateLocality(@Valid @RequestBody Locality locality) throws URISyntaxException {
-        log.debug("REST request to update Locality : {}", locality);
+        log.debug("REST request to saveOccupations Locality : {}", locality);
         if (locality.getId() == null) {
             return createLocality(locality);
         }
@@ -160,6 +160,5 @@ public class LocalityResource {
     public List<Locality> findLocalitiesByZipCode(@RequestParam String zipCode) {
         log.debug("REST request to suggest Locality by zipCode({})", zipCode);
         return localityService.findOneByZipCode(zipCode);
-
     }
 }

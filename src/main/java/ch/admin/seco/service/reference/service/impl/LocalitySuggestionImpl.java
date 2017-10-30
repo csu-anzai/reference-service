@@ -26,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ch.admin.seco.service.reference.domain.Locality;
 import ch.admin.seco.service.reference.domain.search.LocalitySuggestion;
 import ch.admin.seco.service.reference.domain.valueobject.GeoPoint;
-import ch.admin.seco.service.reference.repository.search.LocalitySynonymSearchRepository;
+import ch.admin.seco.service.reference.repository.search.LocalitySearchRepository;
 import ch.admin.seco.service.reference.service.dto.CantonSuggestionDto;
 import ch.admin.seco.service.reference.service.dto.LocalityAutocompleteDto;
 import ch.admin.seco.service.reference.service.dto.LocalitySuggestionDto;
@@ -38,12 +38,12 @@ import ch.admin.seco.service.reference.service.dto.LocalitySuggestionDto;
 @Transactional
 public class LocalitySuggestionImpl {
 
-    private final LocalitySynonymSearchRepository localitySynonymSearchRepository;
+    private final LocalitySearchRepository localitySynonymSearchRepository;
     private final ElasticsearchTemplate elasticsearchTemplate;
     private final EntityToSynonymMapper entityToSynonymMapper;
 
     public LocalitySuggestionImpl(
-        LocalitySynonymSearchRepository localitySynonymSearchRepository,
+        LocalitySearchRepository localitySynonymSearchRepository,
         ElasticsearchTemplate elasticsearchTemplate,
         EntityToSynonymMapper entityToSynonymMapper) {
         this.localitySynonymSearchRepository = localitySynonymSearchRepository;
@@ -75,7 +75,7 @@ public class LocalitySuggestionImpl {
             entityToSynonymMapper::convertLocalitySuggestion, "cities", "zipCodes");
 
         List<CantonSuggestionDto> cantons = convertSuggestionToDto(resultSize, searchResponse,
-            entityToSynonymMapper::convertCantonSuggestion, "cantonCodes", "cantonNames");
+            entityToSynonymMapper::toCantonSuggestionDto, "cantonCodes", "cantonNames");
 
         return new LocalityAutocompleteDto(localities, cantons);
     }

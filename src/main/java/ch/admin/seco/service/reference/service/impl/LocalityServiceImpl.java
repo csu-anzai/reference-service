@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ch.admin.seco.service.reference.domain.Locality;
 import ch.admin.seco.service.reference.domain.valueobject.GeoPoint;
 import ch.admin.seco.service.reference.repository.LocalityRepository;
-import ch.admin.seco.service.reference.repository.search.LocalitySynonymSearchRepository;
+import ch.admin.seco.service.reference.repository.search.LocalitySearchRepository;
 import ch.admin.seco.service.reference.service.LocalityService;
 import ch.admin.seco.service.reference.service.dto.LocalityAutocompleteDto;
 
@@ -29,12 +29,12 @@ public class LocalityServiceImpl implements LocalityService {
     private final Logger log = LoggerFactory.getLogger(LocalityServiceImpl.class);
 
     private final LocalityRepository localityRepository;
-    private final LocalitySynonymSearchRepository localitySynonymSearchRepository;
+    private final LocalitySearchRepository localitySynonymSearchRepository;
     private final EntityToSynonymMapper entityToSynonymMapper;
     private final LocalitySuggestionImpl localitySuggestion;
 
     public LocalityServiceImpl(LocalityRepository localityRepository,
-        LocalitySynonymSearchRepository localitySynonymSearchRepository,
+        LocalitySearchRepository localitySynonymSearchRepository,
         ElasticsearchTemplate elasticsearchTemplate,
         EntityToSynonymMapper entityToSynonymMapper, LocalitySuggestionImpl localitySuggestion) {
         this.localityRepository = localityRepository;
@@ -128,6 +128,6 @@ public class LocalityServiceImpl implements LocalityService {
 
     @Async
     public void index(Locality locality) {
-        localitySynonymSearchRepository.index(entityToSynonymMapper.toSuggestion(locality));
+        localitySynonymSearchRepository.index(entityToSynonymMapper.toLocalitySuggestion(locality));
     }
 }

@@ -58,12 +58,14 @@
             </column>
 
             <column name="label_de" type="varchar(100)"/>
-
             <column name="label_fr" type="varchar(100)"/>
-
             <column name="label_it" type="varchar(100)"/>
-
             <column name="label_en" type="varchar(100)"/>
+
+            <column name="label_de_f" type="varchar(100)"/>
+            <column name="label_fr_f" type="varchar(100)"/>
+            <column name="label_it_f" type="varchar(100)"/>
+            <column name="label_en_f" type="varchar(100)"/>
         </createTable>
 
         <addUniqueConstraint constraintName="occupation_class_code_unique"
