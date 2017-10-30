@@ -243,7 +243,7 @@ public class OccupationResource {
 
     private HttpHeaders createCacheHeader() {
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setCacheControl(CacheControl.maxAge(5, TimeUnit.MINUTES).cachePublic().getHeaderValue());
+        httpHeaders.setCacheControl(CacheControl.maxAge(2, TimeUnit.MINUTES).cachePublic().getHeaderValue());
         return httpHeaders;
     }
 

@@ -17,7 +17,7 @@
                 "type": "text"
             },
             "synonym": {
-                "type": "boolean"
+                "type": "keyword"
             },
             "combinedContext": {
                 "type": "text"

@@ -150,7 +150,7 @@ public class OccupationServiceImpl implements OccupationService {
     @Override
     @Transactional(readOnly = true)
     public Optional<OccupationDto> findOneOccupationByCode(int code, Language language) {
-        log.debug("Request to get OccupationMapping : code:{}", code);
+        log.debug("Request to get OccupationDto : code:{}", code);
         return occupationRepository.findOneByCode(code)
             .map(toOccupationDto(language));
     }
@@ -158,7 +158,7 @@ public class OccupationServiceImpl implements OccupationService {
     @Override
     @Transactional(readOnly = true)
     public Optional<OccupationDto> findOneOccupationByAvamCode(int avamCode, Language language) {
-        log.debug("Request to get OccupationMapping : avamCode:{}", avamCode);
+        log.debug("Request to get OccupationDto : avamCode:{}", avamCode);
         return occupationMappingRepository.findByAvamCode(avamCode)
             .stream()
             .findFirst()
@@ -170,7 +170,7 @@ public class OccupationServiceImpl implements OccupationService {
     @Override
     @Transactional(readOnly = true)
     public Optional<OccupationDto> findOneOccupationByX28Code(int x28Code, Language language) {
-        log.debug("Request to get OccupationMapping : x28Code:{}", x28Code);
+        log.debug("Request to get OccupationDto : x28Code:{}", x28Code);
         return occupationMappingRepository.findByX28Code(x28Code)
             .flatMap(occupationMappingToOccupation)
             .map(toOccupationDto(language));
