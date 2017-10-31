@@ -155,7 +155,7 @@ public class Occupation<T extends Occupation<T>> implements Serializable {
             "id=" + id +
             ", code=" + code +
             ", classificationCode=" + classificationCode +
-            ", labelDe=" + maleLabels.getDe() +
+            ", labelDe=" + (nonNull(maleLabels) ? maleLabels.getDe() : "") +
             '}';
     }
 }

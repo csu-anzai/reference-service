@@ -8,10 +8,10 @@ import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import ch.admin.seco.service.reference.domain.Language;
 import ch.admin.seco.service.reference.domain.Occupation;
 import ch.admin.seco.service.reference.domain.OccupationMapping;
 import ch.admin.seco.service.reference.domain.OccupationSynonym;
+import ch.admin.seco.service.reference.domain.enums.Language;
 import ch.admin.seco.service.reference.service.dto.OccupationAutocompleteDto;
 import ch.admin.seco.service.reference.service.dto.OccupationDto;
 

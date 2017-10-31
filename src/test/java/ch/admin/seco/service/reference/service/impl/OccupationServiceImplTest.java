@@ -8,7 +8,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Supplier;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -19,14 +18,16 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 
-import ch.admin.seco.service.reference.domain.Language;
 import ch.admin.seco.service.reference.domain.Occupation;
 import ch.admin.seco.service.reference.domain.OccupationMapping;
+import ch.admin.seco.service.reference.domain.enums.Language;
 import ch.admin.seco.service.reference.repository.ClassificationRepository;
 import ch.admin.seco.service.reference.repository.OccupationMappingRepository;
 import ch.admin.seco.service.reference.repository.OccupationRepository;
 import ch.admin.seco.service.reference.repository.OccupationSynonymRepository;
 import ch.admin.seco.service.reference.repository.search.OccupationSearchRepository;
+import ch.admin.seco.service.reference.service.dto.OccupationDto;
+import ch.admin.seco.service.reference.service.dto.mapper.OccupationDtoMapper;
 
 @RunWith(MockitoJUnitRunner.class)
 public class OccupationServiceImplTest {
@@ -53,65 +54,55 @@ public class OccupationServiceImplTest {
     @Mock
     private ElasticsearchTemplate elasticsearchTemplate;
     @Mock
-    private EntityToSynonymMapper occupationSynonymMapper;
+    private EntityToSuggestionMapper occupationSynonymMapper;
     @Mock
     private OccupationMappingRepository occupationMappingRepository;
     @Mock
     private OccupationRepository occupationRepository;
 
+    private OccupationDtoMapper occupationDtoMapper = new OccupationDtoMapper();
+
     @Mock
     private ClassificationRepository classificationRepository;
 
     private Occupation occupation;
-
-    private static Occupation createOccupation(int code, int classificationCode) {
-        Occupation occupation = new Occupation()
-            .code(code)
-            .classificationCode(classificationCode);
-        occupation.setId(UUID.randomUUID());
-        return occupation;
-    }
-
-    private static OccupationMapping createOccupationMapping(int code, int avamCode, int x28Code) {
-        OccupationMapping occupationMapping = new OccupationMapping()
-            .code(code)
-            .avamCode(avamCode)
-            .x28Code(x28Code);
-        occupationMapping.setId(UUID.randomUUID());
-        return occupationMapping;
-    }
+    private OccupationDto occupationDto;
 
     @Before
     public void setUp() {
         occupationService = new OccupationServiceImpl(applicationContext,
             occupationSynonymRepository, occupationSynonymSearchRepository,
             occupationSynonymMapper, occupationMappingRepository,
-            occupationRepository, classificationRepository, occupationSuggestion);
+            occupationRepository, occupationSuggestion, occupationDtoMapper);
 
         occupationSuggestion = new OccupationSuggestionImpl(elasticsearchTemplate, occupationSynonymMapper, classificationRepository);
 
         occupation = createOccupation(CODE, CLASSIFICATION_CODE);
+        occupationDto = createOccupationDto(occupation);
     }
 
     @Test
     public void shouldReturnEmpty_whenOccupationNotFoundByCode() {
         when(occupationRepository.findOneByCode(CODE)).thenReturn(Optional.empty());
 
-        checkResultIsEmpty(() -> occupationService.findOneOccupationByCode(CODE, Language.de));
+        assertThat(occupationService.findOneOccupationByCode(CODE, Language.de))
+            .isEmpty();
     }
 
     @Test
     public void shouldReturnOccupation_whenOccupationFoundByCode() {
         when(occupationRepository.findOneByCode(CODE)).thenReturn(Optional.of(occupation));
 
-        checkResultIsNotEmpty(() -> occupationService.findOneOccupationByCode(CODE, Language.de), occupation);
+        assertThat(occupationService.findOneOccupationByCode(CODE, Language.de))
+            .contains(occupationDto);
     }
 
     @Test
     public void shouldReturnEmpty_whenOccupationMappingNotFoundByAvamCode() {
         when(occupationMappingRepository.findByAvamCode(AVAM_CODE)).thenReturn(Collections.emptyList());
 
-        checkResultIsEmpty(() -> occupationService.findOneOccupationByAvamCode(AVAM_CODE, Language.de));
+        assertThat(occupationService.findOneOccupationByAvamCode(AVAM_CODE, Language.de))
+            .isEmpty();
     }
 
     @Test
@@ -121,14 +112,16 @@ public class OccupationServiceImplTest {
         when(occupationMappingRepository.findByAvamCode(AVAM_CODE)).thenReturn(occupationMappings);
         when(occupationRepository.findOneByCode(CODE)).thenReturn(Optional.ofNullable(occupation));
 
-        checkResultIsNotEmpty(() -> occupationService.findOneOccupationByAvamCode(AVAM_CODE, Language.de), occupation);
+        assertThat(occupationService.findOneOccupationByAvamCode(AVAM_CODE, Language.de))
+            .contains(occupationDto);
     }
 
     @Test
     public void shouldReturnEmpty_whenMappingNotFoundByX28Code() {
         when(occupationMappingRepository.findByX28Code(X28_CODE)).thenReturn(Optional.empty());
 
-        checkResultIsEmpty(() -> occupationService.findOneOccupationByX28Code(X28_CODE, Language.de));
+        assertThat(occupationService.findOneOccupationByX28Code(X28_CODE, Language.de))
+            .isEmpty();
     }
 
     @Test
@@ -137,7 +130,8 @@ public class OccupationServiceImplTest {
             .thenReturn(Optional.of(createOccupationMapping(CODE, AVAM_CODE, X28_CODE)));
         when(occupationRepository.findOneByCode(CODE)).thenReturn(Optional.empty());
 
-        checkResultIsEmpty(() -> occupationService.findOneOccupationByX28Code(X28_CODE, null));
+        assertThat(occupationService.findOneOccupationByX28Code(X28_CODE, null))
+            .isEmpty();
     }
 
     @Test
@@ -146,19 +140,32 @@ public class OccupationServiceImplTest {
             .thenReturn(Optional.of(createOccupationMapping(CODE, AVAM_CODE, X28_CODE)));
         when(occupationRepository.findOneByCode(CODE)).thenReturn(Optional.of(occupation));
 
-        checkResultIsNotEmpty(() -> occupationService.findOneOccupationByX28Code(X28_CODE, null), occupation);
+        assertThat(occupationService.findOneOccupationByX28Code(X28_CODE, null))
+            .contains(occupationDto);
     }
 
-    private void checkResultIsEmpty(Supplier<Optional<?>> supplier) {
-        Optional<?> result = supplier.get();
-
-        assertThat(result).isEmpty();
+    private Occupation createOccupation(int code, int classificationCode) {
+        Occupation occupation = new Occupation()
+            .code(code)
+            .classificationCode(classificationCode);
+        occupation.setId(UUID.randomUUID());
+        return occupation;
     }
 
-    private void checkResultIsNotEmpty(Supplier<Optional> supplier, Object expectedResult) {
-        Optional result = supplier.get();
+    private OccupationDto createOccupationDto(Occupation occupation) {
+        OccupationDto occupationDto = new OccupationDto()
+            .id(occupation.getId())
+            .code(occupation.getCode())
+            .classificationCode(occupation.getClassificationCode());
+        return occupationDto;
+    }
 
-        assertThat(result).isNotEmpty();
-        assertThat(result).contains(expectedResult);
+    private OccupationMapping createOccupationMapping(int code, int avamCode, int x28Code) {
+        OccupationMapping occupationMapping = new OccupationMapping()
+            .code(code)
+            .avamCode(avamCode)
+            .x28Code(x28Code);
+        occupationMapping.setId(UUID.randomUUID());
+        return occupationMapping;
     }
 }

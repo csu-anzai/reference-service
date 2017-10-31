@@ -2,7 +2,7 @@ package ch.admin.seco.service.reference.service;
 
 import java.util.Optional;
 
-import ch.admin.seco.service.reference.domain.Language;
+import ch.admin.seco.service.reference.domain.enums.Language;
 import ch.admin.seco.service.reference.service.dto.JobCenterDto;
 
 public interface JobCenterService {

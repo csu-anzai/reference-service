@@ -27,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ch.admin.seco.service.reference.ReferenceserviceApp;
 import ch.admin.seco.service.reference.domain.JobCenter;
-import ch.admin.seco.service.reference.domain.Language;
+import ch.admin.seco.service.reference.domain.enums.Language;
 import ch.admin.seco.service.reference.domain.valueobject.Address;
 import ch.admin.seco.service.reference.repository.JobCenterRepository;
 import ch.admin.seco.service.reference.service.JobCenterService;

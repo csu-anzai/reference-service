@@ -1,6 +1,6 @@
 package ch.admin.seco.service.reference.domain.valueobject;
 
-import static org.springframework.util.StringUtils.hasText;
+import static java.util.Objects.isNull;
 
 import java.util.Objects;
 
@@ -8,7 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.Size;
 
-import ch.admin.seco.service.reference.domain.Language;
+import ch.admin.seco.service.reference.domain.enums.Language;
 
 @Embeddable
 public class Labels {
@@ -113,11 +113,9 @@ public class Labels {
     }
 
     public String get(Language language) {
-        String label = getInternal(language);
-        return hasText(label) ? label : getInternal(Language.de);
-    }
-
-    private String getInternal(Language language) {
+        if (isNull(language)) {
+            return null;
+        }
         switch (language) {
             case de:
                 return de;

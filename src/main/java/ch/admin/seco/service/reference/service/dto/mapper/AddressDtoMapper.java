@@ -6,7 +6,7 @@ import ch.admin.seco.service.reference.domain.valueobject.Address;
 import ch.admin.seco.service.reference.service.dto.AddressDto;
 
 @Component
-public class AddressMapper {
+public class AddressDtoMapper {
 
     public AddressDto addressToDto(Address address) {
         return new AddressDto()

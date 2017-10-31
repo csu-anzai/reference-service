@@ -21,6 +21,8 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 
+import ch.admin.seco.service.reference.domain.enums.Language;
+
 /**
  * A OccupationSynonym.
  */

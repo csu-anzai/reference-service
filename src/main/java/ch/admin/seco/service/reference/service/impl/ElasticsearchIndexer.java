@@ -54,7 +54,7 @@ class ElasticsearchIndexer {
     private final CantonRepository cantonRepository;
     private final CantonSearchRepository cantonSearchRepository;
     private final ElasticsearchTemplate elasticsearchTemplate;
-    private final EntityToSynonymMapper entityToSynonymMapper;
+    private final EntityToSuggestionMapper entityToSynonymMapper;
 
     ElasticsearchIndexer(
         EntityManager entityManager, ClassificationRepository classificationRepository, ClassificationSearchRepository classificationSearchRepository,
@@ -62,7 +62,7 @@ class ElasticsearchIndexer {
         LocalityRepository localityRepository, LocalitySearchRepository localitySynonymSearchRepository,
         CantonRepository cantonRepository, CantonSearchRepository cantonSearchRepository,
         ElasticsearchTemplate elasticsearchTemplate,
-        EntityToSynonymMapper entityToSynonymMapper) {
+        EntityToSuggestionMapper entityToSynonymMapper) {
 
         this.entityManager = entityManager;
         this.classificationRepository = classificationRepository;

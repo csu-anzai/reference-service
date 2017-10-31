@@ -31,7 +31,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import ch.admin.seco.service.reference.ReferenceserviceApp;
-import ch.admin.seco.service.reference.domain.Language;
+import ch.admin.seco.service.reference.domain.enums.Language;
 import ch.admin.seco.service.reference.domain.search.ClassificationSuggestion;
 import ch.admin.seco.service.reference.domain.valueobject.Labels;
 import ch.admin.seco.service.reference.repository.ClassificationRepository;

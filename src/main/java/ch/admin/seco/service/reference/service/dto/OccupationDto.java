@@ -1,5 +1,6 @@
 package ch.admin.seco.service.reference.service.dto;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class OccupationDto {
@@ -45,6 +46,25 @@ public class OccupationDto {
     public OccupationDto labels(String male, String female) {
         this.labels = new LabelsDto(male, female);
         return this;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getCode(), getClassificationCode());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        OccupationDto that = (OccupationDto) o;
+        return getCode() == that.getCode() &&
+            getClassificationCode() == that.getClassificationCode() &&
+            Objects.equals(getId(), that.getId());
     }
 
     private final class LabelsDto {

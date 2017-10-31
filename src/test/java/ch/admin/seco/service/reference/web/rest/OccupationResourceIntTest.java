@@ -31,10 +31,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ch.admin.seco.service.reference.ReferenceserviceApp;
 import ch.admin.seco.service.reference.domain.Classification;
-import ch.admin.seco.service.reference.domain.Language;
 import ch.admin.seco.service.reference.domain.Occupation;
 import ch.admin.seco.service.reference.domain.OccupationMapping;
 import ch.admin.seco.service.reference.domain.OccupationSynonym;
+import ch.admin.seco.service.reference.domain.enums.Language;
 import ch.admin.seco.service.reference.domain.search.OccupationSuggestion;
 import ch.admin.seco.service.reference.domain.valueobject.Labels;
 import ch.admin.seco.service.reference.repository.OccupationMappingRepository;

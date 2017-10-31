@@ -1,4 +1,4 @@
-package ch.admin.seco.service.reference.domain;
+package ch.admin.seco.service.reference.domain.enums;
 
 public enum Language {
     de, fr, it, en;

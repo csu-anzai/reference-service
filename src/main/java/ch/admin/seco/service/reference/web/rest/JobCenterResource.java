@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import ch.admin.seco.service.reference.domain.Language;
+import ch.admin.seco.service.reference.domain.enums.Language;
 import ch.admin.seco.service.reference.service.JobCenterService;
 import ch.admin.seco.service.reference.service.dto.JobCenterDto;
 

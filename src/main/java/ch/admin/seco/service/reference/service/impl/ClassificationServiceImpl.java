@@ -38,13 +38,13 @@ public class ClassificationServiceImpl implements ClassificationService {
     private final ApplicationContext applicationContext;
     private final ClassificationRepository classificationRepository;
     private final ClassificationSearchRepository classificationSearchRepository;
-    private final EntityToSynonymMapper classificationMapper;
+    private final EntityToSuggestionMapper classificationMapper;
     private ClassificationServiceImpl classificationServiceImpl;
 
     public ClassificationServiceImpl(ApplicationContext applicationContext,
         ClassificationRepository classificationRepository,
         ClassificationSearchRepository classificationSearchRepository,
-        EntityToSynonymMapper classificationMapper) {
+        EntityToSuggestionMapper classificationMapper) {
 
         this.applicationContext = applicationContext;
         this.classificationRepository = classificationRepository;

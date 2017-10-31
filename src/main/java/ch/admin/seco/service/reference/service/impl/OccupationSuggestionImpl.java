@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ch.admin.seco.service.reference.domain.Classification;
-import ch.admin.seco.service.reference.domain.Language;
+import ch.admin.seco.service.reference.domain.enums.Language;
 import ch.admin.seco.service.reference.domain.search.OccupationSuggestion;
 import ch.admin.seco.service.reference.repository.ClassificationRepository;
 import ch.admin.seco.service.reference.service.dto.ClassificationSuggestionDto;
@@ -39,12 +39,12 @@ public class OccupationSuggestionImpl {
 
     private final Logger LOGGER = LoggerFactory.getLogger(OccupationSuggestionImpl.class);
     private final ElasticsearchTemplate elasticsearchTemplate;
-    private final EntityToSynonymMapper occupationSynonymMapper;
+    private final EntityToSuggestionMapper occupationSynonymMapper;
     private final ClassificationRepository classificationRepository;
 
     OccupationSuggestionImpl(
         ElasticsearchTemplate elasticsearchTemplate,
-        EntityToSynonymMapper occupationSynonymMapper,
+        EntityToSuggestionMapper occupationSynonymMapper,
         ClassificationRepository classificationRepository) {
 
         this.elasticsearchTemplate = elasticsearchTemplate;

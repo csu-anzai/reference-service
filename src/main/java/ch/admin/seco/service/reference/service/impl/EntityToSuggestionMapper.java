@@ -18,10 +18,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import ch.admin.seco.service.reference.domain.Canton;
-import ch.admin.seco.service.reference.domain.Language;
 import ch.admin.seco.service.reference.domain.Locality;
 import ch.admin.seco.service.reference.domain.Occupation;
 import ch.admin.seco.service.reference.domain.OccupationSynonym;
+import ch.admin.seco.service.reference.domain.enums.Language;
 import ch.admin.seco.service.reference.domain.search.CantonSuggestion;
 import ch.admin.seco.service.reference.domain.search.ClassificationSuggestion;
 import ch.admin.seco.service.reference.domain.search.LocalitySuggestion;
@@ -34,11 +34,11 @@ import ch.admin.seco.service.reference.service.dto.LocalitySuggestionDto;
 import ch.admin.seco.service.reference.service.dto.OccupationSuggestionDto;
 
 @Component
-class EntityToSynonymMapper {
+class EntityToSuggestionMapper {
 
     private final ElasticsearchTemplate elasticsearchTemplate;
 
-    EntityToSynonymMapper(ElasticsearchTemplate elasticsearchTemplate) {
+    EntityToSuggestionMapper(ElasticsearchTemplate elasticsearchTemplate) {
         this.elasticsearchTemplate = elasticsearchTemplate;
     }
 

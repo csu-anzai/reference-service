@@ -6,17 +6,17 @@ import java.util.Set;
 import org.springframework.stereotype.Component;
 
 import ch.admin.seco.service.reference.domain.JobCenter;
-import ch.admin.seco.service.reference.domain.Language;
+import ch.admin.seco.service.reference.domain.enums.Language;
 import ch.admin.seco.service.reference.domain.valueobject.Address;
 import ch.admin.seco.service.reference.service.dto.AddressDto;
 import ch.admin.seco.service.reference.service.dto.JobCenterDto;
 
 @Component
-public class JobCenterMapper {
+public class JobCenterDtoMapper {
 
-    private final AddressMapper addressMapper;
+    private final AddressDtoMapper addressMapper;
 
-    public JobCenterMapper(AddressMapper addressMapper) {
+    public JobCenterDtoMapper(AddressDtoMapper addressMapper) {
         this.addressMapper = addressMapper;
     }
 

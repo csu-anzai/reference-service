@@ -30,13 +30,13 @@ public class LocalityServiceImpl implements LocalityService {
 
     private final LocalityRepository localityRepository;
     private final LocalitySearchRepository localitySynonymSearchRepository;
-    private final EntityToSynonymMapper entityToSynonymMapper;
+    private final EntityToSuggestionMapper entityToSynonymMapper;
     private final LocalitySuggestionImpl localitySuggestion;
 
     public LocalityServiceImpl(LocalityRepository localityRepository,
         LocalitySearchRepository localitySynonymSearchRepository,
         ElasticsearchTemplate elasticsearchTemplate,
-        EntityToSynonymMapper entityToSynonymMapper, LocalitySuggestionImpl localitySuggestion) {
+        EntityToSuggestionMapper entityToSynonymMapper, LocalitySuggestionImpl localitySuggestion) {
         this.localityRepository = localityRepository;
         this.localitySynonymSearchRepository = localitySynonymSearchRepository;
         this.entityToSynonymMapper = entityToSynonymMapper;

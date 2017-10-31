@@ -8,11 +8,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ch.admin.seco.service.reference.domain.Language;
+import ch.admin.seco.service.reference.domain.enums.Language;
 import ch.admin.seco.service.reference.repository.JobCenterRepository;
 import ch.admin.seco.service.reference.service.JobCenterService;
 import ch.admin.seco.service.reference.service.dto.JobCenterDto;
-import ch.admin.seco.service.reference.service.dto.mapper.JobCenterMapper;
+import ch.admin.seco.service.reference.service.dto.mapper.JobCenterDtoMapper;
 
 @Service
 public class JobCenterServiceImpl implements JobCenterService {
@@ -20,9 +20,9 @@ public class JobCenterServiceImpl implements JobCenterService {
     private final Logger log = LoggerFactory.getLogger(JobCenterServiceImpl.class);
 
     private final JobCenterRepository jobCenterRepository;
-    private final JobCenterMapper jobCenterMapper;
+    private final JobCenterDtoMapper jobCenterMapper;
 
-    public JobCenterServiceImpl(JobCenterRepository jobCenterRepository, JobCenterMapper jobCenterMapper) {
+    public JobCenterServiceImpl(JobCenterRepository jobCenterRepository, JobCenterDtoMapper jobCenterMapper) {
         this.jobCenterRepository = jobCenterRepository;
         this.jobCenterMapper = jobCenterMapper;
     }

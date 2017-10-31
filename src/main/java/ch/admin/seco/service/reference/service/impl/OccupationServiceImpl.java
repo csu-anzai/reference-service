@@ -8,8 +8,6 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
 
-import javax.annotation.PostConstruct;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,11 +17,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ch.admin.seco.service.reference.domain.Language;
 import ch.admin.seco.service.reference.domain.Occupation;
 import ch.admin.seco.service.reference.domain.OccupationMapping;
 import ch.admin.seco.service.reference.domain.OccupationSynonym;
-import ch.admin.seco.service.reference.repository.ClassificationRepository;
+import ch.admin.seco.service.reference.domain.enums.Language;
 import ch.admin.seco.service.reference.repository.OccupationMappingRepository;
 import ch.admin.seco.service.reference.repository.OccupationRepository;
 import ch.admin.seco.service.reference.repository.OccupationSynonymRepository;
@@ -31,6 +28,7 @@ import ch.admin.seco.service.reference.repository.search.OccupationSearchReposit
 import ch.admin.seco.service.reference.service.OccupationService;
 import ch.admin.seco.service.reference.service.dto.OccupationAutocompleteDto;
 import ch.admin.seco.service.reference.service.dto.OccupationDto;
+import ch.admin.seco.service.reference.service.dto.mapper.OccupationDtoMapper;
 
 /**
  * Service Implementation for managing Occupation.
@@ -43,21 +41,21 @@ public class OccupationServiceImpl implements OccupationService {
     private final ApplicationContext applicationContext;
     private final OccupationSynonymRepository occupationSynonymRepository;
     private final OccupationSearchRepository occupationSynonymSearchRepository;
-    private final EntityToSynonymMapper occupationSynonymMapper;
+    private final EntityToSuggestionMapper occupationSynonymMapper;
     private final OccupationMappingRepository occupationMappingRepository;
     private final OccupationRepository occupationRepository;
-    private final ClassificationRepository classificationRepository;
-    private final OccupationSuggestionImpl occupationSuggestion;
+    private final OccupationSuggestionImpl occupationSuggestionImpl;
+    private final OccupationDtoMapper occupationDtoMapper;
     private final Function<OccupationMapping, Optional<Occupation>> occupationMappingToOccupation;
-    private OccupationServiceImpl occupationServiceImpl;
 
     public OccupationServiceImpl(ApplicationContext applicationContext,
         OccupationSynonymRepository occupationSynonymRepository,
         OccupationSearchRepository occupationSynonymSearchRepository,
-        EntityToSynonymMapper occupationSynonymMapper,
+        EntityToSuggestionMapper occupationSynonymMapper,
         OccupationMappingRepository occupationMappingRepository,
         OccupationRepository occupationRepository,
-        ClassificationRepository classificationRepository, OccupationSuggestionImpl occupationSuggestion) {
+        OccupationSuggestionImpl occupationSuggestion,
+        OccupationDtoMapper occupationDtoMapper) {
 
         this.applicationContext = applicationContext;
         this.occupationSynonymRepository = occupationSynonymRepository;
@@ -65,10 +63,10 @@ public class OccupationServiceImpl implements OccupationService {
         this.occupationSynonymMapper = occupationSynonymMapper;
         this.occupationMappingRepository = occupationMappingRepository;
         this.occupationRepository = occupationRepository;
-        this.classificationRepository = classificationRepository;
 
+        this.occupationSuggestionImpl = occupationSuggestion;
+        this.occupationDtoMapper = occupationDtoMapper;
         this.occupationMappingToOccupation = mapping -> occupationRepository.findOneByCode(mapping.getCode());
-        this.occupationSuggestion = occupationSuggestion;
     }
 
     /**
@@ -152,7 +150,7 @@ public class OccupationServiceImpl implements OccupationService {
     public Optional<OccupationDto> findOneOccupationByCode(int code, Language language) {
         log.debug("Request to get OccupationDto : code:{}", code);
         return occupationRepository.findOneByCode(code)
-            .map(toOccupationDto(language));
+            .map(occupation -> occupationDtoMapper.toOccupationDto(occupation, language));
     }
 
     @Override
@@ -163,7 +161,7 @@ public class OccupationServiceImpl implements OccupationService {
             .stream()
             .findFirst()
             .flatMap(occupationMappingToOccupation)
-            .map(toOccupationDto(language));
+            .map(occupation -> occupationDtoMapper.toOccupationDto(occupation, language));
 
     }
 
@@ -173,13 +171,7 @@ public class OccupationServiceImpl implements OccupationService {
         log.debug("Request to get OccupationDto : x28Code:{}", x28Code);
         return occupationMappingRepository.findByX28Code(x28Code)
             .flatMap(occupationMappingToOccupation)
-            .map(toOccupationDto(language));
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public OccupationAutocompleteDto suggest(String prefix, Language language, boolean includeSynonyms, int resultSize) {
-        return occupationSuggestion.suggest(prefix, language, includeSynonyms, resultSize);
+            .map(occupation -> occupationDtoMapper.toOccupationDto(occupation, language));
     }
 
     /**
@@ -209,6 +201,12 @@ public class OccupationServiceImpl implements OccupationService {
         return occupationSynonymRepository.saveAll(occupationSynonyms);
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public OccupationAutocompleteDto suggest(String prefix, Language language, boolean includeSynonyms, int resultSize) {
+        return occupationSuggestionImpl.suggest(prefix, language, includeSynonyms, resultSize);
+    }
+
     @Override
     public List<Occupation> saveOccupations(Collection<Occupation> occupations) {
         occupations.stream()
@@ -221,18 +219,5 @@ public class OccupationServiceImpl implements OccupationService {
 
             });
         return occupationRepository.saveAll(occupations);
-    }
-
-    private Function<Occupation, OccupationDto> toOccupationDto(Language language) {
-        return occupation -> new OccupationDto()
-            .id(occupation.getId())
-            .code(occupation.getCode())
-            .classificationCode(occupation.getClassificationCode())
-            .labels(occupation.getMaleLabels().get(language), occupation.getFemaleLabels().get(language));
-    }
-
-    @PostConstruct
-    private void init() {
-        occupationServiceImpl = applicationContext.getBean(OccupationServiceImpl.class);
     }
 }
