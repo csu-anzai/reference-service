@@ -81,7 +81,7 @@ public class LocalitySuggestionDto {
 
     @Override
     public int hashCode() {
-        return Objects.hash(city, communalCode, cantonCode);
+        return Objects.hash(city, communalCode, cantonCode, zipCode);
     }
 
     @Override
@@ -95,6 +95,7 @@ public class LocalitySuggestionDto {
         LocalitySuggestionDto that = (LocalitySuggestionDto) o;
         return communalCode == that.communalCode &&
             Objects.equals(city, that.city) &&
-            Objects.equals(cantonCode, that.cantonCode);
+            Objects.equals(cantonCode, that.cantonCode) &&
+            Objects.equals(zipCode, that.zipCode);
     }
 }

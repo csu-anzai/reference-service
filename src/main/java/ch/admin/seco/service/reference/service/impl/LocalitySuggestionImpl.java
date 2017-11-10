@@ -66,7 +66,7 @@ public class LocalitySuggestionImpl {
 
         SuggestBuilder suggestBuilder = new SuggestBuilder()
             .addSuggestion("cities", citySuggestions)
-            .addSuggestion("zipCodes", new CompletionSuggestionBuilder("zipCode").prefix(prefix))
+            .addSuggestion("zipCodes", new CompletionSuggestionBuilder("zipCode").prefix(prefix).size(resultSize))
             .addSuggestion("cantonCodes", new CompletionSuggestionBuilder("code.canton-suggestions").prefix(prefix))
             .addSuggestion("cantonNames", new CompletionSuggestionBuilder("cantonSuggestions").prefix(prefix));
         SearchResponse searchResponse = elasticsearchTemplate.suggest(suggestBuilder, LocalitySuggestion.class);
