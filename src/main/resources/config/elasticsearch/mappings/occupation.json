@@ -23,93 +23,25 @@
                 "type": "text"
             },
             "occupationSuggestions": {
-                "type": "text",
-                "fields": {
-                    "de": {
-                        "type": "completion",
-                        "analyzer": "german",
-                        "contexts": [
-                            {
-                                "name": "lang",
-                                "type": "CATEGORY",
-                                "path": "language"
-                            },
-                            {
-                                "name": "syno",
-                                "type": "CATEGORY",
-                                "path": "synonym"
-                            },
-                            {
-                                "name": "lang_syno",
-                                "type": "CATEGORY",
-                                "path": "combinedContext"
-                            }
-                        ]
+                "type": "completion",
+                "analyzer": "ascii_folding",
+                "contexts": [
+                    {
+                        "name": "lang",
+                        "type": "CATEGORY",
+                        "path": "language"
                     },
-                    "fr": {
-                        "type": "completion",
-                        "analyzer": "french",
-                        "contexts": [
-                            {
-                                "name": "lang",
-                                "type": "CATEGORY",
-                                "path": "language"
-                            },
-                            {
-                                "name": "syno",
-                                "type": "CATEGORY",
-                                "path": "synonym"
-                            },
-                            {
-                                "name": "lang_syno",
-                                "type": "CATEGORY",
-                                "path": "combinedContext"
-                            }
-                        ]
+                    {
+                        "name": "syno",
+                        "type": "CATEGORY",
+                        "path": "synonym"
                     },
-                    "it": {
-                        "type": "completion",
-                        "analyzer": "italian",
-                        "contexts": [
-                            {
-                                "name": "lang",
-                                "type": "CATEGORY",
-                                "path": "language"
-                            },
-                            {
-                                "name": "syno",
-                                "type": "CATEGORY",
-                                "path": "synonym"
-                            },
-                            {
-                                "name": "lang_syno",
-                                "type": "CATEGORY",
-                                "path": "combinedContext"
-                            }
-                        ]
-                    },
-                    "en": {
-                        "type": "completion",
-                        "analyzer": "english",
-                        "contexts": [
-                            {
-                                "name": "lang",
-                                "type": "CATEGORY",
-                                "path": "language"
-                            },
-                            {
-                                "name": "syno",
-                                "type": "CATEGORY",
-                                "path": "synonym"
-                            },
-                            {
-                                "name": "lang_syno",
-                                "type": "CATEGORY",
-                                "path": "combinedContext"
-                            }
-                        ]
+                    {
+                        "name": "lang_syno",
+                        "type": "CATEGORY",
+                        "path": "combinedContext"
                     }
-                }
+                ]
             }
         }
     }

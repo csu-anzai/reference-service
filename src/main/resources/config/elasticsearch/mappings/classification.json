@@ -8,19 +8,19 @@
                 "properties": {
                     "de": {
                         "type": "text",
-                        "analyzer": "german"
+                        "analyzer": "ascii_folding"
                     },
                     "fr": {
                         "type": "text",
-                        "analyzer": "french"
+                        "analyzer": "ascii_folding"
                     },
                     "it": {
                         "type": "text",
-                        "analyzer": "italian"
+                        "analyzer": "ascii_folding"
                     },
                     "en": {
                         "type": "text",
-                        "analyzer": "english"
+                        "analyzer": "ascii_folding"
                     }
                 }
             },
@@ -28,19 +28,19 @@
                 "properties": {
                     "de": {
                         "type": "completion",
-                        "analyzer": "german"
+                        "analyzer": "ascii_folding"
                     },
                     "fr": {
                         "type": "completion",
-                        "analyzer": "french"
+                        "analyzer": "ascii_folding"
                     },
                     "it": {
                         "type": "completion",
-                        "analyzer": "italian"
+                        "analyzer": "ascii_folding"
                     },
                     "en": {
                         "type": "completion",
-                        "analyzer": "english"
+                        "analyzer": "ascii_folding"
                     }
                 }
             }

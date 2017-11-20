@@ -4,6 +4,7 @@ import java.util.Set;
 
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Mapping;
+import org.springframework.data.elasticsearch.annotations.Setting;
 
 import ch.admin.seco.service.reference.domain.OccupationSynonym;
 
@@ -12,6 +13,7 @@ import ch.admin.seco.service.reference.domain.OccupationSynonym;
  */
 @Document(indexName = "occupations", type = "occupation")
 @Mapping(mappingPath = "config/elasticsearch/mappings/occupation.json")
+@Setting(settingPath = "config/elasticsearch/settings/folding-analyzer.json")
 public class OccupationSuggestion extends OccupationSynonym<OccupationSuggestion> {
 
     private Set<String> occupationSuggestions;

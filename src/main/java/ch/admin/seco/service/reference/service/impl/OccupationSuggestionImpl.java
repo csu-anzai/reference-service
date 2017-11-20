@@ -94,7 +94,7 @@ public class OccupationSuggestionImpl {
     private SuggestBuilder buildSuggestRequest(String prefix, Language language, boolean includeSynonyms, int resultSize) {
         return new SuggestBuilder()
             .addSuggestion("occupation",
-                completionSuggestion("occupationSuggestions." + language.name())
+                completionSuggestion("occupationSuggestions")
                     .prefix(prefix)
                     .size(resultSize)
                     .contexts(createContext(language, includeSynonyms))
