@@ -42,10 +42,10 @@ public class LocalitySuggestionImpl {
     private final ElasticsearchTemplate elasticsearchTemplate;
     private final EntityToSuggestionMapper entityToSynonymMapper;
 
-    public LocalitySuggestionImpl(
-        LocalitySearchRepository localitySynonymSearchRepository,
+    public LocalitySuggestionImpl(LocalitySearchRepository localitySynonymSearchRepository,
         ElasticsearchTemplate elasticsearchTemplate,
         EntityToSuggestionMapper entityToSynonymMapper) {
+
         this.localitySynonymSearchRepository = localitySynonymSearchRepository;
         this.elasticsearchTemplate = elasticsearchTemplate;
         this.entityToSynonymMapper = entityToSynonymMapper;

@@ -7,7 +7,6 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,8 +34,9 @@ public class LocalityServiceImpl implements LocalityService {
 
     public LocalityServiceImpl(LocalityRepository localityRepository,
         LocalitySearchRepository localitySynonymSearchRepository,
-        ElasticsearchTemplate elasticsearchTemplate,
-        EntityToSuggestionMapper entityToSynonymMapper, LocalitySuggestionImpl localitySuggestion) {
+        EntityToSuggestionMapper entityToSynonymMapper,
+        LocalitySuggestionImpl localitySuggestion) {
+
         this.localityRepository = localityRepository;
         this.localitySynonymSearchRepository = localitySynonymSearchRepository;
         this.entityToSynonymMapper = entityToSynonymMapper;

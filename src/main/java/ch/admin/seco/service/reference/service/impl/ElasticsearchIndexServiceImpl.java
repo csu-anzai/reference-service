@@ -14,16 +14,21 @@ public class ElasticsearchIndexServiceImpl implements ElasticsearchIndexService 
 
     private final Logger log = LoggerFactory.getLogger(ElasticsearchIndexServiceImpl.class);
     private final ElasticsearchIndexer elasticsearchIndexer;
+    private final ElasticsearchOccupationLabelIndexer elasticsearchOccupationLabelIndexer;
 
-    ElasticsearchIndexServiceImpl(ElasticsearchIndexer elasticsearchIndexServiceTasks) {
+    ElasticsearchIndexServiceImpl(ElasticsearchIndexer elasticsearchIndexServiceTasks,
+        ElasticsearchOccupationLabelIndexer elasticsearchOccupationLabelIndexer) {
+
         this.elasticsearchIndexer = elasticsearchIndexServiceTasks;
+        this.elasticsearchOccupationLabelIndexer = elasticsearchOccupationLabelIndexer;
     }
 
     public void reindexAll() {
 
         CompletableFuture.allOf(
             CompletableFuture.runAsync(elasticsearchIndexer::reindexLocalityIndex),
-            CompletableFuture.runAsync(elasticsearchIndexer::reindexOccupationIndex)
+            CompletableFuture.runAsync(elasticsearchIndexer::reindexOccupationIndex),
+            CompletableFuture.runAsync(elasticsearchOccupationLabelIndexer::reindexOccupationIndex)
         ).join();
 
         log.info("ReindexAll finished");

@@ -11,7 +11,6 @@ import java.util.function.Function;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -38,7 +37,6 @@ import ch.admin.seco.service.reference.service.dto.mapper.OccupationDtoMapper;
 public class OccupationServiceImpl implements OccupationService {
 
     private final Logger log = LoggerFactory.getLogger(OccupationServiceImpl.class);
-    private final ApplicationContext applicationContext;
     private final OccupationSynonymRepository occupationSynonymRepository;
     private final OccupationSearchRepository occupationSynonymSearchRepository;
     private final EntityToSuggestionMapper occupationSynonymMapper;
@@ -48,7 +46,7 @@ public class OccupationServiceImpl implements OccupationService {
     private final OccupationDtoMapper occupationDtoMapper;
     private final Function<OccupationMapping, Optional<Occupation>> occupationMappingToOccupation;
 
-    public OccupationServiceImpl(ApplicationContext applicationContext,
+    public OccupationServiceImpl(
         OccupationSynonymRepository occupationSynonymRepository,
         OccupationSearchRepository occupationSynonymSearchRepository,
         EntityToSuggestionMapper occupationSynonymMapper,
@@ -57,7 +55,6 @@ public class OccupationServiceImpl implements OccupationService {
         OccupationSuggestionImpl occupationSuggestion,
         OccupationDtoMapper occupationDtoMapper) {
 
-        this.applicationContext = applicationContext;
         this.occupationSynonymRepository = occupationSynonymRepository;
         this.occupationSynonymSearchRepository = occupationSynonymSearchRepository;
         this.occupationSynonymMapper = occupationSynonymMapper;

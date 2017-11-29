@@ -4,6 +4,7 @@ import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toSet;
 import static org.elasticsearch.search.suggest.SuggestBuilders.completionSuggestion;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -42,8 +43,7 @@ public class OccupationSuggestionImpl {
     private final EntityToSuggestionMapper occupationSynonymMapper;
     private final ClassificationRepository classificationRepository;
 
-    OccupationSuggestionImpl(
-        ElasticsearchTemplate elasticsearchTemplate,
+    OccupationSuggestionImpl(ElasticsearchTemplate elasticsearchTemplate,
         EntityToSuggestionMapper occupationSynonymMapper,
         ClassificationRepository classificationRepository) {
 
@@ -76,7 +76,7 @@ public class OccupationSuggestionImpl {
                 .map(classification -> new ClassificationSuggestionDto(classification.getLabels().get(language), classification.getCode())))
             .flatMap(Function.identity())
             .distinct()
-            .sorted((a, b) -> a.getName().compareTo(b.getName()))
+            .sorted(Comparator.comparing(ClassificationSuggestionDto::getName))
             .collect(Collectors.toList());
     }
 
@@ -87,7 +87,7 @@ public class OccupationSuggestionImpl {
             .map(occupationSynonymMapper::convertOccupationSuggestion)
             .distinct()
             .limit(resultSize)
-            .sorted((a, b) -> a.getName().compareTo(b.getName()))
+            .sorted(Comparator.comparing(OccupationSuggestionDto::getName))
             .collect(Collectors.toList());
     }
 

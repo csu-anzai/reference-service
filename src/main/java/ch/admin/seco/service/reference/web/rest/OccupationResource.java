@@ -77,7 +77,9 @@ public class OccupationResource {
     public ResponseEntity<OccupationSynonym> createOccupationSynonym(@Valid @RequestBody OccupationSynonym occupationSynonym) throws URISyntaxException {
         log.debug("REST request to save OccupationSynonym : {}", occupationSynonym);
         if (occupationSynonym.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(OCCUPATION_SYNONYM_ENTITY, "idexists", "A new occupationSynonym cannot already have an ID")).body(null);
+            return ResponseEntity.badRequest()
+                .headers(HeaderUtil.createFailureAlert(OCCUPATION_SYNONYM_ENTITY, "id exists", "A new occupationSynonym cannot already have an ID"))
+                .body(null);
         }
         OccupationSynonym result = occupationService.save(occupationSynonym);
         return ResponseEntity.created(new URI("/api/occupations/synonym/" + result.getId()))

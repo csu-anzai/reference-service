@@ -21,6 +21,8 @@ eureka:
         instanceId: referenceservice:${spring.application.instance-id:${random.value}}
 
 spring:
+    profiles:
+        active: test
     application:
         name: referenceservice
     jackson:
@@ -29,7 +31,7 @@ spring:
         type: none
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
-        url: jdbc:h2:mem:referenceservice;DB_CLOSE_DELAY=-1
+        url: jdbc:h2:mem:referenceservice;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
 #        url: jdbc:h2:file:./build/h2db/db/referenceservice;DB_CLOSE_DELAY=-1
         name:
         username: referenceservice

@@ -46,8 +46,6 @@ public class OccupationServiceImplTest {
     private OccupationSuggestionImpl occupationSuggestion;
 
     @Mock
-    private ApplicationContext applicationContext;
-    @Mock
     private OccupationSynonymRepository occupationSynonymRepository;
     @Mock
     private OccupationSearchRepository occupationSynonymSearchRepository;
@@ -70,7 +68,7 @@ public class OccupationServiceImplTest {
 
     @Before
     public void setUp() {
-        occupationService = new OccupationServiceImpl(applicationContext,
+        occupationService = new OccupationServiceImpl(
             occupationSynonymRepository, occupationSynonymSearchRepository,
             occupationSynonymMapper, occupationMappingRepository,
             occupationRepository, occupationSuggestion, occupationDtoMapper);

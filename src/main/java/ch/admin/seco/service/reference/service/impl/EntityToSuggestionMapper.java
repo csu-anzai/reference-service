@@ -13,7 +13,6 @@ import java.util.regex.Pattern;
 
 import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
 
-import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -35,12 +34,6 @@ import ch.admin.seco.service.reference.service.dto.OccupationSuggestionDto;
 
 @Component
 class EntityToSuggestionMapper {
-
-    private final ElasticsearchTemplate elasticsearchTemplate;
-
-    EntityToSuggestionMapper(ElasticsearchTemplate elasticsearchTemplate) {
-        this.elasticsearchTemplate = elasticsearchTemplate;
-    }
 
     Locality fromSynonym(LocalitySuggestion localitySynonym) {
         return new Locality()

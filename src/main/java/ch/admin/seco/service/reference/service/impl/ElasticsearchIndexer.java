@@ -56,11 +56,16 @@ class ElasticsearchIndexer {
     private final ElasticsearchTemplate elasticsearchTemplate;
     private final EntityToSuggestionMapper entityToSynonymMapper;
 
-    ElasticsearchIndexer(
-        EntityManager entityManager, ClassificationRepository classificationRepository, ClassificationSearchRepository classificationSearchRepository,
-        OccupationRepository occupationRepository1, OccupationSynonymRepository occupationSynonymRepository, OccupationSearchRepository occupationRepository,
-        LocalityRepository localityRepository, LocalitySearchRepository localitySynonymSearchRepository,
-        CantonRepository cantonRepository, CantonSearchRepository cantonSearchRepository,
+    ElasticsearchIndexer(EntityManager entityManager,
+        ClassificationRepository classificationRepository,
+        ClassificationSearchRepository classificationSearchRepository,
+        OccupationRepository occupationRepository1,
+        OccupationSynonymRepository occupationSynonymRepository,
+        OccupationSearchRepository occupationRepository,
+        LocalityRepository localityRepository,
+        LocalitySearchRepository localitySynonymSearchRepository,
+        CantonRepository cantonRepository,
+        CantonSearchRepository cantonSearchRepository,
         ElasticsearchTemplate elasticsearchTemplate,
         EntityToSuggestionMapper entityToSynonymMapper) {
 
@@ -87,7 +92,7 @@ class ElasticsearchIndexer {
         reindexOccupation();
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
     public void reindexLocalityIndex() {
         disableHibernateSecondaryCache();
         elasticsearchTemplate.deleteIndex(LocalitySuggestion.class);

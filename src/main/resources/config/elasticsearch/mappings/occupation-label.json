@@ -1,0 +1,62 @@
+{
+    "occupation": {
+        "properties": {
+            "contextKey": {
+                "type": "text",
+                "fields": {
+                    "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 10
+                    }
+                }
+            },
+            "type": {
+                "type": "keyword"
+            },
+            "code": {
+                "type": "keyword"
+            },
+            "language": {
+                "type": "text",
+                "fields": {
+                    "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 2
+                    }
+                }
+            },
+            "classifier": {
+                "type": "keyword"
+            },
+            "label": {
+                "type": "text"
+            },
+            "occupationSuggestions": {
+                "type": "completion",
+                "analyzer": "ascii_folding",
+                "contexts": [
+                    {
+                        "name": "lang",
+                        "type": "CATEGORY",
+                        "path": "language"
+                    },
+                    {
+                        "name": "key",
+                        "type": "CATEGORY",
+                        "path": "contextKey"
+                    }
+                ]
+            },
+            "mappings": {
+                "properties": {
+                    "type": {
+                        "type": "keyword"
+                    },
+                    "code": {
+                        "type": "keyword"
+                    }
+                }
+            }
+        }
+    }
+}

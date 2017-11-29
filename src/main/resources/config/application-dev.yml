@@ -55,7 +55,7 @@ spring:
     data:
         elasticsearch:
             cluster-name:
-#            cluster-nodes: localhost:9300
+            cluster-nodes: localhost:9300
             properties:
                 client.transport.sniff: false
                 client.transport.ignore_cluster_name: true

@@ -31,7 +31,7 @@
 
         </createTable>
 
-        <addUniqueConstraint constraintName="occupation_mapping_x28_code_unique"
+        <addUniqueConstraint constraintName="occupation_label_mapping_x28_code_unique"
                              tableName="occupation_mapping" columnNames="x28_code"/>
 
     </changeSet>

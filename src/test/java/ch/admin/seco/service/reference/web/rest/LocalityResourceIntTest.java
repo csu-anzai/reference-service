@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -32,10 +33,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ch.admin.seco.service.reference.ReferenceserviceApp;
 import ch.admin.seco.service.reference.domain.Locality;
+import ch.admin.seco.service.reference.domain.search.CantonSuggestion;
 import ch.admin.seco.service.reference.domain.search.LocalitySuggestion;
 import ch.admin.seco.service.reference.domain.valueobject.GeoPoint;
 import ch.admin.seco.service.reference.repository.CantonRepository;
 import ch.admin.seco.service.reference.repository.LocalityRepository;
+import ch.admin.seco.service.reference.repository.search.CantonSearchRepository;
 import ch.admin.seco.service.reference.repository.search.LocalitySearchRepository;
 import ch.admin.seco.service.reference.service.LocalityService;
 import ch.admin.seco.service.reference.web.rest.errors.ExceptionTranslator;
@@ -75,6 +78,9 @@ public class LocalityResourceIntTest {
 
     @Autowired
     private CantonRepository cantonRepository;
+
+    @Autowired
+    private CantonSearchRepository cantonSearchRepository;
 
     @Autowired
     private LocalityService localityService;
@@ -342,6 +348,12 @@ public class LocalityResourceIntTest {
     public void searchLocality() throws Exception {
         // Initialize the database
         localityService.save(locality);
+        cantonSearchRepository.save(new CantonSuggestion()
+            .id(UUID.randomUUID())
+            .code("BE")
+            .name("Canton Bern")
+            .cantonSuggestions(Collections.emptySet())
+        );
 
         // Search the locality
         restLocalityMockMvc.perform(get("/api/_search/localities?prefix={prefix}&resultSize={resultSize}", "be", 5))
@@ -353,12 +365,6 @@ public class LocalityResourceIntTest {
             .andExpect(jsonPath("$.localities[*].regionCode").value(hasItem(DEFAULT_REGION_CODE)))
             .andExpect(jsonPath("$.localities[*].zipCode").value(hasItem(DEFAULT_ZIP_CODE)))
             .andExpect(jsonPath("$.cantons[*].code").value(hasItem(DEFAULT_CANTON_CODE)));
-
-        // Search the locality
-        restLocalityMockMvc.perform(get("/api/_search/localities?prefix={prefix}&resultSize={resultSize}", "freib", 5))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.cantons[*].code").value(hasItem("FR")));
     }
 
     @Test

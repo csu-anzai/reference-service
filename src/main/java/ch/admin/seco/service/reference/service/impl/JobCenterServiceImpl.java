@@ -22,7 +22,9 @@ public class JobCenterServiceImpl implements JobCenterService {
     private final JobCenterRepository jobCenterRepository;
     private final JobCenterDtoMapper jobCenterMapper;
 
-    public JobCenterServiceImpl(JobCenterRepository jobCenterRepository, JobCenterDtoMapper jobCenterMapper) {
+    public JobCenterServiceImpl(JobCenterRepository jobCenterRepository,
+        JobCenterDtoMapper jobCenterMapper) {
+
         this.jobCenterRepository = jobCenterRepository;
         this.jobCenterMapper = jobCenterMapper;
     }
