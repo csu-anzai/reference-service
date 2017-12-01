@@ -101,9 +101,16 @@ public class OccupationLabelResource {
 
     @GetMapping(value = "/occupations/label/mapping", params = "bfsCode")
     @Timed
-    public ResponseEntity<OccupationLabelMapping> getOccupationMappinByBFSCode(@RequestParam int bfsCode) {
+    public ResponseEntity<OccupationLabelMapping> getOccupationMappingByBFSCode(@RequestParam int bfsCode) {
         return ResponseUtil.wrapOrNotFound(
             occupationService.findOneOccupationMappingByBfsCode(bfsCode), createCacheHeader());
+    }
+
+    @GetMapping(value = "/occupations/label/mapping", params = "x28Code")
+    @Timed
+    public ResponseEntity<OccupationLabelMapping> getOccupationMappingByX28Code(@RequestParam int x28Code) {
+        return ResponseUtil.wrapOrNotFound(
+            occupationService.findOneOccupationMappingByX28Code(x28Code), createCacheHeader());
     }
 
     private Language getLanguage() {

@@ -28,8 +28,10 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ch.admin.seco.service.reference.ReferenceserviceApp;
 import ch.admin.seco.service.reference.domain.OccupationLabel;
 import ch.admin.seco.service.reference.domain.OccupationLabelMapping;
+import ch.admin.seco.service.reference.domain.OccupationLabelMappingX28;
 import ch.admin.seco.service.reference.domain.enums.Language;
 import ch.admin.seco.service.reference.repository.OccupationLabelMappingRepository;
+import ch.admin.seco.service.reference.repository.OccupationLabelMappingX28Repository;
 import ch.admin.seco.service.reference.repository.OccupationLabelRepository;
 import ch.admin.seco.service.reference.repository.search.OccupationLabelSearchRepository;
 import ch.admin.seco.service.reference.service.OccupationLabelService;
@@ -60,6 +62,9 @@ public class OccupationLabelResourceIntTest {
     private OccupationLabelMappingRepository occupationLabelMappingRepository;
 
     @Autowired
+    private OccupationLabelMappingX28Repository occupationLabelMappingX28Repository;
+
+    @Autowired
     private OccupationLabelSearchRepository occupationLabelSearchRepository;
 
     @Before
@@ -77,10 +82,16 @@ public class OccupationLabelResourceIntTest {
     public void initTest() {
         this.occupationLabelRepository.deleteAll();
         this.occupationLabelMappingRepository.deleteAll();
+        this.occupationLabelMappingX28Repository.deleteAll();
         this.occupationLabelSearchRepository.deleteAll();
 
         this.occupationLabelMappingRepository.save(
+            //                         bfs     avam  sbn3  sbn5
             createOccupationMapping(33302009, 68913, 361, 36102, "Java-Programmierer")
+        );
+        this.occupationLabelMappingX28Repository.save(
+            //                              avam      x28
+            createOccupationLabelMappingX28(68913, 11002714)
         );
         this.occupationLabelService.save(createAvamOccupationLabel(68913, Language.de, 'm', "Java-Programmierer"));
 
@@ -204,6 +215,18 @@ public class OccupationLabelResourceIntTest {
             .andExpect(jsonPath("$.description").value("Java-Programmierer"));
     }
 
+    @Test
+    public void getOccupationMappingByX28Code() throws Exception {
+        sut.perform(get("/api/occupations/label/mapping?x28Code=11002714"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.bfsCode").value(33302009))
+            .andExpect(jsonPath("$.avamCode").value(68913))
+            .andExpect(jsonPath("$.sbn3Code").value(361))
+            .andExpect(jsonPath("$.sbn5Code").value(36102))
+            .andExpect(jsonPath("$.description").value("Java-Programmierer"));
+    }
+
     private OccupationLabel createAvamOccupationLabel(int code, Language lang, char gender, String label) {
         return createOccupationLabel(code, "avam", lang, String.valueOf(gender), label);
     }
@@ -233,6 +256,14 @@ public class OccupationLabelResourceIntTest {
             .language(lang)
             .classifier(classifier)
             .label(label);
+    }
+
+    private OccupationLabelMappingX28 createOccupationLabelMappingX28(int avamCode, int x28Code) {
+        OccupationLabelMappingX28 mapping = new OccupationLabelMappingX28();
+        mapping.setAvamCode(avamCode);
+        mapping.setX28Code(x28Code);
+
+        return mapping;
     }
 
     private OccupationLabelMapping createOccupationMapping(int bfsCode, int avamCode, int sbn3Code, int sbn5Code, String description) {

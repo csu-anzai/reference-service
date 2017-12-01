@@ -22,6 +22,8 @@ public interface OccupationLabelService {
 
     Optional<OccupationLabelMapping> findOneOccupationMappingByAvamCode(int avamCode);
 
+    Optional<OccupationLabelMapping> findOneOccupationMappingByX28Code(int x28Code);
+
     /**
      * Search for the occupationSynonym corresponding to the query.
      *

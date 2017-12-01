@@ -71,6 +71,13 @@ public class OccupationLabelServiceImpl implements OccupationLabelService {
         return occupationMappingRepository.findOneByAvamCode(avamCode);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<OccupationLabelMapping> findOneOccupationMappingByX28Code(int x28Code) {
+        log.debug("Request to get OccupationLabelMapping : x28Code:{}", x28Code);
+        return occupationMappingRepository.findOneByX28Code(x28Code);
+    }
+
     @Transactional(readOnly = true)
     @Override
     public OccupationLabelAutocompleteDto suggest(String prefix, Language language, Collection<String> types, int resultSize) {
