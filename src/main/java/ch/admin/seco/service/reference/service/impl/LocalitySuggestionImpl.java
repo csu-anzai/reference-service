@@ -1,11 +1,6 @@
 package ch.admin.seco.service.reference.service.impl;
 
-import static java.util.stream.Collectors.toList;
-
-import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Stream;
 
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.common.geo.GeoDistance;
@@ -13,7 +8,6 @@ import org.elasticsearch.common.unit.DistanceUnit;
 import org.elasticsearch.search.sort.GeoDistanceSortBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.suggest.SuggestBuilder;
-import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
 import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder;
 
 import org.springframework.data.domain.PageRequest;
@@ -27,9 +21,9 @@ import ch.admin.seco.service.reference.domain.Locality;
 import ch.admin.seco.service.reference.domain.search.LocalitySuggestion;
 import ch.admin.seco.service.reference.domain.valueobject.GeoPoint;
 import ch.admin.seco.service.reference.repository.search.LocalitySearchRepository;
-import ch.admin.seco.service.reference.service.dto.CantonSuggestionDto;
 import ch.admin.seco.service.reference.service.dto.LocalityAutocompleteDto;
-import ch.admin.seco.service.reference.service.dto.LocalitySuggestionDto;
+import ch.admin.seco.service.reference.service.dto.LocalitySearchDTO;
+import ch.admin.seco.service.reference.service.factory.LocalitySuggestionConverterFactory;
 
 /**
  * Service Implementation for managing Locality.
@@ -55,29 +49,32 @@ public class LocalitySuggestionImpl {
      * Search for the locality corresponding
      * to the prefix and limit result by resultSize.
      *
-     * @param prefix the prefix of the locality suggest
-     * @param resultSize the response size information
+     * @param localitySearchDTO suggest request parameters
      * @return the result of the suggest
      */
-    public LocalityAutocompleteDto suggest(String prefix, int resultSize) {
-        CompletionSuggestionBuilder citySuggestions = new CompletionSuggestionBuilder("citySuggestions")
-            .prefix(prefix)
-            .size(Math.min(resultSize + 20, 10000)); // to factor in duplicate entries as 'Zürich' we increase the result size
-
-        SuggestBuilder suggestBuilder = new SuggestBuilder()
-            .addSuggestion("cities", citySuggestions)
-            .addSuggestion("zipCodes", new CompletionSuggestionBuilder("zipCode").prefix(prefix).size(resultSize))
-            .addSuggestion("cantonCodes", new CompletionSuggestionBuilder("code.canton-suggestions").prefix(prefix))
-            .addSuggestion("cantonNames", new CompletionSuggestionBuilder("cantonSuggestions").prefix(prefix));
+    public LocalityAutocompleteDto suggest(LocalitySearchDTO localitySearchDTO) {
+        SuggestBuilder suggestBuilder = createSuggestBuilder(localitySearchDTO);
         SearchResponse searchResponse = elasticsearchTemplate.suggest(suggestBuilder, LocalitySuggestion.class);
+        return LocalitySuggestionConverterFactory.getConverter(localitySearchDTO)
+            .convert(searchResponse, localitySearchDTO.getSize());
+    }
 
-        List<LocalitySuggestionDto> localities = convertSuggestionToDto(resultSize, searchResponse,
-            entityToSynonymMapper::convertLocalitySuggestion, "cities", "zipCodes");
+    private SuggestBuilder createSuggestBuilder(LocalitySearchDTO localitySearchDTO) {
+        final String query = localitySearchDTO.getQuery();
+        final int increasedResultSize = Math.min(localitySearchDTO.getSize() + 20, 10000); // to factor in duplicate entries as 'Zürich' we increase the result size
 
-        List<CantonSuggestionDto> cantons = convertSuggestionToDto(resultSize, searchResponse,
-            entityToSynonymMapper::toCantonSuggestionDto, "cantonCodes", "cantonNames");
+        CompletionSuggestionBuilder citySuggestions = new CompletionSuggestionBuilder("citySuggestions")
+            .prefix(query)
+            .size(increasedResultSize);
+        CompletionSuggestionBuilder zipCodeSuggestionBuilder = new CompletionSuggestionBuilder("zipCode")
+            .prefix(query)
+            .size(increasedResultSize);
 
-        return new LocalityAutocompleteDto(localities, cantons);
+        return new SuggestBuilder()
+            .addSuggestion("cities", citySuggestions)
+            .addSuggestion("zipCodes", zipCodeSuggestionBuilder)
+            .addSuggestion("cantonCodes", new CompletionSuggestionBuilder("code.canton-suggestions").prefix(query))
+            .addSuggestion("cantonNames", new CompletionSuggestionBuilder("cantonSuggestions").prefix(query));
     }
 
     /**
@@ -99,16 +96,5 @@ public class LocalitySuggestionImpl {
             .getContent()
             .stream().findFirst()
             .map(entityToSynonymMapper::fromSynonym);
-    }
-
-    private <T> List<T> convertSuggestionToDto(int resultSize, SearchResponse searchResponse,
-        Function<CompletionSuggestion.Entry.Option, T> mapperFunction, String... suggestionNames) {
-        return Stream.of(suggestionNames)
-            .flatMap(suggestionName -> searchResponse.getSuggest().<CompletionSuggestion>getSuggestion(suggestionName).getEntries().stream())
-            .flatMap(item -> item.getOptions().stream())
-            .map(mapperFunction)
-            .distinct() // eliminate duplicates as 'Zürich'
-            .limit(resultSize) // reduce the result list to the desired result size
-            .collect(toList());
     }
 }

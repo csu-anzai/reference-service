@@ -17,6 +17,7 @@ import ch.admin.seco.service.reference.repository.LocalityRepository;
 import ch.admin.seco.service.reference.repository.search.LocalitySearchRepository;
 import ch.admin.seco.service.reference.service.LocalityService;
 import ch.admin.seco.service.reference.service.dto.LocalityAutocompleteDto;
+import ch.admin.seco.service.reference.service.dto.LocalitySearchDTO;
 
 /**
  * Service Implementation for managing Locality.
@@ -101,13 +102,13 @@ public class LocalityServiceImpl implements LocalityService {
      * Search for the locality corresponding
      * to the prefix and limit result by resultSize.
      *
-     * @param prefix the prefix of the locality suggest
-     * @param resultSize the response size information
+     *
+     * @param localitySearchDTO suggest request parameters
      * @return the result of the suggest
      */
     @Override
-    public LocalityAutocompleteDto suggest(String prefix, int resultSize) {
-        return localitySuggestion.suggest(prefix, resultSize);
+    public LocalityAutocompleteDto suggest(LocalitySearchDTO localitySearchDTO) {
+        return localitySuggestion.suggest(localitySearchDTO);
     }
 
     /**

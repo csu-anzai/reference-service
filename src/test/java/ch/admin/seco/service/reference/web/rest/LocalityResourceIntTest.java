@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -370,12 +371,11 @@ public class LocalityResourceIntTest {
     @Test
     @Transactional
     public void searchLocalityByZipCode() throws Exception {
-        Locality locality1 = createLocalityEntity().zipCode("3001");
-        localityService.save(locality1);
-        Locality locality2 = createLocalityEntity().city("Ebersecken").zipCode("3002");
-        localityService.save(locality2);
-        Locality locality3 = createLocalityEntity().city("Dachsen").zipCode("4001");
-        localityService.save(locality3);
+        saveLocalities(
+            createLocalityEntity().zipCode("3001"),
+            createLocalityEntity().city("Ebersecken").zipCode("3002"),
+            createLocalityEntity().city("Dachsen").zipCode("4001")
+        );
 
         restLocalityMockMvc.perform(
             get("/api/_search/localities")
@@ -386,6 +386,36 @@ public class LocalityResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.localities[0].zipCode").value("3001"))
             .andExpect(jsonPath("$.localities[1].zipCode").value("3002"));
+    }
+
+    @Test
+    @Transactional
+    public void searchLocalityByZipCodeWithDistinctResult() throws Exception {
+        saveLocalities(
+            createLocalityEntity().zipCode("3001"),
+            createLocalityEntity().zipCode("3002"),
+            createLocalityEntity().zipCode("3003"),
+            createLocalityEntity().zipCode("3004"),
+            createLocalityEntity().city("Zurich").zipCode("3005"),
+            createLocalityEntity().city("Lucern").zipCode("3006")
+        );
+
+        restLocalityMockMvc.perform(
+            get("/api/_search/localities")
+                .param("prefix", "30")
+                .param("resultSize", "2")
+                .param("distinctLocalities", "true")
+        )
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.localities.length()").value("2"))
+            .andExpect(jsonPath("$.localities[0].city").value(DEFAULT_CITY))
+            .andExpect(jsonPath("$.localities[0].zipCode").value("3004"))
+            .andExpect(jsonPath("$.localities[1].city").value("Zurich"))
+            .andExpect(jsonPath("$.localities[1].zipCode").value("3005"));
+    }
+
+    private void saveLocalities(Locality... localities) {
+        Arrays.asList(localities).forEach(localityService::save);
     }
 
     @Test

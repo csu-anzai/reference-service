@@ -27,9 +27,7 @@ import ch.admin.seco.service.reference.domain.search.LocalitySuggestion;
 import ch.admin.seco.service.reference.domain.search.OccupationSuggestion;
 import ch.admin.seco.service.reference.domain.search.Suggestions;
 import ch.admin.seco.service.reference.domain.valueobject.Labels;
-import ch.admin.seco.service.reference.service.dto.CantonSuggestionDto;
 import ch.admin.seco.service.reference.service.dto.ClassificationSuggestionDto;
-import ch.admin.seco.service.reference.service.dto.LocalitySuggestionDto;
 import ch.admin.seco.service.reference.service.dto.OccupationSuggestionDto;
 
 @Component
@@ -82,16 +80,6 @@ class EntityToSuggestionMapper {
             .classificationSuggestions(extractSuggestions(classification.getLabels()));
     }
 
-    LocalitySuggestionDto convertLocalitySuggestion(CompletionSuggestion.Entry.Option option) {
-        Map<String, Object> source = option.getHit().getSourceAsMap();
-        return new LocalitySuggestionDto()
-            .city(String.class.cast(source.get("city")))
-            .communalCode(Integer.class.cast(source.get("communalCode")))
-            .cantonCode(String.class.cast(source.get("cantonCode")))
-            .regionCode(String.class.cast(source.get("regionCode")))
-            .zipCode(String.class.cast(source.get("zipCode")));
-    }
-
     LocalitySuggestion toLocalitySuggestion(Locality locality) {
         return new LocalitySuggestion()
             .id(locality.getId())
@@ -124,13 +112,6 @@ class EntityToSuggestionMapper {
         String label = String.class.cast(Map.class.cast(source.get("labels")).get(language.name()));
         int code = Integer.class.cast(source.get("code"));
         return new ClassificationSuggestionDto(label, code);
-    }
-
-    CantonSuggestionDto toCantonSuggestionDto(CompletionSuggestion.Entry.Option option) {
-        Map<String, Object> source = option.getHit().getSourceAsMap();
-        return new CantonSuggestionDto()
-            .code(String.class.cast(source.get("code")))
-            .name(String.class.cast(source.get("name")));
     }
 
     private Suggestions extractSuggestions(Labels labels) {

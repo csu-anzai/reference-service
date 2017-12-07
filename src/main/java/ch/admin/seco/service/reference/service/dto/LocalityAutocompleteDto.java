@@ -7,9 +7,9 @@ public class LocalityAutocompleteDto {
     private final List<LocalitySuggestionDto> localities;
     private final List<CantonSuggestionDto> cantons;
 
-    public LocalityAutocompleteDto(List<LocalitySuggestionDto> occupations, List<CantonSuggestionDto> classifications) {
-        this.localities = occupations;
-        this.cantons = classifications;
+    public LocalityAutocompleteDto(List<LocalitySuggestionDto> localities, List<CantonSuggestionDto> cantons) {
+        this.localities = localities;
+        this.cantons = cantons;
     }
 
     public List<LocalitySuggestionDto> getLocalities() {

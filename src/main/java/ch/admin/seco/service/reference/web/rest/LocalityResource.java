@@ -27,6 +27,7 @@ import ch.admin.seco.service.reference.domain.Locality;
 import ch.admin.seco.service.reference.domain.valueobject.GeoPoint;
 import ch.admin.seco.service.reference.service.LocalityService;
 import ch.admin.seco.service.reference.service.dto.LocalityAutocompleteDto;
+import ch.admin.seco.service.reference.service.dto.LocalitySearchDTO;
 import ch.admin.seco.service.reference.web.rest.util.HeaderUtil;
 
 /**
@@ -96,7 +97,7 @@ public class LocalityResource {
     public List<Locality> getAllLocalities() {
         log.debug("REST request to get all Localities");
         return localityService.findAll();
-        }
+    }
 
     /**
      * GET  /localities/:id : get the "id" locality.
@@ -126,18 +127,20 @@ public class LocalityResource {
     }
 
     /**
-     * SEARCH  /_search/localities?prefix=:prefix&resultSize=:resultSize : suggest for the locality corresponding
-     * to the prefix and limit result by resultSize.
+     * SEARCH  /_search/localities?prefix=:prefix&resultSize=:resultSize&distinctLocalities=:distinctLocalities :
+     * suggest for the locality corresponding to the prefix and limit result by resultSize.
      *
      * @param prefix the prefix of the locality suggest
      * @param resultSize the resultSize information
+     * @param distinctLocalities indicates is localities should be distinct during search by zip code
      * @return the result of the suggest
      */
     @GetMapping("/_search/localities")
     @Timed
-    public LocalityAutocompleteDto suggestLocality(@RequestParam String prefix, @RequestParam int resultSize) {
+    public LocalityAutocompleteDto suggestLocality(@RequestParam String prefix, @RequestParam int resultSize,
+        @RequestParam(defaultValue = "false") boolean distinctLocalities) {
         log.debug("REST request to suggest Localities for prefix {}, resultSize {}", prefix, resultSize);
-        return localityService.suggest(prefix, resultSize);
+        return localityService.suggest(new LocalitySearchDTO(prefix, resultSize, distinctLocalities));
     }
 
     /**
