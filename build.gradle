@@ -45,10 +45,6 @@ bootJar {
     mainClass = 'ch.admin.seco.service.reference.ReferenceserviceApp'
 }
 
-war {
-
-}
-
 springBoot {
     buildInfo()
 }
@@ -132,7 +128,7 @@ if (project.hasProperty('zipkin')) {
 }
 
 group = 'ch.admin.seco.service.reference'
-version = version != 'unspecified' ? version : '0.0.7-SNAPSHOT'
+version = version != 'unspecified' ? version : '0.0.8-SNAPSHOT'
 
 description = ''
 
@@ -264,7 +260,7 @@ task cleanResources(type: Delete) {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.1'
+    gradleVersion = '4.2.1'
 }
 
 task stage(dependsOn: 'bootJar') {

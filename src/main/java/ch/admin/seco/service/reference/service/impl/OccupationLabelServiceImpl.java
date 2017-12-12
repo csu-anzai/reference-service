@@ -39,9 +39,9 @@ public class OccupationLabelServiceImpl implements OccupationLabelService {
     private final ElasticsearchOccupationLabelIndexer elasticsearchOccupationLabelIndexer;
 
     public OccupationLabelServiceImpl(OccupationLabelMappingRepository occupationMappingRepository,
-        OccupationLabelRepository occupationLabelRepository,
-        ElasticsearchOccupationLabelIndexer elasticsearchOccupationLabelIndexer,
-        OccupationLabelSuggestionImpl occupationSuggestion) {
+            OccupationLabelRepository occupationLabelRepository,
+            ElasticsearchOccupationLabelIndexer elasticsearchOccupationLabelIndexer,
+            OccupationLabelSuggestionImpl occupationSuggestion) {
 
         this.occupationMappingRepository = occupationMappingRepository;
         this.occupationLabelRepository = occupationLabelRepository;
@@ -78,6 +78,21 @@ public class OccupationLabelServiceImpl implements OccupationLabelService {
         return occupationMappingRepository.findOneByX28Code(x28Code);
     }
 
+    @Override
+    public Optional<OccupationLabelMapping> findOneOccupationMapping(String type, int code) {
+        log.debug("Request to get OccupationLabelMapping : {}:{}", type, code);
+        switch (type.toLowerCase()) {
+            case "x28":
+                return occupationMappingRepository.findOneByX28Code(code);
+            case "avam":
+                return occupationMappingRepository.findOneByAvamCode(code);
+            case "bfs":
+                return occupationMappingRepository.findByBfsCode(code).stream().findFirst();
+        }
+        return Optional.empty();
+    }
+
+
     @Transactional(readOnly = true)
     @Override
     public OccupationLabelAutocompleteDto suggest(String prefix, Language language, Collection<String> types, int resultSize) {
@@ -93,7 +108,7 @@ public class OccupationLabelServiceImpl implements OccupationLabelService {
             occupationLabels = occupationLabelRepository.findByCodeAndTypeAndLanguage(code, type, Language.de);
         }
         return occupationLabels.stream()
-            .collect(toMap(item -> hasText(item.getClassifier()) ? item.getClassifier() : "label", OccupationLabel::getLabel));
+                .collect(toMap(item -> hasText(item.getClassifier()) ? item.getClassifier() : "label", OccupationLabel::getLabel));
     }
 
     @Override
@@ -101,26 +116,26 @@ public class OccupationLabelServiceImpl implements OccupationLabelService {
     public Optional<Map<String, String>> getOccupationLabels(int code, String type, Language language, String classifier) {
         log.debug("Request to get OccupationLabels : code:{}, type:{}, classifier:{}, language:{}", code, type, classifier, language);
         return ofNullable(getBestMatchingOccupationLabel(code, type, language, classifier))
-            .map(item -> ImmutableMap.of("label", item.getLabel()));
+                .map(item -> ImmutableMap.of("label", item.getLabel()));
     }
 
     private OccupationLabel getBestMatchingOccupationLabel(int code, String type, Language language, String classifier) {
         return occupationLabelRepository.findOneByCodeAndTypeAndLanguageAndClassifier(code, type, language, classifier)
-            .orElseGet(() ->
-                // if the requested language was not found try to get another language
-                occupationLabelRepository.findByCodeAndTypeAndClassifier(code, type, classifier)
-                    .stream()
-                    .reduce((bestMatch, current) -> {
-                        if (isNull(bestMatch)) {
-                            // select the first entry as default
-                            return current;
-                        } else if (Language.de.equals(current.getLanguage())) {
-                            // German labels have priority
-                            return current;
-                        }
-                        return bestMatch;
-                    })
-                    .orElse(null)
-            );
+                .orElseGet(() ->
+                        // if the requested language was not found try to get another language
+                        occupationLabelRepository.findByCodeAndTypeAndClassifier(code, type, classifier)
+                                .stream()
+                                .reduce((bestMatch, current) -> {
+                                    if (isNull(bestMatch)) {
+                                        // select the first entry as default
+                                        return current;
+                                    } else if (Language.de.equals(current.getLanguage())) {
+                                        // German labels have priority
+                                        return current;
+                                    }
+                                    return bestMatch;
+                                })
+                                .orElse(null)
+                );
     }
 }

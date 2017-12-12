@@ -18,11 +18,20 @@ public interface OccupationLabelService {
 
     OccupationLabel save(OccupationLabel occupationLabel);
 
+    @Deprecated
+    @Transactional(readOnly = true)
     Optional<OccupationLabelMapping> findOneOccupationMappingByBfsCode(int bfsCode);
 
+    @Deprecated
+    @Transactional(readOnly = true)
     Optional<OccupationLabelMapping> findOneOccupationMappingByAvamCode(int avamCode);
 
+    @Deprecated
+    @Transactional(readOnly = true)
     Optional<OccupationLabelMapping> findOneOccupationMappingByX28Code(int x28Code);
+
+    @Transactional(readOnly = true)
+    Optional<OccupationLabelMapping> findOneOccupationMapping(String type, int code);
 
     /**
      * Search for the occupationSynonym corresponding to the query.

@@ -53,7 +53,7 @@ public class OccupationLabelResource {
     @GetMapping("/_search/occupations/label")
     @Timed
     public ResponseEntity<OccupationLabelAutocompleteDto> suggestOccupation(
-        @RequestParam String prefix, @RequestParam Collection<String> types, @RequestParam int resultSize) {
+            @RequestParam String prefix, @RequestParam Collection<String> types, @RequestParam int resultSize) {
         log.debug("REST request to suggest for a page of OccupationSynonyms for query {}", prefix);
         OccupationLabelAutocompleteDto result = occupationService.suggest(prefix, getLanguage(), types, resultSize);
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -63,15 +63,15 @@ public class OccupationLabelResource {
     @Timed
     public ResponseEntity<Map<String, String>> getOccupationLabelsByCodeAndType(@RequestParam int code, @RequestParam String type) {
         return ResponseEntity.ok()
-            .headers(createCacheHeader())
-            .body(occupationService.getOccupationLabels(code, type, getLanguage()));
+                .headers(createCacheHeader())
+                .body(occupationService.getOccupationLabels(code, type, getLanguage()));
     }
 
     @GetMapping(value = "/occupations/label", params = {"code", "type", "classifier"})
     @Timed
     public ResponseEntity<Map<String, String>> getOccupationLabelsByCodeAndTypeAndClassifier(@RequestParam int code, @RequestParam String type, @RequestParam String classifier) {
         return ResponseUtil.wrapOrNotFound(
-            occupationService.getOccupationLabels(code, type, getLanguage(), classifier), createCacheHeader());
+                occupationService.getOccupationLabels(code, type, getLanguage(), classifier), createCacheHeader());
     }
 
     // /occupations/label/avam:15012
@@ -92,25 +92,35 @@ public class OccupationLabelResource {
         }
     }
 
+    @Deprecated
     @GetMapping(value = "/occupations/label/mapping", params = "avamCode")
     @Timed
     public ResponseEntity<OccupationLabelMapping> getOccupationMappingByAvamCode(@RequestParam int avamCode) {
         return ResponseUtil.wrapOrNotFound(
-            occupationService.findOneOccupationMappingByAvamCode(avamCode), createCacheHeader());
+                occupationService.findOneOccupationMappingByAvamCode(avamCode), createCacheHeader());
     }
 
+    @Deprecated
     @GetMapping(value = "/occupations/label/mapping", params = "bfsCode")
     @Timed
     public ResponseEntity<OccupationLabelMapping> getOccupationMappingByBFSCode(@RequestParam int bfsCode) {
         return ResponseUtil.wrapOrNotFound(
-            occupationService.findOneOccupationMappingByBfsCode(bfsCode), createCacheHeader());
+                occupationService.findOneOccupationMappingByBfsCode(bfsCode), createCacheHeader());
     }
 
+    @Deprecated
     @GetMapping(value = "/occupations/label/mapping", params = "x28Code")
     @Timed
     public ResponseEntity<OccupationLabelMapping> getOccupationMappingByX28Code(@RequestParam int x28Code) {
         return ResponseUtil.wrapOrNotFound(
-            occupationService.findOneOccupationMappingByX28Code(x28Code), createCacheHeader());
+                occupationService.findOneOccupationMappingByX28Code(x28Code), createCacheHeader());
+    }
+
+    @GetMapping("/occupations/label/mapping/{type}/{code}")
+    @Timed
+    public ResponseEntity<OccupationLabelMapping> getOccupationMapping(@PathVariable String type, @PathVariable int code) {
+        return ResponseUtil.wrapOrNotFound(
+                occupationService.findOneOccupationMapping(type, code), createCacheHeader());
     }
 
     private Language getLanguage() {

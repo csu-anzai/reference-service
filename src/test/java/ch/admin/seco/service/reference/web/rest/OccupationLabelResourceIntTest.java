@@ -107,7 +107,7 @@ public class OccupationLabelResourceIntTest {
 
     @Test
     public void suggestOccupation_X28() throws Exception {
-        sut.perform(get("/api/_search/occupations/label?prefix=jav&types=x28&resultSize=5").locale(Locale.GERMAN))
+        sut.perform(get("/api/_search/occupations/label?prefix=jav&types=x28&types=sbn3&types=sbn5&resultSize=5").locale(Locale.GERMAN))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.occupations").value(hasSize(2)))
@@ -126,7 +126,7 @@ public class OccupationLabelResourceIntTest {
 
     @Test
     public void suggestOccupation_AVAM() throws Exception {
-        sut.perform(get("/api/_search/occupations/label?prefix=jav&types=avam&resultSize=5").locale(Locale.GERMAN))
+        sut.perform(get("/api/_search/occupations/label?prefix=jav&types=avam,sbn3,sbn5&resultSize=5").locale(Locale.GERMAN))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.occupations").value(hasSize(1)))
@@ -145,7 +145,7 @@ public class OccupationLabelResourceIntTest {
 
     @Test
     public void suggestOccupation_X28_AVAM() throws Exception {
-        sut.perform(get("/api/_search/occupations/label?prefix=java&types=avam,x28&resultSize=5").locale(Locale.GERMAN))
+        sut.perform(get("/api/_search/occupations/label?prefix=java&types=avam,x28,sbn3,sbn5&resultSize=5").locale(Locale.GERMAN))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.occupations").value(hasSize(3)))

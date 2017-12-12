@@ -1,5 +1,6 @@
 package ch.admin.seco.service.reference.service.impl;
 
+import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 import static org.elasticsearch.search.suggest.SuggestBuilders.completionSuggestion;
 
@@ -9,6 +10,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import ch.admin.seco.service.reference.domain.OccupationLabel;
 import ch.admin.seco.service.reference.domain.enums.Language;
@@ -44,7 +47,7 @@ public class OccupationLabelSuggestionImpl {
     private final ObjectMapper objectMapper;
 
     OccupationLabelSuggestionImpl(ElasticsearchTemplate elasticsearchTemplate,
-        OccupationLabelRepository occupationLabelRepository) {
+            OccupationLabelRepository occupationLabelRepository) {
 
         this.elasticsearchTemplate = elasticsearchTemplate;
         this.occupationLabelRepository = occupationLabelRepository;
@@ -58,54 +61,145 @@ public class OccupationLabelSuggestionImpl {
         LOGGER.debug("Request to suggest for a page of Occupations for query {}", prefix);
 
         SearchResponse suggestResponse = elasticsearchTemplate.suggest(
-            buildSuggestRequest(prefix, language, types, resultSize * 2),
-            OccupationLabelSuggestion.class);
+                buildSuggestRequest(prefix, language, types, resultSize * 3),
+                OccupationLabelSuggestion.class);
 
-        Collection<OccupationLabelSuggestionDto> occupationSuggestionDtos = mapOccupations(suggestResponse, resultSize);
-        Collection<OccupationLabel> classifications = occupationSuggestionDtos.stream()
-            .map(OccupationLabelSuggestionDto::getMappings)
-            .filter(Objects::nonNull)
-            .flatMap(mappings -> mappings.entrySet().stream()
-                .filter(a -> a.getKey().startsWith("sbn")))
-            .distinct()
-            .flatMap(entry -> occupationLabelRepository.findByCodeAndTypeAndLanguage(entry.getValue(), entry.getKey(), language).stream())
-            .sorted(Comparator.comparing(OccupationLabel::getLabel))
-            .collect(toList());
-
-        return new OccupationLabelAutocompleteDto(occupationSuggestionDtos, classifications);
+        List<OccupationLabelSuggestionDto> occupations = mapOccupations(suggestResponse, resultSize);
+        List<OccupationLabel> classifications = Collections.emptyList();
+        if (hasClassificationType(types)) {
+            classifications = mapClassifications(suggestResponse, resultSize, occupations, language);
+        }
+        return new OccupationLabelAutocompleteDto(occupations, classifications);
     }
 
-    private Collection<OccupationLabelSuggestionDto> mapOccupations(SearchResponse suggestResponse, int resultSize) {
+    boolean hasClassificationType(Collection<String> types) {
+        return types.stream().anyMatch(type -> isClassification(type));
+    }
+
+    boolean isClassification(String type) {
+        return type.startsWith("sbn");
+    }
+
+    private Stream<OccupationLabel> mapClassifications(List<OccupationLabelSuggestionDto> classifications) {
+        if (CollectionUtils.isEmpty(classifications)) {
+            return Stream.empty();
+        }
+        return classifications.stream()
+                .map(dto -> objectMapper.convertValue(dto, OccupationLabel.class));
+    }
+
+
+    private List<OccupationLabelSuggestionDto> mapOccupations(SearchResponse suggestResponse, int resultSize) {
         if (Objects.isNull(suggestResponse.getSuggest())) {
             return Collections.emptyList();
         }
 
+        return Stream.concat(
+                streamSuggestions(suggestResponse, "occupation"),
+                streamSuggestions(suggestResponse, "occupationSuggestions"))
+                .distinct()
+                .limit(resultSize)
+                .collect(toList());
+    }
+
+    private List<OccupationLabel> mapClassifications(SearchResponse suggestResponse, int resultSize, List<OccupationLabelSuggestionDto> occupations, Language language) {
+        return streamClassifications(suggestResponse, occupations, language)
+                .distinct()
+                .limit(resultSize)
+                .collect(toList());
+    }
+
+    private Stream<OccupationLabel> streamClassifications(SearchResponse suggestResponse, List<OccupationLabelSuggestionDto> occupations, Language language) {
+        if (Objects.isNull(suggestResponse.getSuggest())) {
+            return Stream.empty();
+        }
+
+        return Stream.concat(
+                streamSuggestions(suggestResponse, "classification")
+                        .map(dto -> objectMapper.convertValue(dto, OccupationLabel.class)),
+                Stream.concat(
+                        streamSuggestions(suggestResponse, "classificationSuggestions")
+                                .map(dto -> objectMapper.convertValue(dto, OccupationLabel.class)),
+                        streamClassificationsFromOccupations(occupations, language)
+                )
+                        .sorted(Comparator.comparing(OccupationLabel::getLabel))
+        );
+    }
+
+    private Stream<OccupationLabel> streamClassificationsFromOccupations(List<OccupationLabelSuggestionDto> occupations, Language language) {
+        if (CollectionUtils.isEmpty(occupations)) {
+            return Stream.empty();
+        }
+        return occupations.stream()
+                .map(OccupationLabelSuggestionDto::getMappings)
+                .filter(Objects::nonNull)
+                .flatMap(mappings -> mappings.entrySet().stream()
+                        .filter(mapping -> isClassification(mapping.getKey())))
+                .distinct()
+                .flatMap(entry -> occupationLabelRepository.findByCodeAndTypeAndLanguage(entry.getValue(), entry.getKey(), language).stream());
+    }
+
+    private Stream<OccupationLabelSuggestionDto> streamSuggestions(SearchResponse suggestResponse, String suggestionName) {
         return suggestResponse.getSuggest()
-            .<CompletionSuggestion>getSuggestion("occupation").getEntries().stream()
-            .flatMap(item -> item.getOptions().stream())
-            .map(option -> objectMapper.convertValue(option.getHit().getSourceAsMap(), OccupationLabelSuggestionDto.class))
-            .distinct()
-            .limit(resultSize)
-            .sorted(Comparator.comparing(OccupationLabelSuggestionDto::getLabel))
-            .collect(toList());
+                .<CompletionSuggestion>getSuggestion(suggestionName).getEntries().stream()
+                .flatMap(item -> item.getOptions().stream())
+                .map(option -> objectMapper.convertValue(option.getHit().getSourceAsMap(), OccupationLabelSuggestionDto.class))
+                .collect(groupingBy(OccupationLabelSuggestionDto::getLabel)).values().stream()
+                .map(sameLabels -> sameLabels.stream().reduce((a, b) -> "x28".equals(b.getType()) ? b : a).get())
+                .sorted(Comparator.comparing(OccupationLabelSuggestionDto::getLabel));
     }
 
     private SuggestBuilder buildSuggestRequest(String prefix, Language language, Collection<String> types, int resultSize) {
-        return new SuggestBuilder()
-            .addSuggestion("occupation",
-                completionSuggestion("occupationSuggestions")
-                    .prefix(prefix)
-                    .size(resultSize)
-                    .contexts(createContext(language, types))
-            );
+        Map<Type, List<String>> typeMap = types.stream().collect(groupingBy(this::getType));
+        List<String> occupationTypes = typeMap.get(Type.OCCUPATION);
+        List<String> classificationTypes = typeMap.get(Type.CLASSIFICATION);
+
+        SuggestBuilder suggestBuilder = new SuggestBuilder();
+        if (!CollectionUtils.isEmpty(occupationTypes)) {
+            suggestBuilder
+                    .addSuggestion("occupation",
+                            completionSuggestion("label")
+                                    .prefix(prefix)
+                                    .size(resultSize)
+                                    .contexts(createContext(language, occupationTypes)))
+                    .addSuggestion("occupationSuggestions",
+                            completionSuggestion("occupationSuggestions")
+                                    .prefix(prefix)
+                                    .size(resultSize)
+                                    .contexts(createContext(language, occupationTypes)));
+        }
+        if (!CollectionUtils.isEmpty(classificationTypes)) {
+            suggestBuilder
+                    .addSuggestion("classification",
+                            completionSuggestion("label")
+                                    .prefix(prefix)
+                                    .size(resultSize)
+                                    .contexts(createContext(language, classificationTypes)))
+                    .addSuggestion("classificationSuggestions",
+                            completionSuggestion("occupationSuggestions")
+                                    .prefix(prefix)
+                                    .size(resultSize)
+                                    .contexts(createContext(language, classificationTypes)));
+        }
+        return suggestBuilder;
+    }
+
+    private Type getType(String type) {
+        return isClassification(type) ? Type.CLASSIFICATION : Type.OCCUPATION;
     }
 
     private Map<String, List<? extends ToXContent>> createContext(Language language, Collection<String> types) {
+        Objects.requireNonNull(types, "types must not be null");
+
         return ImmutableMap.of("key",
-            types.stream()
-                .map(type -> String.format("%s:%s", type, language.name()))
-                .map(key -> CategoryQueryContext.builder().setCategory(key).build())
-                .collect(toList()));
+                types.stream()
+                        .map(type -> String.format("%s:%s", type, language.name()))
+                        .map(key -> CategoryQueryContext.builder().setCategory(key).build())
+                        .collect(toList()));
+    }
+
+    enum Type {
+        OCCUPATION, CLASSIFICATION
     }
 }
 

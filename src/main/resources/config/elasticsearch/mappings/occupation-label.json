@@ -29,7 +29,20 @@
                 "type": "keyword"
             },
             "label": {
-                "type": "text"
+                "type": "completion",
+                "analyzer": "ascii_folding",
+                "contexts": [
+                    {
+                        "name": "lang",
+                        "type": "CATEGORY",
+                        "path": "language"
+                    },
+                    {
+                        "name": "key",
+                        "type": "CATEGORY",
+                        "path": "contextKey"
+                    }
+                ]
             },
             "occupationSuggestions": {
                 "type": "completion",

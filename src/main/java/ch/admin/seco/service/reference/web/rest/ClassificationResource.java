@@ -38,6 +38,7 @@ import ch.admin.seco.service.reference.web.rest.util.PaginationUtil;
 /**
  * REST controller for managing Classification.
  */
+@Deprecated
 @RestController
 @RequestMapping("/api")
 public class ClassificationResource {

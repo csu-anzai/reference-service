@@ -49,6 +49,7 @@ import ch.admin.seco.service.reference.web.rest.util.PaginationUtil;
 /**
  * REST controller for managing OccupationSynonym.
  */
+@Deprecated
 @RestController
 @RequestMapping("/api")
 public class OccupationResource {
