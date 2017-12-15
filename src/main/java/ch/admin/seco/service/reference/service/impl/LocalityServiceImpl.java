@@ -17,7 +17,7 @@ import ch.admin.seco.service.reference.repository.LocalityRepository;
 import ch.admin.seco.service.reference.repository.search.LocalitySearchRepository;
 import ch.admin.seco.service.reference.service.LocalityService;
 import ch.admin.seco.service.reference.service.dto.LocalityAutocompleteDto;
-import ch.admin.seco.service.reference.service.dto.LocalitySearchDTO;
+import ch.admin.seco.service.reference.service.dto.LocalitySearchDto;
 
 /**
  * Service Implementation for managing Locality.
@@ -107,7 +107,7 @@ public class LocalityServiceImpl implements LocalityService {
      * @return the result of the suggest
      */
     @Override
-    public LocalityAutocompleteDto suggest(LocalitySearchDTO localitySearchDTO) {
+    public LocalityAutocompleteDto suggest(LocalitySearchDto localitySearchDTO) {
         return localitySuggestion.suggest(localitySearchDTO);
     }
 

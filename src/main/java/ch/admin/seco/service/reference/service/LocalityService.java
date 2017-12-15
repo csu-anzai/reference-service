@@ -7,7 +7,7 @@ import java.util.UUID;
 import ch.admin.seco.service.reference.domain.Locality;
 import ch.admin.seco.service.reference.domain.valueobject.GeoPoint;
 import ch.admin.seco.service.reference.service.dto.LocalityAutocompleteDto;
-import ch.admin.seco.service.reference.service.dto.LocalitySearchDTO;
+import ch.admin.seco.service.reference.service.dto.LocalitySearchDto;
 
 /**
  * Service Interface for managing Locality.
@@ -51,7 +51,7 @@ public interface LocalityService {
      * @param localitySearchDTO suggest request parameters
      * @return the result of the suggest
      */
-    LocalityAutocompleteDto suggest(LocalitySearchDTO localitySearchDTO);
+    LocalityAutocompleteDto suggest(LocalitySearchDto localitySearchDTO);
 
     /**
      * Search for the nearest locality to the geo point.

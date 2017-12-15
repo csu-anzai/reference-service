@@ -102,24 +102,24 @@ public class LocalityResourceIntTest {
 
     private Locality locality;
 
+    private static Locality createLocalityEntity() {
+        return new Locality()
+                .city(DEFAULT_CITY)
+                .zipCode(DEFAULT_ZIP_CODE)
+                .communalCode(DEFAULT_COMMUNAL_CODE)
+                .cantonCode(DEFAULT_CANTON_CODE)
+                .regionCode(DEFAULT_REGION_CODE)
+                .geoPoint(new GeoPoint(DEFAULT_LAT, DEFAULT_LON));
+    }
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
         LocalityResource localityResource = new LocalityResource(localityService);
         this.restLocalityMockMvc = MockMvcBuilders.standaloneSetup(localityResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setMessageConverters(jacksonMessageConverter).build();
-    }
-
-    private static Locality createLocalityEntity() {
-        return new Locality()
-            .city(DEFAULT_CITY)
-            .zipCode(DEFAULT_ZIP_CODE)
-            .communalCode(DEFAULT_COMMUNAL_CODE)
-            .cantonCode(DEFAULT_CANTON_CODE)
-            .regionCode(DEFAULT_REGION_CODE)
-            .geoPoint(new GeoPoint(DEFAULT_LAT, DEFAULT_LON));
+                .setCustomArgumentResolvers(pageableArgumentResolver)
+                .setControllerAdvice(exceptionTranslator)
+                .setMessageConverters(jacksonMessageConverter).build();
     }
 
     @Before
@@ -135,9 +135,9 @@ public class LocalityResourceIntTest {
 
         // Create the Locality
         restLocalityMockMvc.perform(post("/api/localities")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(locality)))
-            .andExpect(status().isCreated());
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(locality)))
+                .andExpect(status().isCreated());
 
         // Validate the Locality in the database
         List<Locality> localityList = localityRepository.findAll();
@@ -165,9 +165,9 @@ public class LocalityResourceIntTest {
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restLocalityMockMvc.perform(post("/api/localities")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(locality)))
-            .andExpect(status().isBadRequest());
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(locality)))
+                .andExpect(status().isBadRequest());
 
         // Validate the Alice in the database
         List<Locality> localityList = localityRepository.findAll();
@@ -184,9 +184,9 @@ public class LocalityResourceIntTest {
         // Create the Locality, which fails.
 
         restLocalityMockMvc.perform(post("/api/localities")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(locality)))
-            .andExpect(status().isBadRequest());
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(locality)))
+                .andExpect(status().isBadRequest());
 
         List<Locality> localityList = localityRepository.findAll();
         assertThat(localityList).hasSize(databaseSizeBeforeTest);
@@ -202,9 +202,9 @@ public class LocalityResourceIntTest {
         // Create the Locality, which fails.
 
         restLocalityMockMvc.perform(post("/api/localities")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(locality)))
-            .andExpect(status().isBadRequest());
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(locality)))
+                .andExpect(status().isBadRequest());
 
         List<Locality> localityList = localityRepository.findAll();
         assertThat(localityList).hasSize(databaseSizeBeforeTest);
@@ -220,9 +220,9 @@ public class LocalityResourceIntTest {
         // Create the Locality, which fails.
 
         restLocalityMockMvc.perform(post("/api/localities")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(locality)))
-            .andExpect(status().isBadRequest());
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(locality)))
+                .andExpect(status().isBadRequest());
 
         List<Locality> localityList = localityRepository.findAll();
         assertThat(localityList).hasSize(databaseSizeBeforeTest);
@@ -238,9 +238,9 @@ public class LocalityResourceIntTest {
         // Create the Locality, which fails.
 
         restLocalityMockMvc.perform(post("/api/localities")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(locality)))
-            .andExpect(status().isBadRequest());
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(locality)))
+                .andExpect(status().isBadRequest());
 
         List<Locality> localityList = localityRepository.findAll();
         assertThat(localityList).hasSize(databaseSizeBeforeTest);
@@ -272,16 +272,16 @@ public class LocalityResourceIntTest {
 
         // Get all the localityList
         restLocalityMockMvc.perform(get("/api/localities?sort=id,desc"))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(locality.getId().toString())))
-            .andExpect(jsonPath("$.[*].city").value(hasItem(DEFAULT_CITY)))
-            .andExpect(jsonPath("$.[*].zipCode").value(hasItem(DEFAULT_ZIP_CODE)))
-            .andExpect(jsonPath("$.[*].communalCode").value(hasItem(DEFAULT_COMMUNAL_CODE)))
-            .andExpect(jsonPath("$.[*].cantonCode").value(hasItem(DEFAULT_CANTON_CODE)))
-            .andExpect(jsonPath("$.[*].regionCode").value(hasItem(DEFAULT_REGION_CODE)))
-            .andExpect(jsonPath("$.[*].geoPoint.lat").value(hasItem(DEFAULT_LAT)))
-            .andExpect(jsonPath("$.[*].geoPoint.lon").value(hasItem(DEFAULT_LON)));
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.[*].id").value(hasItem(locality.getId().toString())))
+                .andExpect(jsonPath("$.[*].city").value(hasItem(DEFAULT_CITY)))
+                .andExpect(jsonPath("$.[*].zipCode").value(hasItem(DEFAULT_ZIP_CODE)))
+                .andExpect(jsonPath("$.[*].communalCode").value(hasItem(DEFAULT_COMMUNAL_CODE)))
+                .andExpect(jsonPath("$.[*].cantonCode").value(hasItem(DEFAULT_CANTON_CODE)))
+                .andExpect(jsonPath("$.[*].regionCode").value(hasItem(DEFAULT_REGION_CODE)))
+                .andExpect(jsonPath("$.[*].geoPoint.lat").value(hasItem(DEFAULT_LAT)))
+                .andExpect(jsonPath("$.[*].geoPoint.lon").value(hasItem(DEFAULT_LON)));
     }
 
     @Test
@@ -292,16 +292,16 @@ public class LocalityResourceIntTest {
 
         // Get the locality
         restLocalityMockMvc.perform(get("/api/localities/{id}", locality.getId()))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.id").value(locality.getId().toString()))
-            .andExpect(jsonPath("$.city").value(DEFAULT_CITY))
-            .andExpect(jsonPath("$.zipCode").value(DEFAULT_ZIP_CODE))
-            .andExpect(jsonPath("$.communalCode").value(DEFAULT_COMMUNAL_CODE))
-            .andExpect(jsonPath("$.cantonCode").value(DEFAULT_CANTON_CODE))
-            .andExpect(jsonPath("$.regionCode").value(DEFAULT_REGION_CODE))
-            .andExpect(jsonPath("$.geoPoint.lat").value(DEFAULT_LAT))
-            .andExpect(jsonPath("$.geoPoint.lon").value(DEFAULT_LON));
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.id").value(locality.getId().toString()))
+                .andExpect(jsonPath("$.city").value(DEFAULT_CITY))
+                .andExpect(jsonPath("$.zipCode").value(DEFAULT_ZIP_CODE))
+                .andExpect(jsonPath("$.communalCode").value(DEFAULT_COMMUNAL_CODE))
+                .andExpect(jsonPath("$.cantonCode").value(DEFAULT_CANTON_CODE))
+                .andExpect(jsonPath("$.regionCode").value(DEFAULT_REGION_CODE))
+                .andExpect(jsonPath("$.geoPoint.lat").value(DEFAULT_LAT))
+                .andExpect(jsonPath("$.geoPoint.lon").value(DEFAULT_LON));
     }
 
     @Test
@@ -315,17 +315,17 @@ public class LocalityResourceIntTest {
         // Update the locality
         Locality updatedLocality = localityRepository.getOne(locality.getId());
         updatedLocality
-            .city(UPDATED_CITY)
-            .zipCode(UPDATED_ZIP_CODE)
-            .communalCode(UPDATED_COMMUNAL_CODE)
-            .cantonCode(UPDATED_CANTON_CODE)
-            .regionCode(UPDATED_REGION_CODE)
-            .geoPoint(new GeoPoint(UPDATED_LAT, UPDATED_LON));
+                .city(UPDATED_CITY)
+                .zipCode(UPDATED_ZIP_CODE)
+                .communalCode(UPDATED_COMMUNAL_CODE)
+                .cantonCode(UPDATED_CANTON_CODE)
+                .regionCode(UPDATED_REGION_CODE)
+                .geoPoint(new GeoPoint(UPDATED_LAT, UPDATED_LON));
 
         restLocalityMockMvc.perform(put("/api/localities")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(updatedLocality)))
-            .andExpect(status().isOk());
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(updatedLocality)))
+                .andExpect(status().isOk());
 
         // Validate the Locality in the database
         List<Locality> localityList = localityRepository.findAll();
@@ -350,72 +350,70 @@ public class LocalityResourceIntTest {
         // Initialize the database
         localityService.save(locality);
         cantonSearchRepository.save(new CantonSuggestion()
-            .id(UUID.randomUUID())
-            .code("BE")
-            .name("Canton Bern")
-            .cantonSuggestions(Collections.emptySet())
+                .id(UUID.randomUUID())
+                .code("BE")
+                .name("Canton Bern")
+                .cantonSuggestions(Collections.emptySet())
         );
 
         // Search the locality
         restLocalityMockMvc.perform(get("/api/_search/localities?prefix={prefix}&resultSize={resultSize}", "be", 5))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.localities[*].city").value(hasItem(DEFAULT_CITY)))
-            .andExpect(jsonPath("$.localities[*].communalCode").value(hasItem(DEFAULT_COMMUNAL_CODE)))
-            .andExpect(jsonPath("$.localities[*].cantonCode").value(hasItem(DEFAULT_CANTON_CODE)))
-            .andExpect(jsonPath("$.localities[*].regionCode").value(hasItem(DEFAULT_REGION_CODE)))
-            .andExpect(jsonPath("$.localities[*].zipCode").value(hasItem(DEFAULT_ZIP_CODE)))
-            .andExpect(jsonPath("$.cantons[*].code").value(hasItem(DEFAULT_CANTON_CODE)));
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.localities[*].city").value(hasItem(DEFAULT_CITY)))
+                .andExpect(jsonPath("$.localities[*].communalCode").value(hasItem(DEFAULT_COMMUNAL_CODE)))
+                .andExpect(jsonPath("$.localities[*].cantonCode").value(hasItem(DEFAULT_CANTON_CODE)))
+                .andExpect(jsonPath("$.localities[*].regionCode").value(hasItem(DEFAULT_REGION_CODE)))
+                .andExpect(jsonPath("$.localities[*].zipCode").value(hasItem(DEFAULT_ZIP_CODE)))
+                .andExpect(jsonPath("$.cantons[*].code").value(hasItem(DEFAULT_CANTON_CODE)));
     }
 
     @Test
     @Transactional
     public void searchLocalityByZipCode() throws Exception {
         saveLocalities(
-            createLocalityEntity().zipCode("3001"),
-            createLocalityEntity().city("Ebersecken").zipCode("3002"),
-            createLocalityEntity().city("Dachsen").zipCode("4001")
+                createLocalityEntity().zipCode("3001"),
+                createLocalityEntity().city("Ebersecken").zipCode("3002"),
+                createLocalityEntity().city("Dachsen").zipCode("4001")
         );
 
         restLocalityMockMvc.perform(
-            get("/api/_search/localities")
-                .param("prefix", "30")
-                .param("resultSize", "10")
+                get("/api/_search/localities")
+                        .param("prefix", "30")
+                        .param("resultSize", "10")
         )
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.localities[0].zipCode").value("3001"))
-            .andExpect(jsonPath("$.localities[1].zipCode").value("3002"));
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.localities[0].zipCode").value("3001"))
+                .andExpect(jsonPath("$.localities[1].zipCode").value("3002"));
     }
 
     @Test
     @Transactional
     public void searchLocalityByZipCodeWithDistinctResult() throws Exception {
         saveLocalities(
-            createLocalityEntity().zipCode("3001"),
-            createLocalityEntity().zipCode("3002"),
-            createLocalityEntity().zipCode("3003"),
-            createLocalityEntity().zipCode("3004"),
-            createLocalityEntity().city("Zurich").zipCode("3005"),
-            createLocalityEntity().city("Lucern").zipCode("3006")
+                createLocalityEntity().zipCode("3001"),
+                createLocalityEntity().zipCode("3002"),
+                createLocalityEntity().zipCode("3003"),
+                createLocalityEntity().zipCode("3004"),
+                createLocalityEntity().city("Zurich").zipCode("3005"),
+                createLocalityEntity().city("Lucern").zipCode("3006")
         );
 
         restLocalityMockMvc.perform(
-            get("/api/_search/localities")
-                .param("prefix", "30")
-                .param("resultSize", "2")
-                .param("distinctLocalities", "true")
+                get("/api/_search/localities")
+                        .param("prefix", "30")
+                        .param("resultSize", "10")
+                        .param("distinctLocalities", "true")
         )
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.localities.length()").value("2"))
-            .andExpect(jsonPath("$.localities[0].city").value(DEFAULT_CITY))
-            .andExpect(jsonPath("$.localities[0].zipCode").value("3004"))
-            .andExpect(jsonPath("$.localities[1].city").value("Zurich"))
-            .andExpect(jsonPath("$.localities[1].zipCode").value("3005"));
-    }
-
-    private void saveLocalities(Locality... localities) {
-        Arrays.asList(localities).forEach(localityService::save);
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.localities.length()").value("3"))
+                .andExpect(jsonPath("$.localities[0].city").value(DEFAULT_CITY))
+                .andExpect(jsonPath("$.localities[0].zipCode").isEmpty())
+                .andExpect(jsonPath("$.localities[1].city").value("Lucern"))
+                .andExpect(jsonPath("$.localities[1].zipCode").isEmpty())
+                .andExpect(jsonPath("$.localities[2].city").value("Zurich"))
+                .andExpect(jsonPath("$.localities[2].zipCode").isEmpty());
     }
 
     @Test
@@ -423,7 +421,7 @@ public class LocalityResourceIntTest {
     public void getNonExistingLocality() throws Exception {
         // Get the locality
         restLocalityMockMvc.perform(get("/api/localities/{id}", UUID.randomUUID()))
-            .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -431,27 +429,27 @@ public class LocalityResourceIntTest {
     public void searchNearestLocality() throws Exception {
         localityService.save(locality);
         Locality locality2 = new Locality().city(UPDATED_CITY)
-            .zipCode(UPDATED_ZIP_CODE)
-            .communalCode(UPDATED_COMMUNAL_CODE)
-            .cantonCode(UPDATED_CANTON_CODE)
-            .regionCode(UPDATED_REGION_CODE)
-            .geoPoint(new GeoPoint(UPDATED_LAT, UPDATED_LON));
+                .zipCode(UPDATED_ZIP_CODE)
+                .communalCode(UPDATED_COMMUNAL_CODE)
+                .cantonCode(UPDATED_CANTON_CODE)
+                .regionCode(UPDATED_REGION_CODE)
+                .geoPoint(new GeoPoint(UPDATED_LAT, UPDATED_LON));
         localityService.save(locality2);
 
         MockHttpServletRequestBuilder requestBuilder = get("/api/_search/localities/nearest")
-            .param("latitude", UPDATED_LAT.toString())
-            .param("longitude", Double.toString(UPDATED_LON - 0.52D));
+                .param("latitude", UPDATED_LAT.toString())
+                .param("longitude", Double.toString(UPDATED_LON - 0.52D));
         restLocalityMockMvc.perform(requestBuilder)
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.id").value(locality2.getId().toString()))
-            .andExpect(jsonPath("$.city").value(UPDATED_CITY))
-            .andExpect(jsonPath("$.zipCode").value(UPDATED_ZIP_CODE))
-            .andExpect(jsonPath("$.communalCode").value(UPDATED_COMMUNAL_CODE))
-            .andExpect(jsonPath("$.cantonCode").value(UPDATED_CANTON_CODE))
-            .andExpect(jsonPath("$.regionCode").value(UPDATED_REGION_CODE))
-            .andExpect(jsonPath("$.geoPoint.lat").value(UPDATED_LAT))
-            .andExpect(jsonPath("$.geoPoint.lon").value(UPDATED_LON));
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.id").value(locality2.getId().toString()))
+                .andExpect(jsonPath("$.city").value(UPDATED_CITY))
+                .andExpect(jsonPath("$.zipCode").value(UPDATED_ZIP_CODE))
+                .andExpect(jsonPath("$.communalCode").value(UPDATED_COMMUNAL_CODE))
+                .andExpect(jsonPath("$.cantonCode").value(UPDATED_CANTON_CODE))
+                .andExpect(jsonPath("$.regionCode").value(UPDATED_REGION_CODE))
+                .andExpect(jsonPath("$.geoPoint.lat").value(UPDATED_LAT))
+                .andExpect(jsonPath("$.geoPoint.lon").value(UPDATED_LON));
     }
 
     @Test
@@ -463,9 +461,9 @@ public class LocalityResourceIntTest {
 
         // If the entity doesn't have an ID, it will be created instead of just being updated
         restLocalityMockMvc.perform(put("/api/localities")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(locality)))
-            .andExpect(status().isCreated());
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(locality)))
+                .andExpect(status().isCreated());
 
         // Validate the Locality in the database
         List<Locality> localityList = localityRepository.findAll();
@@ -482,8 +480,8 @@ public class LocalityResourceIntTest {
 
         // Get the locality
         restLocalityMockMvc.perform(delete("/api/localities/{id}", locality.getId())
-            .accept(TestUtil.APPLICATION_JSON_UTF8))
-            .andExpect(status().isOk());
+                .accept(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(status().isOk());
 
         // Validate Elasticsearch is empty
         boolean localityExistsInEs = localitySynonymSearchRepository.findById(locality.getId()).isPresent();
@@ -513,16 +511,20 @@ public class LocalityResourceIntTest {
     @Transactional
     public void searchNonExistingNearestLocality() throws Exception {
         MockHttpServletRequestBuilder requestBuilder = get("/api/_search/localities/nearest")
-            .param("latitude", DEFAULT_LAT.toString())
-            .param("longitude", DEFAULT_LON.toString());
+                .param("latitude", DEFAULT_LAT.toString())
+                .param("longitude", DEFAULT_LON.toString());
         restLocalityMockMvc.perform(requestBuilder)
-            .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
     public void countCantons() {
         assertThat(cantonRepository.count()).isEqualTo(25);
+    }
+
+    private void saveLocalities(Locality... localities) {
+        Arrays.asList(localities).forEach(localityService::save);
     }
 
     private void checkLocalityGeoPoint(GeoPoint geoPoint) throws Exception {
@@ -533,9 +535,9 @@ public class LocalityResourceIntTest {
         // Create the Locality, which fails.
 
         restLocalityMockMvc.perform(post("/api/localities")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(locality)))
-            .andExpect(status().isBadRequest());
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(locality)))
+                .andExpect(status().isBadRequest());
 
         List<Locality> localityList = localityRepository.findAll();
         assertThat(localityList).hasSize(databaseSizeBeforeTest);

@@ -22,7 +22,7 @@ import ch.admin.seco.service.reference.domain.search.LocalitySuggestion;
 import ch.admin.seco.service.reference.domain.valueobject.GeoPoint;
 import ch.admin.seco.service.reference.repository.search.LocalitySearchRepository;
 import ch.admin.seco.service.reference.service.dto.LocalityAutocompleteDto;
-import ch.admin.seco.service.reference.service.dto.LocalitySearchDTO;
+import ch.admin.seco.service.reference.service.dto.LocalitySearchDto;
 import ch.admin.seco.service.reference.service.factory.LocalitySuggestionConverterFactory;
 
 /**
@@ -52,16 +52,16 @@ public class LocalitySuggestionImpl {
      * @param localitySearchDTO suggest request parameters
      * @return the result of the suggest
      */
-    public LocalityAutocompleteDto suggest(LocalitySearchDTO localitySearchDTO) {
+    public LocalityAutocompleteDto suggest(LocalitySearchDto localitySearchDTO) {
         SuggestBuilder suggestBuilder = createSuggestBuilder(localitySearchDTO);
         SearchResponse searchResponse = elasticsearchTemplate.suggest(suggestBuilder, LocalitySuggestion.class);
         return LocalitySuggestionConverterFactory.getConverter(localitySearchDTO)
             .convert(searchResponse, localitySearchDTO.getSize());
     }
 
-    private SuggestBuilder createSuggestBuilder(LocalitySearchDTO localitySearchDTO) {
+    private SuggestBuilder createSuggestBuilder(LocalitySearchDto localitySearchDTO) {
         final String query = localitySearchDTO.getQuery();
-        final int increasedResultSize = Math.min(localitySearchDTO.getSize() + 20, 10000); // to factor in duplicate entries as 'Zürich' we increase the result size
+        final int increasedResultSize = Math.min(localitySearchDTO.getSize() + 20, 1000); // to factor in duplicate entries as 'Zürich' we increase the result size
 
         CompletionSuggestionBuilder citySuggestions = new CompletionSuggestionBuilder("citySuggestions")
             .prefix(query)

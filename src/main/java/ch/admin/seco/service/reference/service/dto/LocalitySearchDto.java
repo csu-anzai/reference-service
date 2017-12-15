@@ -1,12 +1,12 @@
 package ch.admin.seco.service.reference.service.dto;
 
-public class LocalitySearchDTO {
+public class LocalitySearchDto {
 
     private final String query;
     private final int size;
     private final boolean distinctLocalities;
 
-    public LocalitySearchDTO(String query, int size, boolean distinctLocalities) {
+    public LocalitySearchDto(String query, int size, boolean distinctLocalities) {
         this.query = query;
         this.size = size;
         this.distinctLocalities = distinctLocalities;

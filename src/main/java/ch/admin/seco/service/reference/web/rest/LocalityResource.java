@@ -27,7 +27,7 @@ import ch.admin.seco.service.reference.domain.Locality;
 import ch.admin.seco.service.reference.domain.valueobject.GeoPoint;
 import ch.admin.seco.service.reference.service.LocalityService;
 import ch.admin.seco.service.reference.service.dto.LocalityAutocompleteDto;
-import ch.admin.seco.service.reference.service.dto.LocalitySearchDTO;
+import ch.admin.seco.service.reference.service.dto.LocalitySearchDto;
 import ch.admin.seco.service.reference.web.rest.util.HeaderUtil;
 
 /**
@@ -140,7 +140,7 @@ public class LocalityResource {
     public LocalityAutocompleteDto suggestLocality(@RequestParam String prefix, @RequestParam int resultSize,
         @RequestParam(defaultValue = "false") boolean distinctLocalities) {
         log.debug("REST request to suggest Localities for prefix {}, resultSize {}", prefix, resultSize);
-        return localityService.suggest(new LocalitySearchDTO(prefix, resultSize, distinctLocalities));
+        return localityService.suggest(new LocalitySearchDto(prefix, resultSize, distinctLocalities));
     }
 
     /**
