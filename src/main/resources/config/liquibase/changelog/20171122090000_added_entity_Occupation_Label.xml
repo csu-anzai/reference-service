@@ -80,6 +80,8 @@
 
         <loadData tableName="occupation_label"
                   file="config/liquibase/changelog/data/occupation-label.csv"/>
+        <loadData tableName="occupation_label"
+                  file="config/liquibase/changelog/data/occupation-label-sbn.csv"/>
     </changeSet>
 
     <changeSet id="20171122090000-8" author="miwr">
