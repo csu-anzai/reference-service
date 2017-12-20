@@ -2,12 +2,18 @@
   "analysis": {
     "analyzer": {
       "ascii_folding": {
-        "tokenizer": "standard",
+        "tokenizer": "extended_whitespace",
         "filter": [
           "lowercase",
           "german_normalization",
           "asciifolding"
         ]
+      }
+    },
+    "tokenizer": {
+      "extended_whitespace": {
+        "type": "pattern",
+        "pattern": "[^\\w\\+\\#@]+"
       }
     }
   }
