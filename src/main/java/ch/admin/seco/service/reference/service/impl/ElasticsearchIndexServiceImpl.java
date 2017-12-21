@@ -27,7 +27,6 @@ public class ElasticsearchIndexServiceImpl implements ElasticsearchIndexService 
 
         CompletableFuture.allOf(
             CompletableFuture.runAsync(elasticsearchIndexer::reindexLocalityIndex),
-            CompletableFuture.runAsync(elasticsearchIndexer::reindexOccupationIndex),
             CompletableFuture.runAsync(elasticsearchOccupationLabelIndexer::reindexOccupationIndex)
         ).join();
 

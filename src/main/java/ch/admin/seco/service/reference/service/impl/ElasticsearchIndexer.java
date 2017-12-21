@@ -23,32 +23,18 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StopWatch;
 
 import ch.admin.seco.service.reference.domain.Canton;
-import ch.admin.seco.service.reference.domain.Classification;
-import ch.admin.seco.service.reference.domain.OccupationSynonym;
 import ch.admin.seco.service.reference.domain.search.CantonSuggestion;
-import ch.admin.seco.service.reference.domain.search.ClassificationSuggestion;
 import ch.admin.seco.service.reference.domain.search.LocalitySuggestion;
-import ch.admin.seco.service.reference.domain.search.OccupationSuggestion;
 import ch.admin.seco.service.reference.repository.CantonRepository;
-import ch.admin.seco.service.reference.repository.ClassificationRepository;
 import ch.admin.seco.service.reference.repository.LocalityRepository;
-import ch.admin.seco.service.reference.repository.OccupationRepository;
-import ch.admin.seco.service.reference.repository.OccupationSynonymRepository;
 import ch.admin.seco.service.reference.repository.search.CantonSearchRepository;
-import ch.admin.seco.service.reference.repository.search.ClassificationSearchRepository;
 import ch.admin.seco.service.reference.repository.search.LocalitySearchRepository;
-import ch.admin.seco.service.reference.repository.search.OccupationSearchRepository;
 
 @Component
 class ElasticsearchIndexer {
 
     private final Logger log = LoggerFactory.getLogger(ElasticsearchIndexer.class);
     private final EntityManager entityManager;
-    private final ClassificationRepository classificationRepository;
-    private final ClassificationSearchRepository classificationSearchRepository;
-    private final OccupationRepository occupationRepository;
-    private final OccupationSynonymRepository occupationSynonymRepository;
-    private final OccupationSearchRepository occupationSearchRepository;
     private final LocalityRepository localityRepository;
     private final LocalitySearchRepository localitySearchRepository;
     private final CantonRepository cantonRepository;
@@ -57,39 +43,20 @@ class ElasticsearchIndexer {
     private final EntityToSuggestionMapper entityToSynonymMapper;
 
     ElasticsearchIndexer(EntityManager entityManager,
-        ClassificationRepository classificationRepository,
-        ClassificationSearchRepository classificationSearchRepository,
-        OccupationRepository occupationRepository1,
-        OccupationSynonymRepository occupationSynonymRepository,
-        OccupationSearchRepository occupationRepository,
-        LocalityRepository localityRepository,
-        LocalitySearchRepository localitySynonymSearchRepository,
-        CantonRepository cantonRepository,
-        CantonSearchRepository cantonSearchRepository,
-        ElasticsearchTemplate elasticsearchTemplate,
-        EntityToSuggestionMapper entityToSynonymMapper) {
+            LocalityRepository localityRepository,
+            LocalitySearchRepository localitySynonymSearchRepository,
+            CantonRepository cantonRepository,
+            CantonSearchRepository cantonSearchRepository,
+            ElasticsearchTemplate elasticsearchTemplate,
+            EntityToSuggestionMapper entityToSynonymMapper) {
 
         this.entityManager = entityManager;
-        this.classificationRepository = classificationRepository;
-        this.classificationSearchRepository = classificationSearchRepository;
-        this.occupationRepository = occupationRepository1;
-        this.occupationSynonymRepository = occupationSynonymRepository;
-        this.occupationSearchRepository = occupationRepository;
         this.localityRepository = localityRepository;
         this.localitySearchRepository = localitySynonymSearchRepository;
         this.cantonRepository = cantonRepository;
         this.cantonSearchRepository = cantonSearchRepository;
         this.elasticsearchTemplate = elasticsearchTemplate;
         this.entityToSynonymMapper = entityToSynonymMapper;
-    }
-
-    @Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
-    public void reindexOccupationIndex() {
-        disableHibernateSecondaryCache();
-        elasticsearchTemplate.deleteIndex(OccupationSuggestion.class);
-        elasticsearchTemplate.deleteIndex(ClassificationSuggestion.class);
-        reindexClassification();
-        reindexOccupation();
     }
 
     @Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
@@ -100,25 +67,6 @@ class ElasticsearchIndexer {
 
         reindexLocality();
         reindexCanton();
-    }
-
-    private void reindexClassification() {
-        elasticsearchTemplate.createIndex(ClassificationSuggestion.class);
-        elasticsearchTemplate.putMapping(ClassificationSuggestion.class);
-
-        reindexWithStream(classificationRepository, classificationSearchRepository, entityToSynonymMapper::toClassificationSuggestion, Classification.class);
-    }
-
-    private void reindexOccupation() {
-        elasticsearchTemplate.createIndex(OccupationSuggestion.class);
-        elasticsearchTemplate.putMapping(OccupationSuggestion.class);
-
-        Flux.fromStream(occupationRepository.streamAllAvam())
-            .flatMapIterable(entityToSynonymMapper::toOccupationSuggestionSet)
-            .buffer(1000)
-            .subscribe(occupationSearchRepository::saveAll);
-
-        reindexWithStream(occupationSynonymRepository, occupationSearchRepository, entityToSynonymMapper::toOccupationSuggestion, OccupationSynonym.class);
     }
 
     private void reindexLocality() {
@@ -136,9 +84,9 @@ class ElasticsearchIndexer {
     }
 
     private <JPA, ELASTIC, ID extends Serializable> void reindexWithStream(
-        JpaRepository<JPA, ID> jpaRepository,
-        ElasticsearchRepository<ELASTIC, ID> elasticsearchRepository,
-        Function<JPA, ELASTIC> mapEntityToIndex, Class entityClass) {
+            JpaRepository<JPA, ID> jpaRepository,
+            ElasticsearchRepository<ELASTIC, ID> elasticsearchRepository,
+            Function<JPA, ELASTIC> mapEntityToIndex, Class entityClass) {
         try {
             Method m = jpaRepository.getClass().getMethod("streamAll");
             long total = jpaRepository.count();
@@ -148,17 +96,17 @@ class ElasticsearchIndexer {
             stopWatch.start();
             Stream<JPA> stream = Stream.class.cast(m.invoke(jpaRepository));
             Flux.fromStream(stream)
-                .map(mapEntityToIndex)
-                .buffer(1000)
-                .doOnNext(elasticsearchRepository::saveAll)
-                .doOnNext(jobs ->
-                    log.info("Index {} chunk #{}, {} / {}", entityClass.getSimpleName(), index.incrementAndGet(), counter.addAndGet(jobs.size()), total))
-                .doOnComplete(() -> {
-                        stopWatch.stop();
-                        log.info("Indexed {} of {} entities from {} in {} s", elasticsearchRepository.count(), jpaRepository.count(), entityClass.getSimpleName(), stopWatch.getTotalTimeSeconds());
-                    }
-                )
-                .subscribe(jobs -> removeAllElementFromHibernatePrimaryCache());
+                    .map(mapEntityToIndex)
+                    .buffer(1000)
+                    .doOnNext(elasticsearchRepository::saveAll)
+                    .doOnNext(jobs ->
+                            log.info("Index {} chunk #{}, {} / {}", entityClass.getSimpleName(), index.incrementAndGet(), counter.addAndGet(jobs.size()), total))
+                    .doOnComplete(() -> {
+                                stopWatch.stop();
+                                log.info("Indexed {} of {} entities from {} in {} s", elasticsearchRepository.count(), jpaRepository.count(), entityClass.getSimpleName(), stopWatch.getTotalTimeSeconds());
+                            }
+                    )
+                    .subscribe(jobs -> removeAllElementFromHibernatePrimaryCache());
         } catch (Exception e) {
             log.error("ReindexWithStream failed", e);
         }
