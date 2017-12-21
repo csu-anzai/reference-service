@@ -13,7 +13,7 @@
     "tokenizer": {
       "extended_whitespace": {
         "type": "pattern",
-        "pattern": "[^\\w\\+\\#@]+"
+        "pattern": "[^\\u00C0-\\u017Fa-z\\w+]+"
       }
     }
   }
