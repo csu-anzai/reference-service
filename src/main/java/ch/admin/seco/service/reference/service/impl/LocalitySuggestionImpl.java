@@ -23,7 +23,7 @@ import ch.admin.seco.service.reference.domain.valueobject.GeoPoint;
 import ch.admin.seco.service.reference.repository.search.LocalitySearchRepository;
 import ch.admin.seco.service.reference.service.dto.LocalityAutocompleteDto;
 import ch.admin.seco.service.reference.service.dto.LocalitySearchDto;
-import ch.admin.seco.service.reference.service.factory.LocalitySuggestionConverterFactory;
+import ch.admin.seco.service.reference.service.factory.LocalityAutocompleteConverterFactory;
 
 /**
  * Service Implementation for managing Locality.
@@ -55,7 +55,7 @@ public class LocalitySuggestionImpl {
     public LocalityAutocompleteDto suggest(LocalitySearchDto localitySearchDTO) {
         SuggestBuilder suggestBuilder = createSuggestBuilder(localitySearchDTO);
         SearchResponse searchResponse = elasticsearchTemplate.suggest(suggestBuilder, LocalitySuggestion.class);
-        return LocalitySuggestionConverterFactory.getConverter(localitySearchDTO)
+        return LocalityAutocompleteConverterFactory.getConverter(localitySearchDTO)
             .convert(searchResponse, localitySearchDTO.getSize());
     }
 

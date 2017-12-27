@@ -404,15 +404,15 @@ public class LocalityResourceIntTest {
                 get("/api/_search/localities")
                         .param("prefix", "30")
                         .param("resultSize", "10")
-                        .param("distinctLocalities", "true")
+                    .param("distinctByLocalityCity", "true")
         )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.localities.length()").value("3"))
                 .andExpect(jsonPath("$.localities[0].city").value(DEFAULT_CITY))
                 .andExpect(jsonPath("$.localities[0].zipCode").isEmpty())
-                .andExpect(jsonPath("$.localities[1].city").value("Lucern"))
+            .andExpect(jsonPath("$.localities[1].city").value("Zurich"))
                 .andExpect(jsonPath("$.localities[1].zipCode").isEmpty())
-                .andExpect(jsonPath("$.localities[2].city").value("Zurich"))
+            .andExpect(jsonPath("$.localities[2].city").value("Lucern"))
                 .andExpect(jsonPath("$.localities[2].zipCode").isEmpty());
     }
 

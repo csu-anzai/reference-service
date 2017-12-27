@@ -4,12 +4,12 @@ public class LocalitySearchDto {
 
     private final String query;
     private final int size;
-    private final boolean distinctLocalities;
+    private final boolean distinctByLocalityCity;
 
-    public LocalitySearchDto(String query, int size, boolean distinctLocalities) {
+    public LocalitySearchDto(String query, int size, boolean distinctByLocalityCity) {
         this.query = query;
         this.size = size;
-        this.distinctLocalities = distinctLocalities;
+        this.distinctByLocalityCity = distinctByLocalityCity;
     }
 
     public String getQuery() {
@@ -20,7 +20,7 @@ public class LocalitySearchDto {
         return size;
     }
 
-    public boolean isDistinctLocalities() {
-        return distinctLocalities;
+    public boolean isDistinctByLocalityCity() {
+        return distinctByLocalityCity;
     }
 }

@@ -127,20 +127,21 @@ public class LocalityResource {
     }
 
     /**
-     * SEARCH  /_search/localities?prefix=:prefix&resultSize=:resultSize&distinctLocalities=:distinctLocalities :
+     * SEARCH  /_search/localities?prefix=:prefix&resultSize=:resultSize&distinctByLocalityCity=:distinctByLocalityCity :
      * suggest for the locality corresponding to the prefix and limit result by resultSize.
      *
      * @param prefix the prefix of the locality suggest
      * @param resultSize the resultSize information
-     * @param distinctLocalities indicates is localities should be distinct during search by zip code
+     * @param distinctByLocalityCity indicates is localities should be distinct by city if true
+     *                               otherwise distinct by city + zipCode
      * @return the result of the suggest
      */
     @GetMapping("/_search/localities")
     @Timed
     public LocalityAutocompleteDto suggestLocality(@RequestParam String prefix, @RequestParam int resultSize,
-        @RequestParam(defaultValue = "false") boolean distinctLocalities) {
+        @RequestParam(defaultValue = "false") boolean distinctByLocalityCity) {
         log.debug("REST request to suggest Localities for prefix {}, resultSize {}", prefix, resultSize);
-        return localityService.suggest(new LocalitySearchDto(prefix, resultSize, distinctLocalities));
+        return localityService.suggest(new LocalitySearchDto(prefix, resultSize, distinctByLocalityCity));
     }
 
     /**
