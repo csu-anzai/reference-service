@@ -61,8 +61,8 @@ class OccupationMappingGatlingTest extends Simulation {
             .check(status.is(200)))
         .pause(PAUSE)
         .repeat(2) {
-            exec(http("Get all occupationMappings")
-                .get("/referenceservice/api/occupations/mapping")
+            exec(http("Get occupationlabelMappings for avam:73311")
+                .get("/referenceservice/api/occupations/label/mapping/avam/73311?language=it)
                 .headers(headers_http_authenticated)
                 .check(status.is(200)))
                 .pause(10 seconds, 20 seconds)

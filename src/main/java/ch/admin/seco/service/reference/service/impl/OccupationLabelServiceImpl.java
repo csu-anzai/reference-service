@@ -36,46 +36,24 @@ public class OccupationLabelServiceImpl implements OccupationLabelService {
     private final OccupationLabelMappingRepository occupationMappingRepository;
     private final OccupationLabelRepository occupationLabelRepository;
     private final OccupationLabelSuggestionImpl occupationSuggestionImpl;
+    private final GenderNeutralOccupationLabelGenerator labelGenerator;
     private final ElasticsearchOccupationLabelIndexer elasticsearchOccupationLabelIndexer;
 
     public OccupationLabelServiceImpl(OccupationLabelMappingRepository occupationMappingRepository,
             OccupationLabelRepository occupationLabelRepository,
             ElasticsearchOccupationLabelIndexer elasticsearchOccupationLabelIndexer,
-            OccupationLabelSuggestionImpl occupationSuggestion) {
+            OccupationLabelSuggestionImpl occupationSuggestion, GenderNeutralOccupationLabelGenerator labelGenerator) {
 
         this.occupationMappingRepository = occupationMappingRepository;
         this.occupationLabelRepository = occupationLabelRepository;
         this.occupationSuggestionImpl = occupationSuggestion;
         this.elasticsearchOccupationLabelIndexer = elasticsearchOccupationLabelIndexer;
+        this.labelGenerator = labelGenerator;
     }
 
     @Override
     public OccupationLabel save(OccupationLabel occupationLabel) {
-        OccupationLabel result = this.occupationLabelRepository.save(occupationLabel);
-        this.elasticsearchOccupationLabelIndexer.indexOccupationLabel(result);
-        return result;
-    }
-
-
-    @Override
-    @Transactional(readOnly = true)
-    public Optional<OccupationLabelMapping> findOneOccupationMappingByBfsCode(int bfsCode) {
-        log.debug("Request to get OccupationDto : bfsCode:{}", bfsCode);
-        return occupationMappingRepository.findByBfsCode(bfsCode).stream().findFirst();
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Optional<OccupationLabelMapping> findOneOccupationMappingByAvamCode(int avamCode) {
-        log.debug("Request to get OccupationDto : avamCode:{}", avamCode);
-        return occupationMappingRepository.findOneByAvamCode(avamCode);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Optional<OccupationLabelMapping> findOneOccupationMappingByX28Code(int x28Code) {
-        log.debug("Request to get OccupationLabelMapping : x28Code:{}", x28Code);
-        return occupationMappingRepository.findOneByX28Code(x28Code);
+        return this.occupationLabelRepository.save(occupationLabel);
     }
 
     @Override
@@ -107,8 +85,12 @@ public class OccupationLabelServiceImpl implements OccupationLabelService {
         if (occupationLabels.isEmpty()) {
             occupationLabels = occupationLabelRepository.findByCodeAndTypeAndLanguage(code, type, Language.de);
         }
-        return occupationLabels.stream()
-                .collect(toMap(item -> hasText(item.getClassifier()) ? item.getClassifier() : "label", OccupationLabel::getLabel));
+        Map<String, String> labels = occupationLabels.stream()
+                .collect(toMap(item -> hasText(item.getClassifier()) ? item.getClassifier() : "default", OccupationLabel::getLabel));
+        if (!labels.containsKey("default")) {
+            labels.put("default", labelGenerator.generate(labels.get("m"), labels.get("f")));
+        }
+        return labels;
     }
 
     @Override

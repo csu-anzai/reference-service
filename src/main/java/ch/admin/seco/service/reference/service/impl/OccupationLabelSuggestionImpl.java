@@ -61,7 +61,7 @@ public class OccupationLabelSuggestionImpl {
         LOGGER.debug("Request to suggest for a page of Occupations for query {}", prefix);
 
         SearchResponse suggestResponse = elasticsearchTemplate.suggest(
-                buildSuggestRequest(prefix, language, types, resultSize * 3),
+                buildSuggestRequest(prefix, language, types, resultSize),
                 OccupationLabelSuggestion.class);
 
         List<OccupationLabelSuggestionDto> occupations = mapOccupations(suggestResponse, resultSize);
@@ -79,15 +79,6 @@ public class OccupationLabelSuggestionImpl {
     boolean isClassification(String type) {
         return type.startsWith("sbn");
     }
-
-    private Stream<OccupationLabel> mapClassifications(List<OccupationLabelSuggestionDto> classifications) {
-        if (CollectionUtils.isEmpty(classifications)) {
-            return Stream.empty();
-        }
-        return classifications.stream()
-                .map(dto -> objectMapper.convertValue(dto, OccupationLabel.class));
-    }
-
 
     private List<OccupationLabelSuggestionDto> mapOccupations(SearchResponse suggestResponse, int resultSize) {
         if (Objects.isNull(suggestResponse.getSuggest())) {
@@ -144,8 +135,6 @@ public class OccupationLabelSuggestionImpl {
                 .<CompletionSuggestion>getSuggestion(suggestionName).getEntries().stream()
                 .flatMap(item -> item.getOptions().stream())
                 .map(option -> objectMapper.convertValue(option.getHit().getSourceAsMap(), OccupationLabelSuggestionDto.class))
-                .collect(groupingBy(OccupationLabelSuggestionDto::getLabel)).values().stream()
-                .map(sameLabels -> sameLabels.stream().reduce((a, b) -> "x28".equals(b.getType()) ? b : a).get())
                 .sorted(Comparator.comparing(OccupationLabelSuggestionDto::getLabel));
     }
 

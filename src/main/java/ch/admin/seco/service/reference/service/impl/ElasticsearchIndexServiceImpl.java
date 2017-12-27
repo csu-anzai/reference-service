@@ -17,7 +17,7 @@ public class ElasticsearchIndexServiceImpl implements ElasticsearchIndexService 
     private final ElasticsearchOccupationLabelIndexer elasticsearchOccupationLabelIndexer;
 
     ElasticsearchIndexServiceImpl(ElasticsearchIndexer elasticsearchIndexServiceTasks,
-        ElasticsearchOccupationLabelIndexer elasticsearchOccupationLabelIndexer) {
+            ElasticsearchOccupationLabelIndexer elasticsearchOccupationLabelIndexer) {
 
         this.elasticsearchIndexer = elasticsearchIndexServiceTasks;
         this.elasticsearchOccupationLabelIndexer = elasticsearchOccupationLabelIndexer;
@@ -26,8 +26,8 @@ public class ElasticsearchIndexServiceImpl implements ElasticsearchIndexService 
     public void reindexAll() {
 
         CompletableFuture.allOf(
-            CompletableFuture.runAsync(elasticsearchIndexer::reindexLocalityIndex),
-            CompletableFuture.runAsync(elasticsearchOccupationLabelIndexer::reindexOccupationIndex)
+                CompletableFuture.runAsync(elasticsearchIndexer::reindexLocalities),
+                CompletableFuture.runAsync(elasticsearchOccupationLabelIndexer::reindexOccupationLabel)
         ).join();
 
         log.info("ReindexAll finished");

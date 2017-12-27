@@ -60,7 +60,7 @@ class ElasticsearchIndexer {
     }
 
     @Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
-    public void reindexLocalityIndex() {
+    public void reindexLocalities() {
         disableHibernateSecondaryCache();
         elasticsearchTemplate.deleteIndex(LocalitySuggestion.class);
         elasticsearchTemplate.deleteIndex(CantonSuggestion.class);

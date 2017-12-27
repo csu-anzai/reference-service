@@ -1,6 +1,5 @@
 package ch.admin.seco.service.reference.web.rest;
 
-import static java.lang.Integer.parseInt;
 import static org.springframework.context.i18n.LocaleContextHolder.getLocale;
 
 import java.util.Collection;
@@ -59,39 +58,6 @@ public class OccupationLabelResource {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/occupations/label", params = {"code", "type"})
-    @Timed
-    @Deprecated
-    public ResponseEntity<Map<String, String>> getOccupationLabelsByCodeAndType(@RequestParam int code, @RequestParam String type) {
-        return getOccupationLabels(type, code);
-    }
-
-    @GetMapping(value = "/occupations/label", params = {"code", "type", "classifier"})
-    @Timed
-    @Deprecated
-    public ResponseEntity<Map<String, String>> getOccupationLabelsByCodeAndTypeAndClassifier(@RequestParam int code, @RequestParam String type, @RequestParam String classifier) {
-        return getOccupationLabels(type, code, classifier);
-    }
-
-    // /occupations/label/avam:15012
-    // /occupations/label/bfs:11101001
-    // /occupations/label/x28:11000002:23f1f3e3
-    @GetMapping("/occupations/label/{key}")
-    @Timed
-    @Deprecated
-    public ResponseEntity<Map<String, String>> getOccupationLabelsByKey(@PathVariable String key) {
-
-        String[] parts = key.split(":");
-        switch (parts.length) {
-            case 2:
-                return getOccupationLabelsByCodeAndType(parseInt(parts[1]), parts[0]);
-            case 3:
-                return getOccupationLabelsByCodeAndTypeAndClassifier(parseInt(parts[1]), parts[0], parts[2]);
-            default:
-                return ResponseEntity.notFound().build();
-        }
-    }
-
     @GetMapping("/occupations/label/{type}/{code}")
     @Timed
     public ResponseEntity<Map<String, String>> getOccupationLabels(@PathVariable String type, @PathVariable int code) {
@@ -105,28 +71,6 @@ public class OccupationLabelResource {
     public ResponseEntity<Map<String, String>> getOccupationLabels(@PathVariable String type, @PathVariable int code, @PathVariable String classifier) {
         return ResponseUtil.wrapOrNotFound(
                 occupationService.getOccupationLabels(code, type, getLanguage(), classifier), createCacheHeader());
-    }
-
-    @Deprecated
-    @GetMapping(value = "/occupations/label/mapping", params = "avamCode")
-    @Timed
-    public ResponseEntity<OccupationLabelMapping> getOccupationMappingByAvamCode(@RequestParam int avamCode) {
-        return getOccupationMapping("avam", avamCode);
-
-    }
-
-    @Deprecated
-    @GetMapping(value = "/occupations/label/mapping", params = "bfsCode")
-    @Timed
-    public ResponseEntity<OccupationLabelMapping> getOccupationMappingByBFSCode(@RequestParam int bfsCode) {
-        return getOccupationMapping("bfs", bfsCode);
-    }
-
-    @Deprecated
-    @GetMapping(value = "/occupations/label/mapping", params = "x28Code")
-    @Timed
-    public ResponseEntity<OccupationLabelMapping> getOccupationMappingByX28Code(@RequestParam int x28Code) {
-        return getOccupationMapping("x28", x28Code);
     }
 
     @GetMapping("/occupations/label/mapping/{type}/{code}")
