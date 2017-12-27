@@ -40,7 +40,7 @@ public interface OccupationLabelRepository extends JpaRepository<OccupationLabel
     @Query("select new ch.admin.seco.service.reference.domain.valueobject.OccupationLabelKey(o.type, o.code, o.language) from OccupationLabel o group by o.type, o.code, o.language")
     Stream<OccupationLabelKey> streamAllKeys();
 
-    @Query(nativeQuery = true, value = "SELECT count(*) FROM (SELECT count(*) FROM OCCUPATION_LABEL o GROUP BY o.type, o.code, o.language)")
+    @Query(nativeQuery = true, value = "SELECT count(*) FROM (SELECT count(*) FROM OCCUPATION_LABEL o GROUP BY o.type, o.code, o.language) AS groups")
     long countAllKeys();
 
     default Map<String, String> getLabels(int code, String type, Language language) {
