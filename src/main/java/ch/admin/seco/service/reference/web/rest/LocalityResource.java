@@ -163,6 +163,6 @@ public class LocalityResource {
     @Timed
     public List<Locality> findLocalitiesByZipCode(@RequestParam String zipCode) {
         log.debug("REST request to suggest Locality by zipCode({})", zipCode);
-        return localityService.findOneByZipCode(zipCode);
+        return localityService.findByZipCode(zipCode);
     }
 }

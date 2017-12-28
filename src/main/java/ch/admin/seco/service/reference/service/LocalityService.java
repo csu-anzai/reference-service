@@ -61,5 +61,5 @@ public interface LocalityService {
      */
     Optional<Locality> findNearestLocality(GeoPoint geoPoint);
 
-    List<Locality> findOneByZipCode(String zipCode);
+    List<Locality> findByZipCode(String zipCode);
 }

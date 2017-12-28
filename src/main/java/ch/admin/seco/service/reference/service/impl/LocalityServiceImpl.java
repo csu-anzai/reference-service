@@ -30,12 +30,12 @@ public class LocalityServiceImpl implements LocalityService {
 
     private final LocalityRepository localityRepository;
     private final LocalitySearchRepository localitySynonymSearchRepository;
-    private final EntityToSuggestionMapper entityToSynonymMapper;
+    private final LocalityToSuggestionMapper entityToSynonymMapper;
     private final LocalitySuggestionImpl localitySuggestion;
 
     public LocalityServiceImpl(LocalityRepository localityRepository,
         LocalitySearchRepository localitySynonymSearchRepository,
-        EntityToSuggestionMapper entityToSynonymMapper,
+            LocalityToSuggestionMapper entityToSynonymMapper,
         LocalitySuggestionImpl localitySuggestion) {
 
         this.localityRepository = localityRepository;
@@ -123,7 +123,7 @@ public class LocalityServiceImpl implements LocalityService {
     }
 
     @Override
-    public List<Locality> findOneByZipCode(String zipCode) {
+    public List<Locality> findByZipCode(String zipCode) {
         return localityRepository.findByZipCode(zipCode);
     }
 

@@ -13,10 +13,10 @@ import ch.admin.seco.service.reference.service.ElasticsearchIndexService;
 public class ElasticsearchIndexServiceImpl implements ElasticsearchIndexService {
 
     private final Logger log = LoggerFactory.getLogger(ElasticsearchIndexServiceImpl.class);
-    private final ElasticsearchIndexer elasticsearchIndexer;
+    private final ElasticsearchLocalityIndexer elasticsearchIndexer;
     private final ElasticsearchOccupationLabelIndexer elasticsearchOccupationLabelIndexer;
 
-    ElasticsearchIndexServiceImpl(ElasticsearchIndexer elasticsearchIndexServiceTasks,
+    ElasticsearchIndexServiceImpl(ElasticsearchLocalityIndexer elasticsearchIndexServiceTasks,
             ElasticsearchOccupationLabelIndexer elasticsearchOccupationLabelIndexer) {
 
         this.elasticsearchIndexer = elasticsearchIndexServiceTasks;

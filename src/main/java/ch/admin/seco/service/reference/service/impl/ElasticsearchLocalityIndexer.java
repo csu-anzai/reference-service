@@ -31,24 +31,24 @@ import ch.admin.seco.service.reference.repository.search.CantonSearchRepository;
 import ch.admin.seco.service.reference.repository.search.LocalitySearchRepository;
 
 @Component
-class ElasticsearchIndexer {
+class ElasticsearchLocalityIndexer {
 
-    private final Logger log = LoggerFactory.getLogger(ElasticsearchIndexer.class);
+    private final Logger log = LoggerFactory.getLogger(ElasticsearchLocalityIndexer.class);
     private final EntityManager entityManager;
     private final LocalityRepository localityRepository;
     private final LocalitySearchRepository localitySearchRepository;
     private final CantonRepository cantonRepository;
     private final CantonSearchRepository cantonSearchRepository;
     private final ElasticsearchTemplate elasticsearchTemplate;
-    private final EntityToSuggestionMapper entityToSynonymMapper;
+    private final LocalityToSuggestionMapper localityToSuggestionMapper;
 
-    ElasticsearchIndexer(EntityManager entityManager,
+    ElasticsearchLocalityIndexer(EntityManager entityManager,
             LocalityRepository localityRepository,
             LocalitySearchRepository localitySynonymSearchRepository,
             CantonRepository cantonRepository,
             CantonSearchRepository cantonSearchRepository,
             ElasticsearchTemplate elasticsearchTemplate,
-            EntityToSuggestionMapper entityToSynonymMapper) {
+            LocalityToSuggestionMapper localityToSuggestionMapper) {
 
         this.entityManager = entityManager;
         this.localityRepository = localityRepository;
@@ -56,7 +56,7 @@ class ElasticsearchIndexer {
         this.cantonRepository = cantonRepository;
         this.cantonSearchRepository = cantonSearchRepository;
         this.elasticsearchTemplate = elasticsearchTemplate;
-        this.entityToSynonymMapper = entityToSynonymMapper;
+        this.localityToSuggestionMapper = localityToSuggestionMapper;
     }
 
     @Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
@@ -73,14 +73,14 @@ class ElasticsearchIndexer {
         elasticsearchTemplate.createIndex(LocalitySuggestion.class);
         elasticsearchTemplate.putMapping(LocalitySuggestion.class);
 
-        reindexWithStream(localityRepository, localitySearchRepository, entityToSynonymMapper::toLocalitySuggestion, LocalitySuggestion.class);
+        reindexWithStream(localityRepository, localitySearchRepository, localityToSuggestionMapper::toLocalitySuggestion, LocalitySuggestion.class);
     }
 
     private void reindexCanton() {
         elasticsearchTemplate.createIndex(CantonSuggestion.class);
         elasticsearchTemplate.putMapping(CantonSuggestion.class);
 
-        reindexWithStream(cantonRepository, cantonSearchRepository, entityToSynonymMapper::toCantonSuggestion, Canton.class);
+        reindexWithStream(cantonRepository, cantonSearchRepository, localityToSuggestionMapper::toCantonSuggestion, Canton.class);
     }
 
     private <JPA, ELASTIC, ID extends Serializable> void reindexWithStream(

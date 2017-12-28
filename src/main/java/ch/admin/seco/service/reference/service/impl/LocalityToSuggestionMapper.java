@@ -1,34 +1,46 @@
 package ch.admin.seco.service.reference.service.impl;
 
 import static java.util.Objects.isNull;
+import static java.util.stream.Collectors.toSet;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
+import javax.annotation.PostConstruct;
+
+import org.slf4j.LoggerFactory;
+
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import ch.admin.seco.service.reference.domain.Canton;
 import ch.admin.seco.service.reference.domain.Locality;
 import ch.admin.seco.service.reference.domain.search.CantonSuggestion;
 import ch.admin.seco.service.reference.domain.search.LocalitySuggestion;
-import ch.admin.seco.service.reference.domain.search.Suggestions;
-import ch.admin.seco.service.reference.domain.valueobject.Labels;
 
 @Component
-class EntityToSuggestionMapper {
+class LocalityToSuggestionMapper {
 
-    Locality fromSynonym(LocalitySuggestion localitySynonym) {
+    private Map<String, Set<String>> synonymsMap;
+
+    Locality fromSynonym(LocalitySuggestion localitySuggestion) {
         return new Locality()
-                .id(localitySynonym.getId())
-                .city(localitySynonym.getCity())
-                .zipCode(localitySynonym.getZipCode())
-                .communalCode(localitySynonym.getCommunalCode())
-                .cantonCode(localitySynonym.getCantonCode())
-                .regionCode(localitySynonym.getRegionCode())
-                .geoPoint(localitySynonym.getGeoPoint());
+                .id(localitySuggestion.getId())
+                .city(localitySuggestion.getCity())
+                .zipCode(localitySuggestion.getZipCode())
+                .communalCode(localitySuggestion.getCommunalCode())
+                .cantonCode(localitySuggestion.getCantonCode())
+                .regionCode(localitySuggestion.getRegionCode())
+                .geoPoint(localitySuggestion.getGeoPoint());
     }
 
     LocalitySuggestion toLocalitySuggestion(Locality locality) {
@@ -51,20 +63,16 @@ class EntityToSuggestionMapper {
                 .cantonSuggestions(extractSuggestions(canton.getName()));
     }
 
-    private Suggestions extractSuggestions(Labels labels) {
-        return new Suggestions()
-                .de(extractSuggestions(labels.getDe()))
-                .fr(extractSuggestions(labels.getFr()))
-                .it(extractSuggestions(labels.getIt()))
-                .en(extractSuggestions(labels.getEn()));
-    }
-
     private Set<String> extractSuggestions(String term) {
         if (isNull(term)) {
             return Collections.emptySet();
         }
         Set<String> suggestions = new HashSet<>();
         suggestions.add(term);
+        Set<String> synonyms = synonymsMap.get(term.toLowerCase());
+        if (!CollectionUtils.isEmpty(synonyms)) {
+            suggestions.addAll(synonyms);
+        }
         Pattern pattern = Pattern.compile("[-_/\\\\. ]+");
 
         nextSubTerm(term, suggestions, pattern);
@@ -81,5 +89,28 @@ class EntityToSuggestionMapper {
             suggestions.add(term);
             nextSubTerm(term, suggestions, pattern);
         }
+    }
+
+    @PostConstruct
+    private void loadLocalitySynonyms() {
+        ClassPathResource file = new ClassPathResource("config/elasticsearch/settings/locality-synonyms.txt");
+        Map<String, Set<String>> synonymsMap = new HashMap<>();
+        try {
+            Files.lines(file.getFile().toPath())
+                    .map(line -> line.split(","))
+                    .forEach(tokens -> {
+                        Set<String> synonyms = Stream.of(tokens)
+                                .map(String::trim)
+                                .collect(toSet());
+
+                        synonyms.stream()
+                                .map(String::toLowerCase)
+                                .forEach(key -> synonymsMap.put(key, synonyms));
+                    });
+        } catch (IOException e) {
+            LoggerFactory.getLogger(this.getClass())
+                    .error("Failed to load locality-synonyms.txt", e);
+        }
+        this.synonymsMap = synonymsMap;
     }
 }
