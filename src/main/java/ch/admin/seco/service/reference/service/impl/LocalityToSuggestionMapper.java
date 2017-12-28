@@ -1,7 +1,6 @@
 package ch.admin.seco.service.reference.service.impl;
 
 import static java.util.Objects.isNull;
-import static java.util.stream.Collectors.toSet;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -12,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
@@ -30,7 +30,7 @@ import ch.admin.seco.service.reference.domain.search.LocalitySuggestion;
 @Component
 class LocalityToSuggestionMapper {
 
-    private Map<String, Set<String>> synonymsMap;
+    private Map<String, String[]> synonymsMap;
 
     Locality fromSynonym(LocalitySuggestion localitySuggestion) {
         return new Locality()
@@ -69,10 +69,7 @@ class LocalityToSuggestionMapper {
         }
         Set<String> suggestions = new HashSet<>();
         suggestions.add(term);
-        Set<String> synonyms = synonymsMap.get(term.toLowerCase());
-        if (!CollectionUtils.isEmpty(synonyms)) {
-            suggestions.addAll(synonyms);
-        }
+        CollectionUtils.mergeArrayIntoCollection(synonymsMap.get(term.toLowerCase()), suggestions);
         Pattern pattern = Pattern.compile("[-_/\\\\. ]+");
 
         nextSubTerm(term, suggestions, pattern);
@@ -92,25 +89,31 @@ class LocalityToSuggestionMapper {
     }
 
     @PostConstruct
-    private void loadLocalitySynonyms() {
+    private void init() {
+        this.synonymsMap = loadLocalitySynonyms();
+    }
+
+    private Map<String, String[]> loadLocalitySynonyms() {
         ClassPathResource file = new ClassPathResource("config/elasticsearch/settings/locality-synonyms.txt");
-        Map<String, Set<String>> synonymsMap = new HashMap<>();
+        Map<String, String[]> synonymsMap = new HashMap<>();
         try {
             Files.lines(file.getFile().toPath())
+                    .filter(line -> !line.startsWith("#"))
                     .map(line -> line.split(","))
+                    .filter(tokens -> tokens.length > 1)
                     .forEach(tokens -> {
-                        Set<String> synonyms = Stream.of(tokens)
-                                .map(String::trim)
-                                .collect(toSet());
+                        for (int i = 0; i < tokens.length; i++) {
+                            tokens[i] = tokens[i].trim();
+                        }
 
-                        synonyms.stream()
+                        Stream.of(tokens)
                                 .map(String::toLowerCase)
-                                .forEach(key -> synonymsMap.put(key, synonyms));
+                                .collect(Collectors.toMap(String::toLowerCase, token -> tokens, (a, b) -> a, () -> synonymsMap));
                     });
         } catch (IOException e) {
             LoggerFactory.getLogger(this.getClass())
                     .error("Failed to load locality-synonyms.txt", e);
         }
-        this.synonymsMap = synonymsMap;
+        return synonymsMap;
     }
 }
