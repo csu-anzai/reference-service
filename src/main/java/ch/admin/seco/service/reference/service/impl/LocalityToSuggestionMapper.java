@@ -2,8 +2,9 @@ package ch.admin.seco.service.reference.service.impl;
 
 import static java.util.Objects.isNull;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.io.InputStreamReader;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -96,8 +97,8 @@ class LocalityToSuggestionMapper {
     private Map<String, String[]> loadLocalitySynonyms() {
         ClassPathResource file = new ClassPathResource("config/elasticsearch/settings/locality-synonyms.txt");
         Map<String, String[]> synonymsMap = new HashMap<>();
-        try {
-            Files.lines(file.getFile().toPath())
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
+            reader.lines()
                     .filter(line -> !line.startsWith("#"))
                     .map(line -> line.split(","))
                     .filter(tokens -> tokens.length > 1)
@@ -113,6 +114,7 @@ class LocalityToSuggestionMapper {
         } catch (IOException e) {
             LoggerFactory.getLogger(this.getClass())
                     .error("Failed to load locality-synonyms.txt", e);
+
         }
         return synonymsMap;
     }

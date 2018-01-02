@@ -13,20 +13,20 @@ import ch.admin.seco.service.reference.service.ElasticsearchIndexService;
 public class ElasticsearchIndexServiceImpl implements ElasticsearchIndexService {
 
     private final Logger log = LoggerFactory.getLogger(ElasticsearchIndexServiceImpl.class);
-    private final ElasticsearchLocalityIndexer elasticsearchIndexer;
+    private final ElasticsearchLocalityIndexer elasticsearchLocalityIndexer;
     private final ElasticsearchOccupationLabelIndexer elasticsearchOccupationLabelIndexer;
 
-    ElasticsearchIndexServiceImpl(ElasticsearchLocalityIndexer elasticsearchIndexServiceTasks,
+    ElasticsearchIndexServiceImpl(ElasticsearchLocalityIndexer elasticsearchLocalityIndexer,
             ElasticsearchOccupationLabelIndexer elasticsearchOccupationLabelIndexer) {
 
-        this.elasticsearchIndexer = elasticsearchIndexServiceTasks;
+        this.elasticsearchLocalityIndexer = elasticsearchLocalityIndexer;
         this.elasticsearchOccupationLabelIndexer = elasticsearchOccupationLabelIndexer;
     }
 
     public void reindexAll() {
 
         CompletableFuture.allOf(
-                CompletableFuture.runAsync(elasticsearchIndexer::reindexLocalities),
+                CompletableFuture.runAsync(elasticsearchLocalityIndexer::reindexLocalities),
                 CompletableFuture.runAsync(elasticsearchOccupationLabelIndexer::reindexOccupationLabel)
         ).join();
 
