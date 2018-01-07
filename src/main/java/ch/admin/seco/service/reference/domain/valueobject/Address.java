@@ -19,12 +19,10 @@ public class Address {
     @NotNull
     private String city;
 
-    @Column(name = "street", length = 100, nullable = false)
-    @NotNull
+    @Column(name = "street", length = 100, nullable = true)
     private String street;
 
-    @Column(name = "house_number", length = 7, nullable = false)
-    @NotNull
+    @Column(name = "house_number", length = 7, nullable = true)
     private String houseNumber;
 
     @Column(name = "zip_code", length = 4, nullable = false)
@@ -114,4 +112,15 @@ public class Address {
         this.language = language;
     }
 
+    @Override
+    public String toString() {
+        return "Address{" +
+                "name='" + name + '\'' +
+                ", city='" + city + '\'' +
+                ", street='" + street + '\'' +
+                ", houseNumber='" + houseNumber + '\'' +
+                ", zipCode='" + zipCode + '\'' +
+                ", language=" + language +
+                '}';
+    }
 }

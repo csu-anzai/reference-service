@@ -25,7 +25,7 @@ import ch.admin.seco.service.reference.domain.valueobject.Address;
 
 @Entity
 @Table(name = "job_center")
-public class JobCenter implements Serializable {
+public class JobCenter extends AbstractAuditingEntity implements Serializable {
 
     @Id
     @Column(name = "id", columnDefinition = "uuid")
@@ -38,12 +38,10 @@ public class JobCenter implements Serializable {
     private String code;
 
     @Column(name = "email", nullable = false)
-    @NotNull
     @Email
     private String email;
 
     @Column(name = "phone", length = 20, nullable = false)
-    @NotNull
     private String phone;
 
     @Column(name = "fax", length = 20)
@@ -165,5 +163,18 @@ public class JobCenter implements Serializable {
         JobCenter jobCenter = (JobCenter) o;
 
         return id.equals(jobCenter.id);
+    }
+
+    @Override
+    public String toString() {
+        return "JobCenter{" +
+                "id=" + id +
+                ", code='" + code + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", fax='" + fax + '\'' +
+                ", showContactDetailsToPublic=" + showContactDetailsToPublic +
+                ", addresses=" + addresses +
+                "}";
     }
 }

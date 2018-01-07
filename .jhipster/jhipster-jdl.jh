@@ -7,8 +7,8 @@ entity Canton {
 entity JobCenter {
     id UUID required
     code String required
-    email String required
-    phone String required
+    email String
+    phone String
     fax String
     showContactDetailsToPublic Boolean required
 }
@@ -16,8 +16,8 @@ entity JobCenter {
 entity Address {
     name String required
     city String required
-    street String required
-    houseNumber String required
+    street String
+    houseNumber String
     zipCode String required
     language Language required
 }
@@ -32,7 +32,7 @@ entity Locality {
     zipCode String required
     communalCode Integer required
     cantonCode String required
-    regionCode String 
+    regionCode String
 }
 
 entity GeoPoint {
@@ -45,7 +45,7 @@ entity OccupationLabel {
     code Integer required
     type String required
     language Language required
-    classifier String 
+    classifier String
     label String required
 }
 

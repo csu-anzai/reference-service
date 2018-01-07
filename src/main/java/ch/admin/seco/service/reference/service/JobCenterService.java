@@ -2,6 +2,7 @@ package ch.admin.seco.service.reference.service;
 
 import java.util.Optional;
 
+import ch.admin.seco.service.reference.domain.JobCenter;
 import ch.admin.seco.service.reference.domain.enums.Language;
 import ch.admin.seco.service.reference.service.dto.JobCenterDto;
 
@@ -15,4 +16,6 @@ public interface JobCenterService {
      * @return JobCenterDto with only one address
      */
     Optional<JobCenterDto> findJobCenterByCode(String code, Language language);
+
+    JobCenter save(JobCenter jobCenter);
 }
