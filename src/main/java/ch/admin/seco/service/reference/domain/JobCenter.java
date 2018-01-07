@@ -19,6 +19,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.validator.constraints.Email;
 
 import ch.admin.seco.service.reference.domain.valueobject.Address;
 
@@ -38,6 +39,7 @@ public class JobCenter implements Serializable {
 
     @Column(name = "email", nullable = false)
     @NotNull
+    @Email
     private String email;
 
     @Column(name = "phone", length = 20, nullable = false)

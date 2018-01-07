@@ -63,9 +63,9 @@
 
     <changeSet author="varu" id="1504692242337-2" context="!test">
         <loadData tableName="job_center"
-                  file="config/liquibase/changelog/data/JOB_CENTER.csv"/>
+                  file="config/liquibase/changelog/data/job_center.csv"/>
 
         <loadData tableName="job_center_addresses"
-                  file="config/liquibase/changelog/data/JOB_CENTER_ADDRESS.csv"/>
+                  file="config/liquibase/changelog/data/job_center_address.csv"/>
     </changeSet>
 </databaseChangeLog>
