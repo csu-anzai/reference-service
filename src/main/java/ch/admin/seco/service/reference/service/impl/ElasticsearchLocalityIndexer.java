@@ -61,7 +61,6 @@ class ElasticsearchLocalityIndexer {
 
     @Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
     public void reindexLocalities() {
-        disableHibernateSecondaryCache();
         elasticsearchTemplate.deleteIndex(LocalitySuggestion.class);
         elasticsearchTemplate.deleteIndex(CantonSuggestion.class);
 
@@ -88,6 +87,7 @@ class ElasticsearchLocalityIndexer {
             ElasticsearchRepository<ELASTIC, ID> elasticsearchRepository,
             Function<JPA, ELASTIC> mapEntityToIndex, Class entityClass) {
         try {
+            disableHibernateSecondaryCache();
             Method m = jpaRepository.getClass().getMethod("streamAll");
             long total = jpaRepository.count();
             AtomicInteger index = new AtomicInteger(0);
@@ -97,7 +97,7 @@ class ElasticsearchLocalityIndexer {
             Stream<JPA> stream = Stream.class.cast(m.invoke(jpaRepository));
             Flux.fromStream(stream)
                     .map(mapEntityToIndex)
-                    .buffer(1000)
+                    .buffer(100)
                     .doOnNext(elasticsearchRepository::saveAll)
                     .doOnNext(jobs ->
                             log.info("Index {} chunk #{}, {} / {}", entityClass.getSimpleName(), index.incrementAndGet(), counter.addAndGet(jobs.size()), total))
