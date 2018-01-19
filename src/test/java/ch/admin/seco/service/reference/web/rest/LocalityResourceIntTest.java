@@ -520,7 +520,7 @@ public class LocalityResourceIntTest {
     @Test
     @Transactional
     public void countCantons() {
-        assertThat(cantonRepository.count()).isEqualTo(25);
+        assertThat(cantonRepository.count()).isEqualTo(26);
     }
 
     private void saveLocalities(Locality... localities) {
