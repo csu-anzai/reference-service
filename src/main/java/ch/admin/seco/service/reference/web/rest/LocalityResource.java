@@ -88,18 +88,6 @@ public class LocalityResource {
     }
 
     /**
-     * GET  /localities : get all the localities.
-     *
-     * @return the ResponseEntity with status 200 (OK) and the list of localities in body
-     */
-    @GetMapping("/localities")
-    @Timed
-    public List<Locality> getAllLocalities() {
-        log.debug("REST request to get all Localities");
-        return localityService.findAll();
-    }
-
-    /**
      * GET  /localities/:id : get the "id" locality.
      *
      * @param id the uuid of the locality to retrieve

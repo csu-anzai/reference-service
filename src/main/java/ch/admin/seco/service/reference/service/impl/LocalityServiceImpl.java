@@ -59,18 +59,6 @@ public class LocalityServiceImpl implements LocalityService {
     }
 
     /**
-     *  Get all the localities.
-     *
-     *  @return the list of entities
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public List<Locality> findAll() {
-        log.debug("Request to get all Localities");
-        return localityRepository.findAll();
-    }
-
-    /**
      *  Get one locality by id.
      *
      *  @param id the uuid of the entity

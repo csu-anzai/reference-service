@@ -266,26 +266,6 @@ public class LocalityResourceIntTest {
 
     @Test
     @Transactional
-    public void getAllLocalities() throws Exception {
-        // Initialize the database
-        localityRepository.saveAndFlush(locality);
-
-        // Get all the localityList
-        restLocalityMockMvc.perform(get("/api/localities?sort=id,desc"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$.[*].id").value(hasItem(locality.getId().toString())))
-                .andExpect(jsonPath("$.[*].city").value(hasItem(DEFAULT_CITY)))
-                .andExpect(jsonPath("$.[*].zipCode").value(hasItem(DEFAULT_ZIP_CODE)))
-                .andExpect(jsonPath("$.[*].communalCode").value(hasItem(DEFAULT_COMMUNAL_CODE)))
-                .andExpect(jsonPath("$.[*].cantonCode").value(hasItem(DEFAULT_CANTON_CODE)))
-                .andExpect(jsonPath("$.[*].regionCode").value(hasItem(DEFAULT_REGION_CODE)))
-                .andExpect(jsonPath("$.[*].geoPoint.lat").value(hasItem(DEFAULT_LAT)))
-                .andExpect(jsonPath("$.[*].geoPoint.lon").value(hasItem(DEFAULT_LON)));
-    }
-
-    @Test
-    @Transactional
     public void getLocality() throws Exception {
         // Initialize the database
         localityRepository.saveAndFlush(locality);

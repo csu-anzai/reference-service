@@ -23,13 +23,6 @@ public interface LocalityService {
     Locality save(Locality locality);
 
     /**
-     *  Get all the localities.
-     *
-     *  @return the list of entities
-     */
-    List<Locality> findAll();
-
-    /**
      *  Get the "id" locality.
      *
      *  @param id the id of the entity
