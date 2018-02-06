@@ -1,24 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <databaseChangeLog
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
     <include
-        file="config/liquibase/changelog/00000000000000_initial_schema.xml"
-        relativeToChangelogFile="false"/>
+            file="config/liquibase/changelog/00000000000000_initial_schema.xml"
+            relativeToChangelogFile="false"/>
     <include
-        file="config/liquibase/changelog/20170808101801_added_entity_Locality.xml"
-        relativeToChangelogFile="false"/>
+            file="config/liquibase/changelog/20170808101801_added_entity_Locality.xml"
+            relativeToChangelogFile="false"/>
     <include
-        file="config/liquibase/changelog/20170906130341_added_entity_JobCenter.xml"
-        relativeToChangelogFile="false"/>
+            file="config/liquibase/changelog/20170906130341_added_entity_JobCenter.xml"
+            relativeToChangelogFile="false"/>
     <include
-        file="config/liquibase/changelog/20171122090000_added_entity_Occupation_Label.xml"
-        relativeToChangelogFile="false"/>
+            file="config/liquibase/changelog/20171122090000_added_entity_Occupation_Label.xml"
+            relativeToChangelogFile="false"/>
     <include
-        file="config/liquibase/changelog/20180119090000_update_Canton.xml"
-        relativeToChangelogFile="false"/>
+            file="config/liquibase/changelog/20180119090000_update_Canton.xml"
+            relativeToChangelogFile="false"/>
+    <include
+            file="config/liquibase/changelog/20180206090000_update_Localities.xml"
+            relativeToChangelogFile="false"/>
+
 
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
