@@ -38,17 +38,21 @@ public class Address {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public Address name(String name) {
         this.name = name;
         return this;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getCity() {
         return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public Address city(String city) {
@@ -56,12 +60,12 @@ public class Address {
         return this;
     }
 
-    public void setCity(String city) {
-        this.city = city;
-    }
-
     public String getStreet() {
         return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
     }
 
     public Address street(String street) {
@@ -69,12 +73,12 @@ public class Address {
         return this;
     }
 
-    public void setStreet(String street) {
-        this.street = street;
-    }
-
     public String getHouseNumber() {
         return houseNumber;
+    }
+
+    public void setHouseNumber(String houseNumber) {
+        this.houseNumber = houseNumber;
     }
 
     public Address houseNumber(String houseNumber) {
@@ -82,12 +86,12 @@ public class Address {
         return this;
     }
 
-    public void setHouseNumber(String houseNumber) {
-        this.houseNumber = houseNumber;
-    }
-
     public String getZipCode() {
         return zipCode;
+    }
+
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
     }
 
     public Address zipCode(String zipCode) {
@@ -95,12 +99,12 @@ public class Address {
         return this;
     }
 
-    public void setZipCode(String zipCode) {
-        this.zipCode = zipCode;
-    }
-
     public Language getLanguage() {
         return language;
+    }
+
+    public void setLanguage(Language language) {
+        this.language = language;
     }
 
     public Address language(Language language) {
@@ -108,19 +112,15 @@ public class Address {
         return this;
     }
 
-    public void setLanguage(Language language) {
-        this.language = language;
-    }
-
     @Override
     public String toString() {
         return "Address{" +
-                "name='" + name + '\'' +
-                ", city='" + city + '\'' +
-                ", street='" + street + '\'' +
-                ", houseNumber='" + houseNumber + '\'' +
-                ", zipCode='" + zipCode + '\'' +
-                ", language=" + language +
-                '}';
+            "name='" + name + '\'' +
+            ", city='" + city + '\'' +
+            ", street='" + street + '\'' +
+            ", houseNumber='" + houseNumber + '\'' +
+            ", zipCode='" + zipCode + '\'' +
+            ", language=" + language +
+            '}';
     }
 }

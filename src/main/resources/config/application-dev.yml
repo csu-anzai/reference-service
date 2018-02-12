@@ -13,13 +13,18 @@
 # http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
 # ===================================================================
 
+logging:
+    level:
+        ROOT: DEBUG
+        io.github.jhipster: DEBUG
+        ch.admin.seco.service.reference: DEBUG
+
 eureka:
     instance:
         prefer-ip-address: true
     client:
         service-url:
             defaultZone: http://admin:${jhipster.registry.password}@localhost:8761/eureka/
-        enabled: false
 
 spring:
     profiles:
@@ -43,7 +48,7 @@ spring:
     jpa:
         database-platform: io.github.jhipster.domain.util.FixedH2Dialect
         database: H2
-        show-sql: false
+        show-sql: true
         properties:
             hibernate.id.new_generator_mappings: true
             hibernate.cache.use_second_level_cache: true
@@ -56,15 +61,9 @@ spring:
     data:
         elasticsearch:
             cluster-name:
-#            cluster-nodes: localhost:9300
-            properties:
-                client.transport.sniff: false
-                client.transport.ignore_cluster_name: true
-                client.transport.ping_timeout: 5s
-                client.transport.nodes_sampler_interval: 5s
-                path:
-                    logs: build/elasticsearch/log
-                    data: build/elasticsearch/data
+            cluster-nodes: localhost:9300
+    liquibase:
+        contexts: dev
     mail:
         host: localhost
         port: 25
@@ -81,9 +80,6 @@ spring:
             discovery:
                 enabled: true
 
-liquibase:
-    contexts: dev
-
 # ===================================================================
 # To enable SSL, generate a certificate using:
 # keytool -genkey -alias referenceservice -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore keystore.p12 -validity 3650
@@ -98,8 +94,8 @@ liquibase:
 #    ssl:
 #        key-store: keystore.p12
 #        key-store-password: <your-password>
-#        keyStoreType: PKCS12
-#        keyAlias: referenceservice
+#        key-store-type: PKCS12
+#        key-alias: referenceservice
 # ===================================================================
 server:
     port: 8082
@@ -117,13 +113,17 @@ jhipster:
         hazelcast: # Hazelcast distributed cache
             time-to-live-seconds: 3600
             backup-count: 1
+            management-center: # Full reference is available at: http://docs.hazelcast.org/docs/management-center/3.9/manual/html/Deploying_and_Starting.html
+                enabled: false
+                update-interval: 3
+                url: http://localhost:8180/mancenter
     # CORS is disabled by default on microservices, as you should access them through a gateway.
     # If you want to enable it, please uncomment the configuration below.
     # cors:
         # allowed-origins: "*"
         # allowed-methods: "*"
         # allowed-headers: "*"
-        # exposed-headers: "Authorization"
+        # exposed-headers: "Authorization,Link,X-Total-Count"
         # allow-credentials: true
         # max-age: 1800
     security:
@@ -137,15 +137,8 @@ jhipster:
         from: referenceservice@localhost
         base-url: http://127.0.0.1:8082
     metrics: # DropWizard Metrics configuration, used by MetricsConfiguration
-        jmx.enabled: true
-        graphite: # Use the "graphite" Maven profile to have the Graphite dependencies
-            enabled: false
-            host: localhost
-            port: 2003
-            prefix: referenceservice
-        prometheus: # Use the "prometheus" Maven profile to have the Prometheus dependencies
-            enabled: false
-            endpoint: /prometheusMetrics
+        jmx:
+            enabled: true
         logs: # Reports Dropwizard metrics in the logs
             enabled: false
             report-frequency: 60 # in seconds
@@ -155,9 +148,6 @@ jhipster:
             host: localhost
             port: 5000
             queue-size: 512
-        spectator-metrics: # Reports Spectator Circuit Breaker metrics in the logs
-            enabled: false
-            # edit spring.metrics.export.delay-millis to set report frequency
 
 # ===================================================================
 # Application specific properties
@@ -168,4 +158,4 @@ jhipster:
 # http://www.jhipster.tech/common-application-properties/
 # ===================================================================
 
-#application:
+# application:

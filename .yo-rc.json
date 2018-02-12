@@ -4,7 +4,7 @@
       "packageName": "ch.admin.seco.service.reference",
       "nativeLanguage": "de"
     },
-    "jhipsterVersion": "4.8.2",
+    "jhipsterVersion": "4.14.0",
     "baseName": "referenceservice",
     "packageName": "ch.admin.seco.service.reference",
     "packageFolder": "ch/admin/seco/service/reference",
@@ -32,7 +32,7 @@
     "otherModules": [
       {
         "name": "generator-jhipster-postgresuuid-converter",
-        "version": "0.1.0"
+        "version": "0.2.2"
       },
       {
         "name": "generator-jhipster-elasticsearch-reindexer",
@@ -48,6 +48,8 @@
       "fr",
       "it"
     ],
-    "clientPackageManager": "yarn"
+    "clientPackageManager": "yarn",
+    "cacheProvider": "hazelcast",
+    "enableHibernateCache": true
   }
 }

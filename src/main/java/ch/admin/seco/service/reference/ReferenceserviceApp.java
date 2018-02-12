@@ -12,20 +12,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.actuate.autoconfigure.MetricFilterAutoConfiguration;
-import org.springframework.boot.actuate.autoconfigure.MetricRepositoryAutoConfiguration;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
 
 import ch.admin.seco.service.reference.config.ApplicationProperties;
 import ch.admin.seco.service.reference.config.DefaultProfileUtil;
 
-@ComponentScan
-@EnableAutoConfiguration(exclude = {MetricFilterAutoConfiguration.class, MetricRepositoryAutoConfiguration.class})
+@SpringBootApplication
 @EnableConfigurationProperties({LiquibaseProperties.class, ApplicationProperties.class})
 @EnableDiscoveryClient
 public class ReferenceserviceApp {

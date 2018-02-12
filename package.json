@@ -1,8 +1,18 @@
 {
-  "license": "MIT",
+  "name": "referenceservice",
+  "version": "0.0.0",
+  "description": "Description for referenceservice",
+  "private": true,
+  "license": "UNLICENSED",
+  "cacheDirectories": [
+    "node_modules"
+  ],
   "devDependencies": {
-    "generator-jhipster-postgresuuid-converter": "0.1.0",
+    "generator-jhipster-postgresuuid-converter": "0.2.2",
     "generator-jhipster-elasticsearch-reindexer": "0.3.0",
-    "generator-jhipster": "4.8.2"
+    "generator-jhipster": "4.14.0"
+  },
+  "engines": {
+    "node": ">=6.9.0"
   }
 }

@@ -52,7 +52,7 @@ public class OccupationLabelResource {
     @GetMapping("/_search/occupations/label")
     @Timed
     public ResponseEntity<OccupationLabelAutocompleteDto> suggestOccupation(
-            @RequestParam String prefix, @RequestParam Collection<String> types, @RequestParam int resultSize) {
+        @RequestParam String prefix, @RequestParam Collection<String> types, @RequestParam int resultSize) {
         log.debug("REST request to suggest for a page of OccupationSynonyms for query {}", prefix);
         OccupationLabelAutocompleteDto result = occupationService.suggest(prefix, getLanguage(), types, resultSize);
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -62,22 +62,22 @@ public class OccupationLabelResource {
     @Timed
     public ResponseEntity<Map<String, String>> getOccupationLabels(@PathVariable String type, @PathVariable int code) {
         return ResponseEntity.ok()
-                .headers(createCacheHeader())
-                .body(occupationService.getOccupationLabels(code, type, getLanguage()));
+            .headers(createCacheHeader())
+            .body(occupationService.getOccupationLabels(code, type, getLanguage()));
     }
 
     @GetMapping("/occupations/label/{type}/{code}/{classifier}")
     @Timed
     public ResponseEntity<Map<String, String>> getOccupationLabels(@PathVariable String type, @PathVariable int code, @PathVariable String classifier) {
         return ResponseUtil.wrapOrNotFound(
-                occupationService.getOccupationLabels(code, type, getLanguage(), classifier), createCacheHeader());
+            occupationService.getOccupationLabels(code, type, getLanguage(), classifier), createCacheHeader());
     }
 
     @GetMapping("/occupations/label/mapping/{type}/{code}")
     @Timed
     public ResponseEntity<OccupationLabelMapping> getOccupationMapping(@PathVariable String type, @PathVariable int code) {
         return ResponseUtil.wrapOrNotFound(
-                occupationService.findOneOccupationMapping(type, code), createCacheHeader());
+            occupationService.findOneOccupationMapping(type, code), createCacheHeader());
     }
 
     private Language getLanguage() {

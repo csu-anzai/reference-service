@@ -35,33 +35,33 @@ class LocalityToSuggestionMapper {
 
     Locality fromSynonym(LocalitySuggestion localitySuggestion) {
         return new Locality()
-                .id(localitySuggestion.getId())
-                .city(localitySuggestion.getCity())
-                .zipCode(localitySuggestion.getZipCode())
-                .communalCode(localitySuggestion.getCommunalCode())
-                .cantonCode(localitySuggestion.getCantonCode())
-                .regionCode(localitySuggestion.getRegionCode())
-                .geoPoint(localitySuggestion.getGeoPoint());
+            .id(localitySuggestion.getId())
+            .city(localitySuggestion.getCity())
+            .zipCode(localitySuggestion.getZipCode())
+            .communalCode(localitySuggestion.getCommunalCode())
+            .cantonCode(localitySuggestion.getCantonCode())
+            .regionCode(localitySuggestion.getRegionCode())
+            .geoPoint(localitySuggestion.getGeoPoint());
     }
 
     LocalitySuggestion toLocalitySuggestion(Locality locality) {
         return new LocalitySuggestion()
-                .id(locality.getId())
-                .city(locality.getCity())
-                .zipCode(locality.getZipCode())
-                .communalCode(locality.getCommunalCode())
-                .cantonCode(locality.getCantonCode())
-                .regionCode(locality.getRegionCode())
-                .geoPoint(locality.getGeoPoint())
-                .citySuggestions(extractSuggestions(locality.getCity()));
+            .id(locality.getId())
+            .city(locality.getCity())
+            .zipCode(locality.getZipCode())
+            .communalCode(locality.getCommunalCode())
+            .cantonCode(locality.getCantonCode())
+            .regionCode(locality.getRegionCode())
+            .geoPoint(locality.getGeoPoint())
+            .citySuggestions(extractSuggestions(locality.getCity()));
     }
 
     CantonSuggestion toCantonSuggestion(Canton canton) {
         return new CantonSuggestion()
-                .id(canton.getId())
-                .code(canton.getCode())
-                .name(canton.getName())
-                .cantonSuggestions(extractSuggestions(canton.getName()));
+            .id(canton.getId())
+            .code(canton.getCode())
+            .name(canton.getName())
+            .cantonSuggestions(extractSuggestions(canton.getName()));
     }
 
     private Set<String> extractSuggestions(String term) {
@@ -99,21 +99,21 @@ class LocalityToSuggestionMapper {
         Map<String, String[]> synonymsMap = new HashMap<>();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
             reader.lines()
-                    .filter(line -> !line.startsWith("#"))
-                    .map(line -> line.split(","))
-                    .filter(tokens -> tokens.length > 1)
-                    .forEach(tokens -> {
-                        for (int i = 0; i < tokens.length; i++) {
-                            tokens[i] = tokens[i].trim();
-                        }
+                .filter(line -> !line.startsWith("#"))
+                .map(line -> line.split(","))
+                .filter(tokens -> tokens.length > 1)
+                .forEach(tokens -> {
+                    for (int i = 0; i < tokens.length; i++) {
+                        tokens[i] = tokens[i].trim();
+                    }
 
-                        Stream.of(tokens)
-                                .map(String::toLowerCase)
-                                .collect(Collectors.toMap(String::toLowerCase, token -> tokens, (a, b) -> a, () -> synonymsMap));
-                    });
+                    Stream.of(tokens)
+                        .map(String::toLowerCase)
+                        .collect(Collectors.toMap(String::toLowerCase, token -> tokens, (a, b) -> a, () -> synonymsMap));
+                });
         } catch (IOException e) {
             LoggerFactory.getLogger(this.getClass())
-                    .error("Failed to load locality-synonyms.txt", e);
+                .error("Failed to load locality-synonyms.txt", e);
 
         }
         return synonymsMap;

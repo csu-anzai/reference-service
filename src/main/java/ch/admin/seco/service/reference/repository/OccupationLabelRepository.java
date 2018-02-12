@@ -35,8 +35,8 @@ public interface OccupationLabelRepository extends JpaRepository<OccupationLabel
     List<OccupationLabel> findByCodeAndTypeAndClassifier(int code, String type, String classifier);
 
     @QueryHints({
-            @QueryHint(name = HINT_FETCH_SIZE, value = "1000"),
-            @QueryHint(name = HINT_CACHE_MODE, value = "IGNORE")})
+        @QueryHint(name = HINT_FETCH_SIZE, value = "1000"),
+        @QueryHint(name = HINT_CACHE_MODE, value = "IGNORE")})
     @Query("select new ch.admin.seco.service.reference.domain.valueobject.OccupationLabelKey(o.type, o.code, o.language) from OccupationLabel o group by o.type, o.code, o.language")
     Stream<OccupationLabelKey> streamAllKeys();
 
@@ -45,6 +45,6 @@ public interface OccupationLabelRepository extends JpaRepository<OccupationLabel
 
     default Map<String, String> getLabels(int code, String type, Language language) {
         return findByCodeAndTypeAndLanguage(code, type, language).stream()
-                .collect(Collectors.toMap(OccupationLabel::getClassifier, OccupationLabel::getLabel));
+            .collect(Collectors.toMap(OccupationLabel::getClassifier, OccupationLabel::getLabel));
     }
 }

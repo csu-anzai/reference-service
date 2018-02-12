@@ -43,12 +43,12 @@ class ElasticsearchLocalityIndexer {
     private final LocalityToSuggestionMapper localityToSuggestionMapper;
 
     ElasticsearchLocalityIndexer(EntityManager entityManager,
-            LocalityRepository localityRepository,
-            LocalitySearchRepository localitySynonymSearchRepository,
-            CantonRepository cantonRepository,
-            CantonSearchRepository cantonSearchRepository,
-            ElasticsearchTemplate elasticsearchTemplate,
-            LocalityToSuggestionMapper localityToSuggestionMapper) {
+        LocalityRepository localityRepository,
+        LocalitySearchRepository localitySynonymSearchRepository,
+        CantonRepository cantonRepository,
+        CantonSearchRepository cantonSearchRepository,
+        ElasticsearchTemplate elasticsearchTemplate,
+        LocalityToSuggestionMapper localityToSuggestionMapper) {
 
         this.entityManager = entityManager;
         this.localityRepository = localityRepository;
@@ -83,9 +83,9 @@ class ElasticsearchLocalityIndexer {
     }
 
     private <JPA, ELASTIC, ID extends Serializable> void reindexWithStream(
-            JpaRepository<JPA, ID> jpaRepository,
-            ElasticsearchRepository<ELASTIC, ID> elasticsearchRepository,
-            Function<JPA, ELASTIC> mapEntityToIndex, Class entityClass) {
+        JpaRepository<JPA, ID> jpaRepository,
+        ElasticsearchRepository<ELASTIC, ID> elasticsearchRepository,
+        Function<JPA, ELASTIC> mapEntityToIndex, Class entityClass) {
         try {
             disableHibernateSecondaryCache();
             Method m = jpaRepository.getClass().getMethod("streamAll");
@@ -96,17 +96,17 @@ class ElasticsearchLocalityIndexer {
             stopWatch.start();
             Stream<JPA> stream = Stream.class.cast(m.invoke(jpaRepository));
             Flux.fromStream(stream)
-                    .map(mapEntityToIndex)
-                    .buffer(100)
-                    .doOnNext(elasticsearchRepository::saveAll)
-                    .doOnNext(jobs ->
-                            log.info("Index {} chunk #{}, {} / {}", entityClass.getSimpleName(), index.incrementAndGet(), counter.addAndGet(jobs.size()), total))
-                    .doOnComplete(() -> {
-                                stopWatch.stop();
-                                log.info("Indexed {} of {} entities from {} in {} s", elasticsearchRepository.count(), jpaRepository.count(), entityClass.getSimpleName(), stopWatch.getTotalTimeSeconds());
-                            }
-                    )
-                    .subscribe(jobs -> removeAllElementFromHibernatePrimaryCache());
+                .map(mapEntityToIndex)
+                .buffer(100)
+                .doOnNext(elasticsearchRepository::saveAll)
+                .doOnNext(jobs ->
+                    log.info("Index {} chunk #{}, {} / {}", entityClass.getSimpleName(), index.incrementAndGet(), counter.addAndGet(jobs.size()), total))
+                .doOnComplete(() -> {
+                        stopWatch.stop();
+                        log.info("Indexed {} of {} entities from {} in {} s", elasticsearchRepository.count(), jpaRepository.count(), entityClass.getSimpleName(), stopWatch.getTotalTimeSeconds());
+                    }
+                )
+                .subscribe(jobs -> removeAllElementFromHibernatePrimaryCache());
         } catch (Exception e) {
             log.error("ReindexWithStream failed", e);
         }
