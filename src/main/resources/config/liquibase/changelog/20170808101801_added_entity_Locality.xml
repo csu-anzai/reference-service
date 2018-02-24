@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <databaseChangeLog
-    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
     <property name="now" value="now()" dbms="h2"/>
 
@@ -28,19 +28,19 @@
             </column>
 
             <column name="communal_code" type="integer">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
 
             <column name="canton_code" type="varchar(2)">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
 
             <column name="latitude" type="double">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
 
             <column name="longitude" type="double">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
 
             <column name="region_code" type="varchar(4)">
@@ -53,7 +53,9 @@
 
     <changeSet id="20170808101801-2" author="varu" context="!test">
         <loadData tableName="locality"
-                  file="config/liquibase/changelog/data/LOCALITY.csv"/>
+                  file="config/liquibase/changelog/data/locality.csv">
+            <column header="language" type="skip"/>
+        </loadData>
     </changeSet>
 
     <!--
@@ -76,7 +78,7 @@
                              tableName="canton" columnNames="code"/>
 
         <loadData tableName="canton"
-                  file="config/liquibase/changelog/data/CANTON.csv"/>
+                  file="config/liquibase/changelog/data/canton.csv"/>
     </changeSet>
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->
 </databaseChangeLog>
