@@ -19,11 +19,6 @@
     <include
             file="config/liquibase/changelog/20180119090000_update_Canton.xml"
             relativeToChangelogFile="false"/>
-    <include
-            file="config/liquibase/changelog/20180206090000_update_Localities.xml"
-            relativeToChangelogFile="false"/>
-
-    <include file="config/liquibase/changelog/00000000000000_initial_schema.xml" relativeToChangelogFile="false"/>
 
     <include
         file="config/liquibase/changelog/20180220190000_added_entity_OccupationReportingObligation.xml"

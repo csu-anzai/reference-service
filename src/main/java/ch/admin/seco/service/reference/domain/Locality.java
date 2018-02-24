@@ -56,18 +56,15 @@ public class Locality<T extends Locality<T>> implements Serializable {
     @Column(name = "communal_code", nullable = false)
     private int communalCode;
 
-    @NotNull
     @Size(max = 2)
     @Column(name = "canton_code", length = 2, nullable = false)
     private String cantonCode;
 
-    @NotNull
     @Size(max = 4)
     @Column(name = "region_code", length = 2, nullable = true)
     private String regionCode;
 
     @Valid
-    @NotNull
     @Embedded
     private GeoPoint geoPoint;
 
