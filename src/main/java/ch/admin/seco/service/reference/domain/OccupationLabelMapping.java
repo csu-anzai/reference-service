@@ -54,7 +54,7 @@ public class OccupationLabelMapping implements Serializable {
 
     @NotNull
     @Min(10000)
-    @Max(999999)
+    @Max(99999)
     @Column(name = "sbn5_code", nullable = false)
     private int sbn5Code;
 
