@@ -7,13 +7,14 @@ import java.util.UUID;
 import javax.annotation.Nonnull;
 
 import ch.admin.seco.service.reference.domain.enums.Language;
+import ch.admin.seco.service.reference.domain.enums.ProfessionCodeType;
 
 public class OccupationLabelSuggestionDto {
     private UUID id;
 
-    private int code;
+    private String code;
 
-    private String type;
+    private ProfessionCodeType type;
 
     private Language language;
 
@@ -21,7 +22,7 @@ public class OccupationLabelSuggestionDto {
 
     private String label;
 
-    private Map<String, Integer> mappings;
+    private Map<ProfessionCodeType, String> mappings;
 
     public UUID getId() {
         return id;
@@ -32,28 +33,28 @@ public class OccupationLabelSuggestionDto {
         return this;
     }
 
-    public int getCode() {
+    public String getCode() {
         return code;
     }
 
-    public void setCode(int code) {
+    public void setCode(String code) {
         this.code = code;
     }
 
-    public OccupationLabelSuggestionDto code(int code) {
+    public OccupationLabelSuggestionDto code(String code) {
         this.code = code;
         return this;
     }
 
-    public String getType() {
+    public ProfessionCodeType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(ProfessionCodeType type) {
         this.type = type;
     }
 
-    public OccupationLabelSuggestionDto type(String type) {
+    public OccupationLabelSuggestionDto type(ProfessionCodeType type) {
         this.type = type;
         return this;
     }
@@ -98,22 +99,23 @@ public class OccupationLabelSuggestionDto {
         return this;
     }
 
-    public Map<String, Integer> getMappings() {
+    public Map<ProfessionCodeType, String> getMappings() {
         return mappings;
     }
 
-    public void setMappings(Map<String, Integer> mappings) {
+    public void setMappings(Map<ProfessionCodeType, String> mappings) {
         this.mappings = mappings;
     }
 
-    public OccupationLabelSuggestionDto mappings(Map<String, Integer> mappings) {
+    public OccupationLabelSuggestionDto mappings(Map<ProfessionCodeType, String> mappings) {
         this.mappings = mappings;
         return this;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getCode(), getType(), getLanguage(), getClassifier(), getLabel(), getMappings());
+
+        return Objects.hash(getId());
     }
 
     @Override
@@ -125,13 +127,7 @@ public class OccupationLabelSuggestionDto {
             return false;
         }
         OccupationLabelSuggestionDto that = (OccupationLabelSuggestionDto) o;
-        return getCode() == that.getCode() &&
-            Objects.equals(getId(), that.getId()) &&
-            Objects.equals(getType(), that.getType()) &&
-            getLanguage() == that.getLanguage() &&
-            Objects.equals(getClassifier(), that.getClassifier()) &&
-            Objects.equals(getLabel(), that.getLabel()) &&
-            Objects.equals(getMappings(), that.getMappings());
+        return Objects.equals(getId(), that.getId());
     }
 
     @Override

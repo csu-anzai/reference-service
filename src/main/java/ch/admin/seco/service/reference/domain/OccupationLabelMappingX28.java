@@ -10,8 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Cache;
@@ -35,39 +33,35 @@ public class OccupationLabelMappingX28 implements Serializable {
     private UUID id;
 
     @NotNull
-    @Min(10000)
-    @Max(999999)
     @Column(name = "avam_code", nullable = false)
-    private int avamCode;
+    private String avamCode;
 
     @NotNull
-    @Min(10000000)
-    @Max(99999999)
     @Column(name = "x28_code", nullable = false)
-    private int x28Code;
+    private String x28Code;
 
-    public int getAvamCode() {
+    public String getAvamCode() {
         return avamCode;
     }
 
-    public void setAvamCode(int avamCode) {
+    public void setAvamCode(String avamCode) {
         this.avamCode = avamCode;
     }
 
-    public OccupationLabelMappingX28 avamCode(int avamCode) {
+    public OccupationLabelMappingX28 avamCode(String avamCode) {
         this.avamCode = avamCode;
         return this;
     }
 
-    public int getX28Code() {
+    public String getX28Code() {
         return x28Code;
     }
 
-    public void setX28Code(int x28Code) {
+    public void setX28Code(String x28Code) {
         this.x28Code = x28Code;
     }
 
-    public OccupationLabelMappingX28 x28Code(int x28Code) {
+    public OccupationLabelMappingX28 x28Code(String x28Code) {
         this.x28Code = x28Code;
         return this;
     }
@@ -86,17 +80,17 @@ public class OccupationLabelMappingX28 implements Serializable {
             return false;
         }
         OccupationLabelMappingX28 that = (OccupationLabelMappingX28) o;
-        return getAvamCode() == that.getAvamCode() &&
-            getX28Code() == that.getX28Code() &&
-            Objects.equals(id, that.id);
+        return Objects.equals(id, that.id) &&
+            Objects.equals(getAvamCode(), that.getAvamCode()) &&
+            Objects.equals(getX28Code(), that.getX28Code());
     }
 
     @Override
     public String toString() {
-        return "OccupationMappingX28{" +
+        return "OccupationLabelMappingX28{" +
             "id=" + id +
-            ", avamCode=" + avamCode +
-            ", x28Code=" + x28Code +
+            ", avamCode='" + avamCode + '\'' +
+            ", x28Code='" + x28Code + '\'' +
             '}';
     }
 }

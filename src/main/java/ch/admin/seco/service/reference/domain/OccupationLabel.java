@@ -21,6 +21,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 
 import ch.admin.seco.service.reference.domain.enums.Language;
+import ch.admin.seco.service.reference.domain.enums.ProfessionCodeType;
 
 /**
  * A Occupation.
@@ -40,12 +41,11 @@ public class OccupationLabel<T extends OccupationLabel<T>> implements Serializab
 
     @NotNull
     @Column(name = "code", nullable = false)
-    private int code;
+    private String code;
 
     @NotNull
-    @Size(max = 10)
-    @Column(name = "type", nullable = false)
-    private String type;
+    @Enumerated(EnumType.STRING)
+    private ProfessionCodeType type;
 
     @NotNull
     @Column(name = "language", nullable = false, length = 2)
@@ -74,28 +74,28 @@ public class OccupationLabel<T extends OccupationLabel<T>> implements Serializab
         return (T) this;
     }
 
-    public int getCode() {
+    public String getCode() {
         return code;
     }
 
-    public void setCode(int code) {
+    public void setCode(String code) {
         this.code = code;
     }
 
-    public T code(int code) {
+    public T code(String code) {
         this.code = code;
         return (T) this;
     }
 
-    public String getType() {
+    public ProfessionCodeType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(ProfessionCodeType type) {
         this.type = type;
     }
 
-    public T type(String type) {
+    public T type(ProfessionCodeType type) {
         this.type = type;
         return (T) this;
     }
@@ -142,7 +142,7 @@ public class OccupationLabel<T extends OccupationLabel<T>> implements Serializab
 
     @Override
     public int hashCode() {
-        return Objects.hash(getCode(), getType(), getLanguage(), getClassifier(), getLabel());
+        return Objects.hash(getId(), getCode(), getType(), getLanguage(), getClassifier(), getLabel());
     }
 
     @Override
@@ -154,9 +154,10 @@ public class OccupationLabel<T extends OccupationLabel<T>> implements Serializab
             return false;
         }
         OccupationLabel<?> that = (OccupationLabel<?>) o;
-        return getCode() == that.getCode() &&
-            Objects.equals(getType(), that.getType()) &&
-            Objects.equals(getLanguage(), that.getLanguage()) &&
+        return Objects.equals(getId(), that.getId()) &&
+            Objects.equals(getCode(), that.getCode()) &&
+            getType() == that.getType() &&
+            getLanguage() == that.getLanguage() &&
             Objects.equals(getClassifier(), that.getClassifier()) &&
             Objects.equals(getLabel(), that.getLabel());
     }
@@ -165,9 +166,9 @@ public class OccupationLabel<T extends OccupationLabel<T>> implements Serializab
     public String toString() {
         return "OccupationLabel{" +
             "id=" + id +
-            ", code=" + code +
-            ", type='" + type + '\'' +
-            ", language='" + language + '\'' +
+            ", code='" + code + '\'' +
+            ", type=" + type +
+            ", language=" + language +
             ", classifier='" + classifier + '\'' +
             ", label='" + label + '\'' +
             '}';

@@ -1,5 +1,10 @@
 package ch.admin.seco.service.reference.service.impl;
 
+import static ch.admin.seco.service.reference.domain.enums.ProfessionCodeType.AVAM;
+import static ch.admin.seco.service.reference.domain.enums.ProfessionCodeType.BFS;
+import static ch.admin.seco.service.reference.domain.enums.ProfessionCodeType.SBN3;
+import static ch.admin.seco.service.reference.domain.enums.ProfessionCodeType.SBN5;
+import static ch.admin.seco.service.reference.domain.enums.ProfessionCodeType.X28;
 import static java.util.Objects.isNull;
 
 import java.util.HashSet;
@@ -32,6 +37,7 @@ import org.springframework.util.StopWatch;
 import org.springframework.util.StringUtils;
 
 import ch.admin.seco.service.reference.domain.OccupationLabel;
+import ch.admin.seco.service.reference.domain.enums.ProfessionCodeType;
 import ch.admin.seco.service.reference.domain.search.OccupationLabelSuggestion;
 import ch.admin.seco.service.reference.domain.valueobject.OccupationLabelKey;
 import ch.admin.seco.service.reference.repository.OccupationLabelMappingRepository;
@@ -74,40 +80,40 @@ public class ElasticsearchOccupationLabelIndexer {
         reindexWithStream();
     }
 
-    private Map<String, Integer> getOccupationLabelMapping(String type, int code) {
-        switch (type) {
-            case "avam":
-                return occupationLabelMappingRepository.findOneByAvamCode(code)
+    private Map<ProfessionCodeType, String> getOccupationLabelMapping(ProfessionCodeType professionType, String professionCode) {
+        switch (professionType) {
+            case AVAM:
+                return occupationLabelMappingRepository.findOneByAvamCode(professionCode)
                     .map(mapping -> ImmutableMap.of(
-                        "avam", mapping.getAvamCode(),
-                        "bfs", mapping.getBfsCode(),
-                        "sbn3", mapping.getSbn3Code(),
-                        "sbn5", mapping.getSbn5Code()))
+                        AVAM, mapping.getAvamCode(),
+                        BFS, mapping.getBfsCode(),
+                        SBN3, mapping.getSbn3Code(),
+                        SBN5, mapping.getSbn5Code()))
                     .orElse(null);
 
-            case "bfs":
-                return occupationLabelMappingRepository.findByBfsCode(code)
+            case BFS:
+                return occupationLabelMappingRepository.findByBfsCode(professionCode)
                     .stream()
                     .map(mapping -> ImmutableMap.of(
-                        "avam", mapping.getAvamCode(),
-                        "bfs", mapping.getBfsCode(),
-                        "sbn3", mapping.getSbn3Code(),
-                        "sbn5", mapping.getSbn5Code()))
+                        AVAM, mapping.getAvamCode(),
+                        BFS, mapping.getBfsCode(),
+                        SBN3, mapping.getSbn3Code(),
+                        SBN5, mapping.getSbn5Code()))
                     .findFirst()
                     .orElse(null);
 
-            case "x28":
-                return occupationLabelMappingRepository.findOneByX28Code(code)
+            case X28:
+                return occupationLabelMappingRepository.findOneByX28Code(professionCode)
                     .map(mapping -> ImmutableMap.of(
-                        "x28", code,
-                        "avam", mapping.getAvamCode(),
-                        "bfs", mapping.getBfsCode(),
-                        "sbn3", mapping.getSbn3Code(),
-                        "sbn5", mapping.getSbn5Code()))
+                        X28, professionCode,
+                        AVAM, mapping.getAvamCode(),
+                        BFS, mapping.getBfsCode(),
+                        SBN3, mapping.getSbn3Code(),
+                        SBN5, mapping.getSbn5Code()))
                     .orElse(null);
 
             default:
-                return ImmutableMap.of("type", code);
+                return ImmutableMap.of(professionType, professionCode);
         }
     }
 
@@ -121,7 +127,7 @@ public class ElasticsearchOccupationLabelIndexer {
             Flux.fromStream(occupationLabelRepository.streamAllKeys())
                 .flatMap(key -> {
                         counter.incrementAndGet();
-                        if ("x28".equals(key.getType())) {
+                        if (X28.equals(key.getType())) {
                             return toX28OccupationLabelPublisher(key);
                         } else {
                             return toOccupationLabelPublisher(key);

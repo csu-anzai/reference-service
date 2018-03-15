@@ -23,8 +23,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ch.admin.seco.service.reference.domain.OccupationLabelMapping;
 import ch.admin.seco.service.reference.domain.enums.Language;
+import ch.admin.seco.service.reference.domain.enums.ProfessionCodeType;
 import ch.admin.seco.service.reference.service.OccupationLabelService;
 import ch.admin.seco.service.reference.service.dto.OccupationLabelAutocompleteDto;
+import ch.admin.seco.service.reference.service.dto.ProfessionCodeDTO;
 
 /**
  * REST controller for managing OccupationSynonym.
@@ -52,32 +54,33 @@ public class OccupationLabelResource {
     @GetMapping("/_search/occupations/label")
     @Timed
     public ResponseEntity<OccupationLabelAutocompleteDto> suggestOccupation(
-        @RequestParam String prefix, @RequestParam Collection<String> types, @RequestParam int resultSize) {
+        @RequestParam String prefix, @RequestParam Collection<ProfessionCodeType> types, @RequestParam int resultSize) {
         log.debug("REST request to suggest for a page of OccupationSynonyms for query {}", prefix);
         OccupationLabelAutocompleteDto result = occupationService.suggest(prefix, getLanguage(), types, resultSize);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @GetMapping("/occupations/label/{type}/{code}")
+    @GetMapping("/occupations/label/{codeType}/{code}")
     @Timed
-    public ResponseEntity<Map<String, String>> getOccupationLabels(@PathVariable String type, @PathVariable int code) {
+    public ResponseEntity<Map<String, String>> getOccupationLabels(ProfessionCodeDTO professionCode) {
         return ResponseEntity.ok()
             .headers(createCacheHeader())
-            .body(occupationService.getOccupationLabels(code, type, getLanguage()));
+            .body(occupationService.getOccupationLabels(professionCode, getLanguage()));
     }
 
-    @GetMapping("/occupations/label/{type}/{code}/{classifier}")
+    @GetMapping("/occupations/label/{codeType}/{code}/{classifier}")
     @Timed
-    public ResponseEntity<Map<String, String>> getOccupationLabels(@PathVariable String type, @PathVariable int code, @PathVariable String classifier) {
+    public ResponseEntity<Map<String, String>> getOccupationLabels(ProfessionCodeDTO professionCode,
+        @PathVariable String classifier) {
         return ResponseUtil.wrapOrNotFound(
-            occupationService.getOccupationLabels(code, type, getLanguage(), classifier), createCacheHeader());
+            occupationService.getOccupationLabels(professionCode, getLanguage(), classifier), createCacheHeader());
     }
 
-    @GetMapping("/occupations/label/mapping/{type}/{code}")
+    @GetMapping("/occupations/label/mapping/{codeType}/{code}")
     @Timed
-    public ResponseEntity<OccupationLabelMapping> getOccupationMapping(@PathVariable String type, @PathVariable int code) {
+    public ResponseEntity<OccupationLabelMapping> getOccupationMapping(ProfessionCodeDTO professionCode) {
         return ResponseUtil.wrapOrNotFound(
-            occupationService.findOneOccupationMapping(type, code), createCacheHeader());
+            occupationService.findOneOccupationMapping(professionCode), createCacheHeader());
     }
 
     private Language getLanguage() {

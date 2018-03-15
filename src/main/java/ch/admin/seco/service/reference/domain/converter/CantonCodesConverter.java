@@ -1,9 +1,9 @@
 package ch.admin.seco.service.reference.domain.converter;
 
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
@@ -20,8 +20,10 @@ public class CantonCodesConverter implements AttributeConverter<Set<String>, Str
             return null;
         }
 
-        return cantonCodes.stream().reduce("",
-                (accumulator, code) -> accumulator.concat(String.format(",%s", code)));
+        return cantonCodes.stream()
+            .map(String::trim)
+            .filter(StringUtils::isNotEmpty)
+            .collect(Collectors.joining(","));
     }
 
     @Override
@@ -30,7 +32,9 @@ public class CantonCodesConverter implements AttributeConverter<Set<String>, Str
             return Collections.emptySet();
         }
 
-        final String[] cantonCodes = value.split(",");
-        return new HashSet<>(Arrays.asList(cantonCodes));
+        return Stream.of(value.split(","))
+            .map(String::trim)
+            .filter(StringUtils::isNotEmpty)
+            .collect(Collectors.toSet());
     }
 }

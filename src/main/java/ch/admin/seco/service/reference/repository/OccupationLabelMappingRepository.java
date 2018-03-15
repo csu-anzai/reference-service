@@ -16,10 +16,10 @@ import ch.admin.seco.service.reference.domain.OccupationLabelMapping;
  */
 @Repository
 public interface OccupationLabelMappingRepository extends JpaRepository<OccupationLabelMapping, UUID> {
-    Optional<OccupationLabelMapping> findOneByAvamCode(int avamCode);
+    Optional<OccupationLabelMapping> findOneByAvamCode(String avamCode);
 
     @Query("select o from OccupationLabelMapping o where o.avamCode in (select m.avamCode from OccupationLabelMappingX28 m where m.x28Code = ?1)")
-    Optional<OccupationLabelMapping> findOneByX28Code(int x28Code);
+    Optional<OccupationLabelMapping> findOneByX28Code(String x28Code);
 
-    List<OccupationLabelMapping> findByBfsCode(int bfsCode);
+    List<OccupationLabelMapping> findByBfsCode(String bfsCode);
 }

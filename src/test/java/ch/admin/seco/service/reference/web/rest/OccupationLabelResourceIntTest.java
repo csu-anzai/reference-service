@@ -1,5 +1,10 @@
 package ch.admin.seco.service.reference.web.rest;
 
+import static ch.admin.seco.service.reference.domain.enums.ProfessionCodeType.AVAM;
+import static ch.admin.seco.service.reference.domain.enums.ProfessionCodeType.BFS;
+import static ch.admin.seco.service.reference.domain.enums.ProfessionCodeType.SBN3;
+import static ch.admin.seco.service.reference.domain.enums.ProfessionCodeType.SBN5;
+import static ch.admin.seco.service.reference.domain.enums.ProfessionCodeType.X28;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -19,6 +24,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.format.support.FormattingConversionService;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -30,6 +36,7 @@ import ch.admin.seco.service.reference.domain.OccupationLabel;
 import ch.admin.seco.service.reference.domain.OccupationLabelMapping;
 import ch.admin.seco.service.reference.domain.OccupationLabelMappingX28;
 import ch.admin.seco.service.reference.domain.enums.Language;
+import ch.admin.seco.service.reference.domain.enums.ProfessionCodeType;
 import ch.admin.seco.service.reference.repository.OccupationLabelMappingRepository;
 import ch.admin.seco.service.reference.repository.OccupationLabelMappingX28Repository;
 import ch.admin.seco.service.reference.repository.OccupationLabelRepository;
@@ -57,6 +64,9 @@ public class OccupationLabelResourceIntTest {
     private ExceptionTranslator exceptionTranslator;
 
     @Autowired
+    private FormattingConversionService formattingConversionService;
+
+    @Autowired
     private OccupationLabelRepository occupationLabelRepository;
 
     @Autowired
@@ -79,7 +89,8 @@ public class OccupationLabelResourceIntTest {
         this.sut = MockMvcBuilders.standaloneSetup(occupationLabelResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
-            .setMessageConverters(jacksonMessageConverter).build();
+            .setMessageConverters(jacksonMessageConverter)
+            .setConversionService(formattingConversionService).build();
     }
 
     @Before
@@ -91,18 +102,18 @@ public class OccupationLabelResourceIntTest {
 
         this.occupationLabelMappingRepository.save(
             //                         bfs     avam  sbn3  sbn5
-            createOccupationMapping(33302009, 68913, 361, 36102, "Java-Programmierer")
+            createOccupationMapping("33302009", "68913", "361", "36102", "Java-Programmierer")
         );
         this.occupationLabelMappingX28Repository.save(
             //                              avam      x28
-            createOccupationLabelMappingX28(68913, 11002714)
+            createOccupationLabelMappingX28("68913", "11002714")
         );
-        this.occupationLabelService.save(createAvamOccupationLabel(68913, Language.de, 'm', "Java-Programmierer"));
-        this.occupationLabelService.save(createX28OccupationLabel(11002714, Language.en, "Javascript Developer"));
-        this.occupationLabelService.save(createX28OccupationLabel(11002714, Language.de, "Javascript-Entwickler"));
-        this.occupationLabelService.save(createX28OccupationLabel(11002714, Language.de, "Javascript-Entwicklerin"));
-        this.occupationLabelService.save(createSBN5OccupationLabel(36102, Language.de, "Programmierer/innen"));
-        this.occupationLabelService.save(createSBN3OccupationLabel(361, Language.de, "Berufe der Informatik"));
+        this.occupationLabelService.save(createAvamOccupationLabel("68913", Language.de, 'm', "Java-Programmierer"));
+        this.occupationLabelService.save(createX28OccupationLabel("11002714", Language.en, "Javascript Developer"));
+        this.occupationLabelService.save(createX28OccupationLabel("11002714", Language.de, "Javascript-Entwickler"));
+        this.occupationLabelService.save(createX28OccupationLabel("11002714", Language.de, "Javascript-Entwicklerin"));
+        this.occupationLabelService.save(createSBN5OccupationLabel("36102", Language.de, "Programmierer/innen"));
+        this.occupationLabelService.save(createSBN3OccupationLabel("361", Language.de, "Berufe der Informatik"));
 
         this.elasticsearchOccupationLabelIndexer.reindexOccupationLabel();
     }
@@ -113,16 +124,16 @@ public class OccupationLabelResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.occupations").value(hasSize(2)))
-            .andExpect(jsonPath("$.occupations[*].code").value(hasItem(11002714)))
-            .andExpect(jsonPath("$.occupations[*].type").value(hasItem("x28")))
+            .andExpect(jsonPath("$.occupations[*].code").value(hasItem("11002714")))
+            .andExpect(jsonPath("$.occupations[*].type").value(hasItem("X28")))
             .andExpect(jsonPath("$.occupations[*].label").value(hasItem("Javascript-Entwickler")))
             .andExpect(jsonPath("$.occupations[*].label").value(hasItem("Javascript-Entwicklerin")))
             .andExpect(jsonPath("$.classifications").value(hasSize(2)))
-            .andExpect(jsonPath("$.classifications[*].code").value(hasItem(361)))
-            .andExpect(jsonPath("$.classifications[*].type").value(hasItem("sbn3")))
+            .andExpect(jsonPath("$.classifications[*].code").value(hasItem("361")))
+            .andExpect(jsonPath("$.classifications[*].type").value(hasItem("SBN3")))
             .andExpect(jsonPath("$.classifications[*].label").value(hasItem("Berufe der Informatik")))
-            .andExpect(jsonPath("$.classifications[*].code").value(hasItem(36102)))
-            .andExpect(jsonPath("$.classifications[*].type").value(hasItem("sbn5")))
+            .andExpect(jsonPath("$.classifications[*].code").value(hasItem("36102")))
+            .andExpect(jsonPath("$.classifications[*].type").value(hasItem("SBN5")))
             .andExpect(jsonPath("$.classifications[*].label").value(hasItem("Programmierer/innen")));
     }
 
@@ -132,16 +143,16 @@ public class OccupationLabelResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.occupations").value(hasSize(1)))
-            .andExpect(jsonPath("$.occupations[*].code").value(hasItem(68913)))
-            .andExpect(jsonPath("$.occupations[*].type").value(hasItem("avam")))
+            .andExpect(jsonPath("$.occupations[*].code").value(hasItem("68913")))
+            .andExpect(jsonPath("$.occupations[*].type").value(hasItem("AVAM")))
             .andExpect(jsonPath("$.occupations[*].label").value(hasItem("Java-Programmierer")))
             .andExpect(jsonPath("$.occupations[*].classifier").value(hasItem("default")))
             .andExpect(jsonPath("$.classifications").value(hasSize(2)))
-            .andExpect(jsonPath("$.classifications[*].code").value(hasItem(361)))
-            .andExpect(jsonPath("$.classifications[*].type").value(hasItem("sbn3")))
+            .andExpect(jsonPath("$.classifications[*].code").value(hasItem("361")))
+            .andExpect(jsonPath("$.classifications[*].type").value(hasItem("SBN3")))
             .andExpect(jsonPath("$.classifications[*].label").value(hasItem("Berufe der Informatik")))
-            .andExpect(jsonPath("$.classifications[*].code").value(hasItem(36102)))
-            .andExpect(jsonPath("$.classifications[*].type").value(hasItem("sbn5")))
+            .andExpect(jsonPath("$.classifications[*].code").value(hasItem("36102")))
+            .andExpect(jsonPath("$.classifications[*].type").value(hasItem("SBN5")))
             .andExpect(jsonPath("$.classifications[*].label").value(hasItem("Programmierer/innen")));
     }
 
@@ -151,20 +162,20 @@ public class OccupationLabelResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.occupations").value(hasSize(3)))
-            .andExpect(jsonPath("$.occupations[*].code").value(hasItem(68913)))
-            .andExpect(jsonPath("$.occupations[*].type").value(hasItem("avam")))
+            .andExpect(jsonPath("$.occupations[*].code").value(hasItem("68913")))
+            .andExpect(jsonPath("$.occupations[*].type").value(hasItem("AVAM")))
             .andExpect(jsonPath("$.occupations[*].label").value(hasItem("Java-Programmierer")))
             .andExpect(jsonPath("$.occupations[*].classifier").value(hasItem("default")))
-            .andExpect(jsonPath("$.occupations[*].code").value(hasItem(11002714)))
-            .andExpect(jsonPath("$.occupations[*].type").value(hasItem("x28")))
+            .andExpect(jsonPath("$.occupations[*].code").value(hasItem("11002714")))
+            .andExpect(jsonPath("$.occupations[*].type").value(hasItem("X28")))
             .andExpect(jsonPath("$.occupations[*].label").value(hasItem("Javascript-Entwickler")))
             .andExpect(jsonPath("$.occupations[*].label").value(hasItem("Javascript-Entwicklerin")))
             .andExpect(jsonPath("$.classifications").value(hasSize(2)))
-            .andExpect(jsonPath("$.classifications[*].code").value(hasItem(361)))
-            .andExpect(jsonPath("$.classifications[*].type").value(hasItem("sbn3")))
+            .andExpect(jsonPath("$.classifications[*].code").value(hasItem("361")))
+            .andExpect(jsonPath("$.classifications[*].type").value(hasItem("SBN3")))
             .andExpect(jsonPath("$.classifications[*].label").value(hasItem("Berufe der Informatik")))
-            .andExpect(jsonPath("$.classifications[*].code").value(hasItem(36102)))
-            .andExpect(jsonPath("$.classifications[*].type").value(hasItem("sbn5")))
+            .andExpect(jsonPath("$.classifications[*].code").value(hasItem("36102")))
+            .andExpect(jsonPath("$.classifications[*].type").value(hasItem("SBN5")))
             .andExpect(jsonPath("$.classifications[*].label").value(hasItem("Programmierer/innen")));
     }
 
@@ -199,10 +210,10 @@ public class OccupationLabelResourceIntTest {
         sut.perform(get("/api/occupations/label/mapping/avam/68913"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.bfsCode").value(33302009))
-            .andExpect(jsonPath("$.avamCode").value(68913))
-            .andExpect(jsonPath("$.sbn3Code").value(361))
-            .andExpect(jsonPath("$.sbn5Code").value(36102))
+            .andExpect(jsonPath("$.bfsCode").value("33302009"))
+            .andExpect(jsonPath("$.avamCode").value("68913"))
+            .andExpect(jsonPath("$.sbn3Code").value("361"))
+            .andExpect(jsonPath("$.sbn5Code").value("36102"))
             .andExpect(jsonPath("$.description").value("Java-Programmierer"));
     }
 
@@ -211,10 +222,10 @@ public class OccupationLabelResourceIntTest {
         sut.perform(get("/api/occupations/label/mapping/bfs/33302009"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.bfsCode").value(33302009))
-            .andExpect(jsonPath("$.avamCode").value(68913))
-            .andExpect(jsonPath("$.sbn3Code").value(361))
-            .andExpect(jsonPath("$.sbn5Code").value(36102))
+            .andExpect(jsonPath("$.bfsCode").value("33302009"))
+            .andExpect(jsonPath("$.avamCode").value("68913"))
+            .andExpect(jsonPath("$.sbn3Code").value("361"))
+            .andExpect(jsonPath("$.sbn5Code").value("36102"))
             .andExpect(jsonPath("$.description").value("Java-Programmierer"));
     }
 
@@ -223,35 +234,35 @@ public class OccupationLabelResourceIntTest {
         sut.perform(get("/api/occupations/label/mapping/x28/11002714"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.bfsCode").value(33302009))
-            .andExpect(jsonPath("$.avamCode").value(68913))
-            .andExpect(jsonPath("$.sbn3Code").value(361))
-            .andExpect(jsonPath("$.sbn5Code").value(36102))
+            .andExpect(jsonPath("$.bfsCode").value("33302009"))
+            .andExpect(jsonPath("$.avamCode").value("68913"))
+            .andExpect(jsonPath("$.sbn3Code").value("361"))
+            .andExpect(jsonPath("$.sbn5Code").value("36102"))
             .andExpect(jsonPath("$.description").value("Java-Programmierer"));
     }
 
-    private OccupationLabel createAvamOccupationLabel(int code, Language lang, char gender, String label) {
-        return createOccupationLabel(code, "avam", lang, String.valueOf(gender), label);
+    private OccupationLabel createAvamOccupationLabel(String code, Language lang, char gender, String label) {
+        return createOccupationLabel(code, AVAM, lang, String.valueOf(gender), label);
     }
 
-    private OccupationLabel createBFSOccupationLabel(int code, Language lang, char gender, String label) {
-        return createOccupationLabel(code, "bfs", lang, String.valueOf(gender), label);
+    private OccupationLabel createBFSOccupationLabel(String code, Language lang, char gender, String label) {
+        return createOccupationLabel(code, BFS, lang, String.valueOf(gender), label);
     }
 
-    private OccupationLabel createSBN3OccupationLabel(int code, Language lang, String label) {
-        return createOccupationLabel(code, "sbn3", lang, "default", label);
+    private OccupationLabel createSBN3OccupationLabel(String code, Language lang, String label) {
+        return createOccupationLabel(code, SBN3, lang, "default", label);
     }
 
-    private OccupationLabel createSBN5OccupationLabel(int code, Language lang, String label) {
-        return createOccupationLabel(code, "sbn5", lang, "default", label);
+    private OccupationLabel createSBN5OccupationLabel(String code, Language lang, String label) {
+        return createOccupationLabel(code, SBN5, lang, "default", label);
     }
 
-    private OccupationLabel createX28OccupationLabel(int code, Language lang, String label) {
-        return createOccupationLabel(code, "x28", lang, RandomStringUtils.randomAlphanumeric(10), label);
+    private OccupationLabel createX28OccupationLabel(String code, Language lang, String label) {
+        return createOccupationLabel(code, X28, lang, RandomStringUtils.randomAlphanumeric(10), label);
     }
 
 
-    private OccupationLabel createOccupationLabel(int code, String type, Language lang, String classifier, String label) {
+    private OccupationLabel createOccupationLabel(String code, ProfessionCodeType type, Language lang, String classifier, String label) {
         return new OccupationLabel()
             .id(UUID.randomUUID())
             .code(code)
@@ -261,7 +272,7 @@ public class OccupationLabelResourceIntTest {
             .label(label);
     }
 
-    private OccupationLabelMappingX28 createOccupationLabelMappingX28(int avamCode, int x28Code) {
+    private OccupationLabelMappingX28 createOccupationLabelMappingX28(String avamCode, String x28Code) {
         OccupationLabelMappingX28 mapping = new OccupationLabelMappingX28();
         mapping.setAvamCode(avamCode);
         mapping.setX28Code(x28Code);
@@ -269,7 +280,7 @@ public class OccupationLabelResourceIntTest {
         return mapping;
     }
 
-    private OccupationLabelMapping createOccupationMapping(int bfsCode, int avamCode, int sbn3Code, int sbn5Code, String description) {
+    private OccupationLabelMapping createOccupationMapping(String bfsCode, String avamCode, String sbn3Code, String sbn5Code, String description) {
         OccupationLabelMapping mapping = new OccupationLabelMapping();
         mapping.setId(UUID.randomUUID());
         mapping.setBfsCode(bfsCode);

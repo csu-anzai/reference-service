@@ -18,6 +18,7 @@ import org.springframework.data.jpa.repository.QueryHints;
 
 import ch.admin.seco.service.reference.domain.OccupationLabel;
 import ch.admin.seco.service.reference.domain.enums.Language;
+import ch.admin.seco.service.reference.domain.enums.ProfessionCodeType;
 import ch.admin.seco.service.reference.domain.valueobject.OccupationLabelKey;
 
 public interface OccupationLabelRepository extends JpaRepository<OccupationLabel, UUID> {
@@ -28,23 +29,20 @@ public interface OccupationLabelRepository extends JpaRepository<OccupationLabel
     @Query("select o from OccupationLabel o")
     Stream<OccupationLabel> streamAll();
 
-    List<OccupationLabel> findByCodeAndTypeAndLanguage(int code, String type, Language language);
+    List<OccupationLabel> findByCodeAndTypeAndLanguage(String professionCode, ProfessionCodeType professionType, Language language);
 
-    Optional<OccupationLabel> findOneByCodeAndTypeAndLanguageAndClassifier(int code, String type, Language language, String classifier);
+    Optional<OccupationLabel> findOneByCodeAndTypeAndLanguageAndClassifier(String professionCode, ProfessionCodeType professionType, Language language, String classifier);
 
-    List<OccupationLabel> findByCodeAndTypeAndClassifier(int code, String type, String classifier);
+    List<OccupationLabel> findByCodeAndTypeAndClassifier(String professionCode, ProfessionCodeType professionType, String classifier);
 
-    @QueryHints({
-        @QueryHint(name = HINT_FETCH_SIZE, value = "1000"),
-        @QueryHint(name = HINT_CACHE_MODE, value = "IGNORE")})
     @Query("select new ch.admin.seco.service.reference.domain.valueobject.OccupationLabelKey(o.type, o.code, o.language) from OccupationLabel o group by o.type, o.code, o.language")
     Stream<OccupationLabelKey> streamAllKeys();
 
     @Query(nativeQuery = true, value = "SELECT count(*) FROM (SELECT count(*) FROM OCCUPATION_LABEL o GROUP BY o.type, o.code, o.language) AS groups")
     long countAllKeys();
 
-    default Map<String, String> getLabels(int code, String type, Language language) {
-        return findByCodeAndTypeAndLanguage(code, type, language).stream()
+    default Map<String, String> getLabels(String professionCode, ProfessionCodeType professionType, Language language) {
+        return findByCodeAndTypeAndLanguage(professionCode, professionType, language).stream()
             .collect(Collectors.toMap(OccupationLabel::getClassifier, OccupationLabel::getLabel));
     }
 }

@@ -10,8 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Cache;
@@ -35,28 +33,20 @@ public class OccupationLabelMapping implements Serializable {
     private UUID id;
 
     @NotNull
-    @Min(10000000)
-    @Max(99999999)
     @Column(name = "bfs_code", nullable = false)
-    private int bfsCode;
+    private String bfsCode;
 
     @NotNull
-    @Min(10000)
-    @Max(999999)
     @Column(name = "avam_code", nullable = false)
-    private int avamCode;
+    private String avamCode;
 
     @NotNull
-    @Min(100)
-    @Max(999)
     @Column(name = "sbn3_code", nullable = false)
-    private int sbn3Code;
+    private String sbn3Code;
 
     @NotNull
-    @Min(10000)
-    @Max(99999)
     @Column(name = "sbn5_code", nullable = false)
-    private int sbn5Code;
+    private String sbn5Code;
 
     @NotNull
     @Column(name = "description", nullable = false)
@@ -70,54 +60,54 @@ public class OccupationLabelMapping implements Serializable {
         this.id = id;
     }
 
-    public int getBfsCode() {
+    public String getBfsCode() {
         return bfsCode;
     }
 
-    public void setBfsCode(int bfsCode) {
+    public void setBfsCode(String bfsCode) {
         this.bfsCode = bfsCode;
     }
 
-    public OccupationLabelMapping bfsCode(int bfsCode) {
+    public OccupationLabelMapping bfsCode(String bfsCode) {
         this.bfsCode = bfsCode;
         return this;
     }
 
-    public int getAvamCode() {
+    public String getAvamCode() {
         return avamCode;
     }
 
-    public void setAvamCode(int avamCode) {
+    public void setAvamCode(String avamCode) {
         this.avamCode = avamCode;
     }
 
-    public OccupationLabelMapping avamCode(int avamCode) {
+    public OccupationLabelMapping avamCode(String avamCode) {
         this.avamCode = avamCode;
         return this;
     }
 
-    public int getSbn3Code() {
+    public String getSbn3Code() {
         return sbn3Code;
     }
 
-    public void setSbn3Code(int sbn3Code) {
+    public void setSbn3Code(String sbn3Code) {
         this.sbn3Code = sbn3Code;
     }
 
-    public OccupationLabelMapping sbn3Code(int sbn3Code) {
+    public OccupationLabelMapping sbn3Code(String sbn3Code) {
         this.sbn3Code = sbn3Code;
         return this;
     }
 
-    public int getSbn5Code() {
+    public String getSbn5Code() {
         return sbn5Code;
     }
 
-    public void setSbn5Code(int sbn5Code) {
+    public void setSbn5Code(String sbn5Code) {
         this.sbn5Code = sbn5Code;
     }
 
-    public OccupationLabelMapping sbn5Code(int sbn5Code) {
+    public OccupationLabelMapping sbn5Code(String sbn5Code) {
         this.sbn5Code = sbn5Code;
         return this;
     }

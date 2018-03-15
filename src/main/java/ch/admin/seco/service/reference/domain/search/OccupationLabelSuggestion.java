@@ -16,9 +16,10 @@ import org.springframework.data.elasticsearch.annotations.Mapping;
 import org.springframework.data.elasticsearch.annotations.Setting;
 
 import ch.admin.seco.service.reference.domain.enums.Language;
+import ch.admin.seco.service.reference.domain.enums.ProfessionCodeType;
 
 /**
- * A Occupation2.
+ * A OccupationLabelSuggestion.
  */
 @Document(indexName = "occupationlabels", type = "occupation")
 @Mapping(mappingPath = "config/elasticsearch/mappings/occupation-label.json")
@@ -30,9 +31,9 @@ public class OccupationLabelSuggestion {
     @GenericGenerator(name = "UUIDGenerator", strategy = "uuid2")
     private UUID id;
 
-    private int code;
+    private String code;
 
-    private String type;
+    private ProfessionCodeType type;
 
     private String classifier;
 
@@ -44,7 +45,7 @@ public class OccupationLabelSuggestion {
 
     private Set<String> occupationSuggestions;
 
-    private Map<String, Integer> mappings;
+    private Map<ProfessionCodeType, String> mappings;
 
 
     public UUID getId() {
@@ -60,28 +61,28 @@ public class OccupationLabelSuggestion {
         return this;
     }
 
-    public int getCode() {
+    public String getCode() {
         return code;
     }
 
-    public void setCode(int code) {
+    public void setCode(String code) {
         this.code = code;
     }
 
-    public OccupationLabelSuggestion code(int code) {
+    public OccupationLabelSuggestion code(String code) {
         this.code = code;
         return this;
     }
 
-    public String getType() {
+    public ProfessionCodeType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(ProfessionCodeType type) {
         this.type = type;
     }
 
-    public OccupationLabelSuggestion type(String type) {
+    public OccupationLabelSuggestion type(ProfessionCodeType type) {
         this.type = type;
         return this;
     }
@@ -151,15 +152,15 @@ public class OccupationLabelSuggestion {
         return this;
     }
 
-    public Map<String, Integer> getMappings() {
+    public Map<ProfessionCodeType, String> getMappings() {
         return mappings;
     }
 
-    public void setMappings(Map<String, Integer> mappings) {
+    public void setMappings(Map<ProfessionCodeType, String> mappings) {
         this.mappings = mappings;
     }
 
-    public OccupationLabelSuggestion mappings(Map<String, Integer> mappings) {
+    public OccupationLabelSuggestion mappings(Map<ProfessionCodeType, String> mappings) {
         this.mappings = mappings;
         return this;
     }

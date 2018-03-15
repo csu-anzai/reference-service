@@ -1,5 +1,7 @@
 package ch.admin.seco.service.reference.service.impl;
 
+import static ch.admin.seco.service.reference.domain.enums.ProfessionCodeType.SBN3;
+import static ch.admin.seco.service.reference.domain.enums.ProfessionCodeType.SBN5;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 import static org.elasticsearch.search.suggest.SuggestBuilders.completionSuggestion;
@@ -30,6 +32,7 @@ import org.springframework.util.CollectionUtils;
 
 import ch.admin.seco.service.reference.domain.OccupationLabel;
 import ch.admin.seco.service.reference.domain.enums.Language;
+import ch.admin.seco.service.reference.domain.enums.ProfessionCodeType;
 import ch.admin.seco.service.reference.domain.search.OccupationLabelSuggestion;
 import ch.admin.seco.service.reference.repository.OccupationLabelRepository;
 import ch.admin.seco.service.reference.service.dto.OccupationLabelAutocompleteDto;
@@ -57,7 +60,7 @@ public class OccupationLabelSuggestionImpl {
     }
 
     @Transactional(readOnly = true)
-    public OccupationLabelAutocompleteDto suggest(String prefix, Language language, Collection<String> types, int resultSize) {
+    public OccupationLabelAutocompleteDto suggest(String prefix, Language language, Collection<ProfessionCodeType> types, int resultSize) {
         LOGGER.debug("Request to suggest for a page of Occupations for query {}", prefix);
 
         SearchResponse suggestResponse = elasticsearchTemplate.suggest(
@@ -72,12 +75,12 @@ public class OccupationLabelSuggestionImpl {
         return new OccupationLabelAutocompleteDto(occupations, classifications);
     }
 
-    boolean hasClassificationType(Collection<String> types) {
+    boolean hasClassificationType(Collection<ProfessionCodeType> types) {
         return types.stream().anyMatch(type -> isClassification(type));
     }
 
-    boolean isClassification(String type) {
-        return type.startsWith("sbn");
+    boolean isClassification(ProfessionCodeType type) {
+        return SBN3.equals(type) || SBN5.equals(type);
     }
 
     private List<OccupationLabelSuggestionDto> mapOccupations(SearchResponse suggestResponse, int resultSize) {
@@ -138,10 +141,10 @@ public class OccupationLabelSuggestionImpl {
             .sorted(Comparator.comparing(OccupationLabelSuggestionDto::getLabel));
     }
 
-    private SuggestBuilder buildSuggestRequest(String prefix, Language language, Collection<String> types, int resultSize) {
-        Map<Type, List<String>> typeMap = types.stream().collect(groupingBy(this::getType));
-        List<String> occupationTypes = typeMap.get(Type.OCCUPATION);
-        List<String> classificationTypes = typeMap.get(Type.CLASSIFICATION);
+    private SuggestBuilder buildSuggestRequest(String prefix, Language language, Collection<ProfessionCodeType> types, int resultSize) {
+        Map<Type, List<ProfessionCodeType>> typeMap = types.stream().collect(groupingBy(this::getType));
+        List<ProfessionCodeType> occupationTypes = typeMap.get(Type.OCCUPATION);
+        List<ProfessionCodeType> classificationTypes = typeMap.get(Type.CLASSIFICATION);
 
         SuggestBuilder suggestBuilder = new SuggestBuilder();
         if (!CollectionUtils.isEmpty(occupationTypes)) {
@@ -173,16 +176,16 @@ public class OccupationLabelSuggestionImpl {
         return suggestBuilder;
     }
 
-    private Type getType(String type) {
+    private Type getType(ProfessionCodeType type) {
         return isClassification(type) ? Type.CLASSIFICATION : Type.OCCUPATION;
     }
 
-    private Map<String, List<? extends ToXContent>> createContext(Language language, Collection<String> types) {
+    private Map<String, List<? extends ToXContent>> createContext(Language language, Collection<ProfessionCodeType> types) {
         Objects.requireNonNull(types, "types must not be null");
 
         return ImmutableMap.of("key",
             types.stream()
-                .map(type -> String.format("%s:%s", type, language.name()))
+                .map(type -> String.format("%s:%s", type.name(), language.name()))
                 .map(key -> CategoryQueryContext.builder().setCategory(key).build())
                 .collect(toList()));
     }
