@@ -15,4 +15,9 @@
             <column name="canton_codes" type="varchar(255)"/>
         </createTable>
     </changeSet>
+
+    <changeSet id="20180220190000-2" author="varu" context="!test">
+        <loadData tableName="reporting_obligation"
+                  file="config/liquibase/changelog/data/reporting-obligation.csv"/>
+    </changeSet>
 </databaseChangeLog>
