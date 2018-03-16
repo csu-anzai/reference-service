@@ -21998,8 +21998,8 @@ ID,NAME,BERUFID,LANGUAGE
 19024924,Head of Construction Manager,11000712,EN
 19024925,Inbetriebnahme Ingenieur,11000695,DE
 19024926,Inbetriebnahme Ingenieurin,11000695,DE
-19024927,Ingenieur f?r Anlagentechnik,11000592,DE
-19024928,Ingenieurin f?r Anlagentechnik,11000592,DE
+19024927,Ingenieur für Anlagentechnik,11000592,DE
+19024928,Ingenieurin für Anlagentechnik,11000592,DE
 19024929,Intellectual Property Rights and License Engineer,11002198,EN
 19024930,Leiter Hochschulmarketing,11001124,DE
 19024931,Leiterin Hochschulmarketing,11001124,DE
@@ -24767,7 +24767,6 @@ Ingénieure de la circulation routière,11001419,FR,
 19028489,Elettromeccanico,11002792,IT
 19028490,Entwickler Flash,11000914,DE
 19028491,Entwicklerin Flash,11000914,DE
-19028492,Zimmerm?dchen,11002931,DE
 19028493,Tax Specialist,11000243,EN
 19028494,ERP expert,11000903,EN
 19028495,Expert immobilier,11000179,FR
@@ -28537,14 +28536,14 @@ Ingénieure de la circulation routière,11001419,FR,
 19032874,Docente di scuola elementare,11001377,IT
 19032876,Handarbeitslehrer,11002244,DE
 19032877,Handarbeitslehrerin,11002244,DE
-19032878,Ma?tre d'activit?s cr?atrices manuelles ou textiles,11002244,FR
-19032879,Ma?tresse d'activit?s cr?atrices manuelles ou textiles,11002244,FR
-19032880,Insegnante di attivit? creative e tessili,11002244,IT
-19032881,Fachlehrer f?r Textilarbeiten,11002244,DE
-19032882,Fachlehrerin f?r Textilarbeiten,11002244,DE
+19032878,Maître d'activités créatrices manuelles ou textiles,11002244,FR
+19032879,Maîtresse d'activités créatrices manuelles ou textiles,11002244,FR
+19032880,Insegnante di attività creative e tessili,11002244,IT
+19032881,Fachlehrer für Textilarbeiten,11002244,DE
+19032882,Fachlehrerin für Textilarbeiten,11002244,DE
 19032883,Docente di attività tessile,11001377,IT
-19032884,Ma?tresse d'activit?s cr?atrices manuelles sur textiles,11002244,FR
-19032885,Ma?tre d'activit?s cr?atrices manuelles sur textiles,11002244,FR
+19032884,Maîtresse d'activités créatrices manuelles sur textiles,11002244,FR
+19032885,Maître d'activités créatrices manuelles sur textiles,11002244,FR
 19032886,Head Corporate Services,11000036,EN
 19032887,Head of Corporate Services,11000036,EN
 19032888,Director Competitive Intelligence,11002042,EN
@@ -30272,7 +30271,7 @@ Ingénieure de la circulation routière,11001419,FR,
 19038240,Directrice de participations,11000148,FR
 19038242,Planificateur d'entreprise,11000156,FR
 19038243,Planificatrice d'entreprise,11000156,FR
-19038244,Responsable de la ligne d'activit?,11000439,FR
+19038244,Responsable de la ligne d'activité,11000439,FR
 19038245,Analyste de processus,11000159,FR
 19038246,Conseiller de gestion financière,11000161,FR
 19038247,Conseillère de gestion financière,11000161,FR
@@ -30588,7 +30587,7 @@ Ingénieure de la circulation routière,11001419,FR,
 19038576,Coordinateur supply chain,11000807,FR
 19038577,Contrôleur de système,11000809,FR
 19038578,Contrôleuse de système,11000809,FR
-19038579,Gestionnaire de syst?me,11001061,FR
+19038579,Gestionnaire de système,11001061,FR
 19038580,Instructeur de formation technique,11000812,FR
 19038581,Mathématicien technique,11000817,FR
 19038582,Agent logistique en textile,11000824,FR
@@ -33622,7 +33621,7 @@ Ingénieure de la circulation routière,11001419,FR,
 19041813,Risk Controller,11000384,FR
 19041815,SAP Application Manager,11001033,EN
 19041818,RFP Officer,11000756,EN
-19041820,M?canicien montage,11002139,FR
+19041820,Mécanicien montage,11002139,FR
 19041821,Technicien de mécanique,11002053,FR
 19041822,Technicienne de mécanique,11002053,FR
 19041824,Receptionist,11000023,EN
@@ -33927,7 +33926,7 @@ Ingénieure de la circulation routière,11001419,FR,
 19042150,Conseillère projet,11000226,FR
 19042151,Webmaster,11001072,FR
 19042152,Assistant en Trade Finance,11002170,FR
-19042153,Manager syst?me,11001061,FR
+19042153,Manager système,11001061,FR
 19042154,Chef des interventions de service,11000798,FR
 19042155,Responsable de réception,11000409,FR
 19042156,Contrôleur de production,11000656,FR
@@ -48015,7 +48014,7 @@ Ingénieure de la circulation routière,11001419,FR,
 19063144,Sachbearbeiter Lohnverarbeitung,11002048,DE
 19063145,Sachbearbeiterin Lohnverarbeitung,11002048,DE
 19063146,SAP PP/QM Business Consultant,11002095,EN
-19063147,Fachlehrperson f?r Handarbeit,11002244,DE
+19063147,Fachlehrperson für Handarbeit,11002244,DE
 19063148,SAP Basis Manager,11001032,DE
 19063149,SAP Basis Managerin,11001032,DE
 19063150,SAP CRM Specialist,11002094,EN
@@ -52218,8 +52217,8 @@ Ingénieure de la circulation routière,11001419,FR,
 19067396,Textilarbeiterin,11002857,DE
 19067397,Laborant Textil,11001885,DE
 19067398,Laborantin Textil,11001885,DE
-19067399,Bekleidungsn?her,11001747,DE
-19067400,Bekleidungsn?herin,11001747,DE
+19067399,Bekleidungsnäher,11001747,DE
+19067400,Bekleidungsnäherin,11001747,DE
 19067401,Wohntextilgestalter,11000821,DE
 19067402,Wohntextilgestalterin,11000821,DE
 19067403,Sticker,11001798,DE
@@ -57536,8 +57535,8 @@ Ingénieure de la circulation routière,11001419,FR,
 19072830,Cheffe de projets Automation,11001916,FR
 19072831,Projektleiter Anlagenbau,11000592,DE
 19072832,Projektleiterin Anlagenbau,11000592,DE
-19072833,Chef de projet d?veloppement immobilier,11000196,FR
-19072834,Cheffe de projet d?veloppement immobilier,11000196,FR
+19072833,Chef de projet développement immobilier,11000196,FR
+19072834,Cheffe de projet développement immobilier,11000196,FR
 19072835,Leiter Finanz- & Personalwesen,11000362,DE
 19072836,Leiterin Finanz- & Personalwesen,11000362,DE
 19072837,Fachperson Berufsintegration,11002318,DE
@@ -58066,8 +58065,8 @@ Ingénieure de la circulation routière,11001419,FR,
 19073367,Artistin,11001698,DE
 19073368,Arzneizubereiter,11002413,DE
 19073369,Arzneizubereiterin,11002413,DE
-19073370,Pr?parateur en pharmacie,11000298,FR
-19073371,Pr?paratrice en pharmacie,11000298,FR
+19073370,Préparateur en pharmacie,11000298,FR
+19073371,Préparatrice en pharmacie,11000298,FR
 19073372,Preparatore di farmacia,11000298,IT
 19073373,Preparatrice di farmacia,11000298,IT
 19073374,Arzt für Arbeitsmedizin,11002405,DE
@@ -58094,8 +58093,8 @@ Ingénieure de la circulation routière,11001419,FR,
 19073397,Atleta,11001733,IT
 19073398,Audio-Video-Elektroniker,11001239,DE
 19073399,Audio-Video-Elektronikerin,11001239,DE
-19073400,Electronicien en audio et t?l?vision,11001239,FR
-19073401,Electronicienne en audio et t?l?vision,11001239,FR
+19073400,Electronicien en audio et télévision,11001239,FR
+19073401,Electronicienne en audio et télévision,11001239,FR
 19073402,Elettronico audio video,11001239,IT
 19073403,Audiometrista,11000598,IT
 19073404,Chef des prises de vues,11000599,FR
@@ -58947,8 +58946,8 @@ Ingénieure de la circulation routière,11001419,FR,
 19074271,Assistente dietista,11000490,IT
 19074272,Cuoco per la dieta,11002394,IT
 19074273,Cuoca per la dieta,11002394,IT
-19074277,M?canicien sur moteurs diesel,11001821,FR
-19074278,M?canicienne sur moteurs diesel,11001821,FR
+19074277,Mécanicien sur moteurs diesel,11001821,FR
+19074278,Mécanicienne sur moteurs diesel,11001821,FR
 19074279,Meccanico di motori diesel,11001821,IT
 19074280,Intendant en hôtellerie et restauration,11000684,FR
 19074281,Intendante en hôtellerie et restauration,11000684,FR
@@ -59133,7 +59132,7 @@ Ingénieure de la circulation routière,11001419,FR,
 19074464,Petrochimico,11000302,IT
 19074465,Ergonomo,11000488,IT
 19074466,Alimentarista,11000490,IT
-19074467,Magasinier de pi?ces d?tach?es,11001820,FR
+19074467,Magasinier de pièces détachées,11001820,FR
 19074468,Magasinière de pièces détachées,11001820,FR
 19074469,Magasinier de pièces détachées,11001820,FR
 19074470,Magazziniere di pezzi di ricambio,11001820,IT
@@ -59735,7 +59734,7 @@ Ingénieure de la circulation routière,11001419,FR,
 19075075,Employée en intendance,11001788,FR
 19075076,Addetto d'economia domestica,11001788,IT
 19075077,Addetta d'economia domestica,11001788,IT
-19075078,Kin?sith?rapeute,11000516,FR
+19075078,Kinésithérapeute,11000516,FR
 19075079,Cinesiterapista,11000516,IT
 19075080,Maître de gymnastique curative,11000504,FR
 19075081,Maîtresse de gymnastique curative,11000504,FR
@@ -60050,7 +60049,7 @@ Ingénieure de la circulation routière,11001419,FR,
 19075394,Ingenieur für Mikroelektronik,11002915,DE
 19075395,Ingenieurin für Mikroelektronik,11002915,DE
 19075396,Ingénieur en microélectronique,11002915,FR
-19075397,Ing?nieure en micro?lectronique,11002915,FR
+19075397,Ingénieure en microélectronique,11002915,FR
 19075398,Ingegnere in microelettronica,11002915,IT
 19075399,Ingenieur für Mikrotechnik,11000748,DE
 19075400,Ingenieurin für Mikrotechnik,11000748,DE
@@ -63127,7 +63126,7 @@ Ingénieure de la circulation routière,11001419,FR,
 19078502,Gastronomiemitarbeiter,11000422,DE
 19078503,Gérant d'atelier,11000436,FR
 19078504,Gérant d'entreprise,11000449,FR
-19078505,Gestionnaire d?atelier,11000436,FR
+19078505,Gestionnaire d'atelier,11000436,FR
 19078506,Grenzwachtbeamtin,11001326,DE
 19078507,Grenzwachtbeamter,11001326,DE
 19078508,Hair Stylist,11001745,DE
@@ -63410,7 +63409,7 @@ Ingénieure de la circulation routière,11001419,FR,
 19078786,Schwimmbadmonteurin,11002804,DE
 19078787,Scientific Researcher,11000303,EN
 19078788,Secrétaire d'entreprise,11001728,FR
-19078789,Secrétaire d?assurances,11002340,FR
+19078789,Secrétaire d'assurances,11002340,FR
 19078790,Security Agent,11001956,EN
 19078791,Security Manager,11002203,FR
 19078792,Security Managerin,11002203,DE
@@ -63887,8 +63886,8 @@ Ingénieure de la circulation routière,11001419,FR,
 19079263,Fachleiterin Früchte und Gemüse,11002784,DE
 19079264,Fachverkäufer Fisch/Fleisch,11001836,DE
 19079265,Fachverkäuferin Fisch/Fleisch,11001836,DE
-19079266,Diensthundefu?hrer,11002687,DE
-19079267,Diensthundefu?hrerin,11002687,DE
+19079266,Diensthundeführer,11002687,DE
+19079267,Diensthundeführerin,11002687,DE
 19079268,Coordinateur des secrétariats,11000037,FR
 19079269,Coordinatrice des secrétariats,11000037,FR
 19079270,Disponent Notfallstation,11002298,DE
@@ -65095,8 +65094,8 @@ Ingénieure de la circulation routière,11001419,FR,
 19080732,Security Operation Engineer,11000970,EN
 19080733,Mitarbeiter Kanalreinigung,11002944,DE
 19080734,Mitarbeiterin Kanalreinigung,11002944,DE
-19080735,Chef de projets d?veloppement immobilier,11000196,FR
-19080736,Cheffe de projets d?veloppement immobilier,11000196,FR
+19080735,Chef de projets développement immobilier,11000196,FR
+19080736,Cheffe de projets développement immobilier,11000196,FR
 19080737,Conseiller de vente en véhicules utilitaires,11002152,FR
 19080738,Conseillère de vente en véhicules utilitaires,11002152,FR
 19080739,Expert Tunnel,11000827,FR
@@ -65469,7 +65468,7 @@ Ingénieure de la circulation routière,11001419,FR,
 19081127,Chef de secteur des ventes,11001575,FR
 19081128,Déléguée régionale des ventes,11001554,FR
 19081129,Délégué régional des ventes,11001554,FR
-19081130,Spécialiste assainissement d?ouvrage,11001296,FR
+19081130,Spécialiste assainissement d'ouvrage,11001296,FR
 19081131,Specialista in risanamento edile,11001296,IT
 19081132,Pneumologin,11002802,DE
 19081133,Pneumologe,11002802,DE
