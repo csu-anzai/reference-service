@@ -230,30 +230,6 @@ public class LocalityResourceIntTest {
 
     @Test
     @Transactional
-    public void checkCantonCodeIsRequired() throws Exception {
-        int databaseSizeBeforeTest = localityRepository.findAll().size();
-        // set the field null
-        locality.setCantonCode(null);
-
-        // Create the Locality, which fails.
-
-        restLocalityMockMvc.perform(post("/api/localities")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(locality)))
-                .andExpect(status().isBadRequest());
-
-        List<Locality> localityList = localityRepository.findAll();
-        assertThat(localityList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    public void checkGeoPointIsRequired() throws Exception {
-        checkLocalityGeoPoint(null);
-    }
-
-    @Test
-    @Transactional
     public void checkLatitudeIsRequired() throws Exception {
         checkLocalityGeoPoint(new GeoPoint(null, DEFAULT_LON));
     }
@@ -262,26 +238,6 @@ public class LocalityResourceIntTest {
     @Transactional
     public void checkLongitudeIsRequired() throws Exception {
         checkLocalityGeoPoint(new GeoPoint(DEFAULT_LAT, null));
-    }
-
-    @Test
-    @Transactional
-    public void getLocality() throws Exception {
-        // Initialize the database
-        localityRepository.saveAndFlush(locality);
-
-        // Get the locality
-        restLocalityMockMvc.perform(get("/api/localities/{id}", locality.getId()))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$.id").value(locality.getId().toString()))
-                .andExpect(jsonPath("$.city").value(DEFAULT_CITY))
-                .andExpect(jsonPath("$.zipCode").value(DEFAULT_ZIP_CODE))
-                .andExpect(jsonPath("$.communalCode").value(DEFAULT_COMMUNAL_CODE))
-                .andExpect(jsonPath("$.cantonCode").value(DEFAULT_CANTON_CODE))
-                .andExpect(jsonPath("$.regionCode").value(DEFAULT_REGION_CODE))
-                .andExpect(jsonPath("$.geoPoint.lat").value(DEFAULT_LAT))
-                .andExpect(jsonPath("$.geoPoint.lon").value(DEFAULT_LON));
     }
 
     @Test

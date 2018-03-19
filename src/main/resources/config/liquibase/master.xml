@@ -19,11 +19,10 @@
     <include
             file="config/liquibase/changelog/20180119090000_update_Canton.xml"
             relativeToChangelogFile="false"/>
+
     <include
-            file="config/liquibase/changelog/20180206090000_update_Localities.xml"
-            relativeToChangelogFile="false"/>
-
-
+        file="config/liquibase/changelog/20180220190000_added_entity_OccupationReportingObligation.xml"
+        relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
 </databaseChangeLog>

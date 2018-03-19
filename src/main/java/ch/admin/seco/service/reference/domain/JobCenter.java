@@ -16,10 +16,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 import javax.validation.Valid;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.validator.constraints.Email;
 
 import ch.admin.seco.service.reference.domain.valueobject.Address;
 
@@ -168,13 +168,13 @@ public class JobCenter extends AbstractAuditingEntity implements Serializable {
     @Override
     public String toString() {
         return "JobCenter{" +
-                "id=" + id +
-                ", code='" + code + '\'' +
-                ", email='" + email + '\'' +
-                ", phone='" + phone + '\'' +
-                ", fax='" + fax + '\'' +
-                ", showContactDetailsToPublic=" + showContactDetailsToPublic +
-                ", addresses=" + addresses +
-                "}";
+            "id=" + id +
+            ", code='" + code + '\'' +
+            ", email='" + email + '\'' +
+            ", phone='" + phone + '\'' +
+            ", fax='" + fax + '\'' +
+            ", showContactDetailsToPublic=" + showContactDetailsToPublic +
+            ", addresses=" + addresses +
+            "}";
     }
 }

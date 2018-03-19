@@ -1,7 +1,10 @@
 package ch.admin.seco.service.reference.config;
 
+import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -22,18 +25,22 @@ import ch.admin.seco.service.reference.security.jwt.JWTConfigurer;
 import ch.admin.seco.service.reference.security.jwt.TokenProvider;
 
 @Configuration
+@Import(SecurityProblemSupport.class)
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class MicroserviceSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final TokenProvider tokenProvider;
 
-    public MicroserviceSecurityConfiguration(TokenProvider tokenProvider) {
+    private final SecurityProblemSupport problemSupport;
+
+    public MicroserviceSecurityConfiguration(TokenProvider tokenProvider, SecurityProblemSupport problemSupport) {
         this.tokenProvider = tokenProvider;
+        this.problemSupport = problemSupport;
     }
 
     @Override
-    public void configure(WebSecurity web) throws Exception {
+    public void configure(WebSecurity web) {
         web.ignoring()
             .antMatchers(HttpMethod.OPTIONS, "/**")
             .antMatchers("/app/**/*.{js,html}")
@@ -53,6 +60,10 @@ public class MicroserviceSecurityConfiguration extends WebSecurityConfigurerAdap
         http
             .csrf()
             .disable()
+            .exceptionHandling()
+            .authenticationEntryPoint(problemSupport)
+            .accessDeniedHandler(problemSupport)
+            .and()
             .headers()
             .cacheControl().disable()
             .addHeaderWriter(notResourcesHeaderWriter)
@@ -66,7 +77,7 @@ public class MicroserviceSecurityConfiguration extends WebSecurityConfigurerAdap
             .antMatchers(HttpMethod.GET, "/api/**").permitAll()
             .antMatchers("/api/**").authenticated()
             .antMatchers("/management/health").permitAll()
-                .antMatchers("/management/info").permitAll()
+            .antMatchers("/management/info").permitAll()
             .antMatchers("/management/**").hasAuthority(AuthoritiesConstants.ADMIN)
             .antMatchers("/swagger-resources/configuration/ui").permitAll()
             .and()

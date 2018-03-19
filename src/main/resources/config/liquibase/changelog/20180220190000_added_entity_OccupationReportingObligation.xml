@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20180220190000-1" author="varu">
+        <createTable tableName="occupation_reporting_obligation">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="sbn5_code" type="integer">
+                <constraints nullable="false"/>
+            </column>
+            <column name="canton_codes" type="varchar(255)"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

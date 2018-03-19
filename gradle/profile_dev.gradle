@@ -1,11 +1,10 @@
-apply plugin: 'org.springframework.boot'
+import org.gradle.internal.os.OperatingSystem
 
-ext {
-    logbackLoglevel = "DEBUG"
-}
+apply plugin: 'org.springframework.boot'
 
 dependencies {
     compile "org.springframework.boot:spring-boot-devtools"
+    compile "com.h2database:h2"
 }
 
 def profiles = 'dev'
@@ -19,11 +18,6 @@ bootRun {
 
 
 processResources {
-    filesMatching('**/logback-spring.xml') {
-        filter {
-            it.replace('#logback.loglevel#', logbackLoglevel)
-        }
-    }
     filesMatching('**/application.yml') {
         filter {
             it.replace('#project.version#', version)

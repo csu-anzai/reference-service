@@ -50,7 +50,7 @@ public class JobCenterResource {
         LOGGER.debug("REST request to update JobCenter {}", jobCenter);
         JobCenter result = jobCenterService.save(jobCenter);
         return ResponseEntity.ok()
-                .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, result.getCode()))
-                .body(result);
+            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, result.getCode()))
+            .body(result);
     }
 }

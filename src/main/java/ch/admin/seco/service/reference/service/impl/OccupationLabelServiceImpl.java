@@ -40,9 +40,9 @@ public class OccupationLabelServiceImpl implements OccupationLabelService {
     private final ElasticsearchOccupationLabelIndexer elasticsearchOccupationLabelIndexer;
 
     public OccupationLabelServiceImpl(OccupationLabelMappingRepository occupationMappingRepository,
-            OccupationLabelRepository occupationLabelRepository,
-            ElasticsearchOccupationLabelIndexer elasticsearchOccupationLabelIndexer,
-            OccupationLabelSuggestionImpl occupationSuggestion, GenderNeutralOccupationLabelGenerator labelGenerator) {
+        OccupationLabelRepository occupationLabelRepository,
+        ElasticsearchOccupationLabelIndexer elasticsearchOccupationLabelIndexer,
+        OccupationLabelSuggestionImpl occupationSuggestion, GenderNeutralOccupationLabelGenerator labelGenerator) {
 
         this.occupationMappingRepository = occupationMappingRepository;
         this.occupationLabelRepository = occupationLabelRepository;
@@ -86,7 +86,7 @@ public class OccupationLabelServiceImpl implements OccupationLabelService {
             occupationLabels = occupationLabelRepository.findByCodeAndTypeAndLanguage(code, type, Language.de);
         }
         Map<String, String> labels = occupationLabels.stream()
-                .collect(toMap(item -> hasText(item.getClassifier()) ? item.getClassifier() : "default", OccupationLabel::getLabel));
+            .collect(toMap(item -> hasText(item.getClassifier()) ? item.getClassifier() : "default", OccupationLabel::getLabel));
         if (!labels.containsKey("default")) {
             labels.put("default", labelGenerator.generate(labels.get("m"), labels.get("f")));
         }
@@ -98,26 +98,26 @@ public class OccupationLabelServiceImpl implements OccupationLabelService {
     public Optional<Map<String, String>> getOccupationLabels(int code, String type, Language language, String classifier) {
         log.debug("Request to get OccupationLabels : code:{}, type:{}, classifier:{}, language:{}", code, type, classifier, language);
         return ofNullable(getBestMatchingOccupationLabel(code, type, language, classifier))
-                .map(item -> ImmutableMap.of("label", item.getLabel()));
+            .map(item -> ImmutableMap.of("label", item.getLabel()));
     }
 
     private OccupationLabel getBestMatchingOccupationLabel(int code, String type, Language language, String classifier) {
         return occupationLabelRepository.findOneByCodeAndTypeAndLanguageAndClassifier(code, type, language, classifier)
-                .orElseGet(() ->
-                        // if the requested language was not found try to get another language
-                        occupationLabelRepository.findByCodeAndTypeAndClassifier(code, type, classifier)
-                                .stream()
-                                .reduce((bestMatch, current) -> {
-                                    if (isNull(bestMatch)) {
-                                        // select the first entry as default
-                                        return current;
-                                    } else if (Language.de.equals(current.getLanguage())) {
-                                        // German labels have priority
-                                        return current;
-                                    }
-                                    return bestMatch;
-                                })
-                                .orElse(null)
-                );
+            .orElseGet(() ->
+                // if the requested language was not found try to get another language
+                occupationLabelRepository.findByCodeAndTypeAndClassifier(code, type, classifier)
+                    .stream()
+                    .reduce((bestMatch, current) -> {
+                        if (isNull(bestMatch)) {
+                            // select the first entry as default
+                            return current;
+                        } else if (Language.de.equals(current.getLanguage())) {
+                            // German labels have priority
+                            return current;
+                        }
+                        return bestMatch;
+                    })
+                    .orElse(null)
+            );
     }
 }

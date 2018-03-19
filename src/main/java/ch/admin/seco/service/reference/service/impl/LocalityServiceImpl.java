@@ -35,7 +35,7 @@ public class LocalityServiceImpl implements LocalityService {
 
     public LocalityServiceImpl(LocalityRepository localityRepository,
         LocalitySearchRepository localitySynonymSearchRepository,
-            LocalityToSuggestionMapper entityToSynonymMapper,
+        LocalityToSuggestionMapper entityToSynonymMapper,
         LocalitySuggestionImpl localitySuggestion) {
 
         this.localityRepository = localityRepository;

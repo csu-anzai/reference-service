@@ -50,11 +50,11 @@ public class ElasticsearchOccupationLabelIndexer {
     private final GenderNeutralOccupationLabelGenerator labelGenerator;
 
     ElasticsearchOccupationLabelIndexer(EntityManager entityManager,
-            OccupationLabelRepository occupationLabelRepository,
-            OccupationLabelMappingRepository occupationLabelMappingRepository,
-            OccupationLabelSearchRepository occupationLabelSearchRepository,
-            ElasticsearchTemplate elasticsearchTemplate,
-            GenderNeutralOccupationLabelGenerator labelGenerator) {
+        OccupationLabelRepository occupationLabelRepository,
+        OccupationLabelMappingRepository occupationLabelMappingRepository,
+        OccupationLabelSearchRepository occupationLabelSearchRepository,
+        ElasticsearchTemplate elasticsearchTemplate,
+        GenderNeutralOccupationLabelGenerator labelGenerator) {
 
         this.entityManager = entityManager;
         this.occupationLabelRepository = occupationLabelRepository;
@@ -78,33 +78,33 @@ public class ElasticsearchOccupationLabelIndexer {
         switch (type) {
             case "avam":
                 return occupationLabelMappingRepository.findOneByAvamCode(code)
-                        .map(mapping -> ImmutableMap.of(
-                                "avam", mapping.getAvamCode(),
-                                "bfs", mapping.getBfsCode(),
-                                "sbn3", mapping.getSbn3Code(),
-                                "sbn5", mapping.getSbn5Code()))
-                        .orElse(null);
+                    .map(mapping -> ImmutableMap.of(
+                        "avam", mapping.getAvamCode(),
+                        "bfs", mapping.getBfsCode(),
+                        "sbn3", mapping.getSbn3Code(),
+                        "sbn5", mapping.getSbn5Code()))
+                    .orElse(null);
 
             case "bfs":
                 return occupationLabelMappingRepository.findByBfsCode(code)
-                        .stream()
-                        .map(mapping -> ImmutableMap.of(
-                                "avam", mapping.getAvamCode(),
-                                "bfs", mapping.getBfsCode(),
-                                "sbn3", mapping.getSbn3Code(),
-                                "sbn5", mapping.getSbn5Code()))
-                        .findFirst()
-                        .orElse(null);
+                    .stream()
+                    .map(mapping -> ImmutableMap.of(
+                        "avam", mapping.getAvamCode(),
+                        "bfs", mapping.getBfsCode(),
+                        "sbn3", mapping.getSbn3Code(),
+                        "sbn5", mapping.getSbn5Code()))
+                    .findFirst()
+                    .orElse(null);
 
             case "x28":
                 return occupationLabelMappingRepository.findOneByX28Code(code)
-                        .map(mapping -> ImmutableMap.of(
-                                "x28", code,
-                                "avam", mapping.getAvamCode(),
-                                "bfs", mapping.getBfsCode(),
-                                "sbn3", mapping.getSbn3Code(),
-                                "sbn5", mapping.getSbn5Code()))
-                        .orElse(null);
+                    .map(mapping -> ImmutableMap.of(
+                        "x28", code,
+                        "avam", mapping.getAvamCode(),
+                        "bfs", mapping.getBfsCode(),
+                        "sbn3", mapping.getSbn3Code(),
+                        "sbn5", mapping.getSbn5Code()))
+                    .orElse(null);
 
             default:
                 return ImmutableMap.of("type", code);
@@ -119,26 +119,26 @@ public class ElasticsearchOccupationLabelIndexer {
             StopWatch stopWatch = new StopWatch();
             stopWatch.start();
             Flux.fromStream(occupationLabelRepository.streamAllKeys())
-                    .flatMap(key -> {
-                                counter.incrementAndGet();
-                                if ("x28".equals(key.getType())) {
-                                    return toX28OccupationLabelPublisher(key);
-                                } else {
-                                    return toOccupationLabelPublisher(key);
-                                }
-                            }
-                    )
-                    .filter(occupationLabelSuggestion -> StringUtils.hasText(occupationLabelSuggestion.getLabel()))
-                    .buffer(1000)
-                    .doOnNext(occupationLabelSearchRepository::saveAll)
-                    .doOnNext(jobs ->
-                            log.info("Index {} chunk #{}, {} / {}", OccupationLabel.class.getSimpleName(), index.incrementAndGet(), counter.get(), total))
-                    .doOnComplete(() -> {
-                                stopWatch.stop();
-                                log.info("Indexed {} suggestions of {} entities from {} in {} s", occupationLabelSearchRepository.count(), total, OccupationLabel.class.getSimpleName(), stopWatch.getTotalTimeSeconds());
-                            }
-                    )
-                    .subscribe(jobs -> removeAllElementFromHibernatePrimaryCache());
+                .flatMap(key -> {
+                        counter.incrementAndGet();
+                        if ("x28".equals(key.getType())) {
+                            return toX28OccupationLabelPublisher(key);
+                        } else {
+                            return toOccupationLabelPublisher(key);
+                        }
+                    }
+                )
+                .filter(occupationLabelSuggestion -> StringUtils.hasText(occupationLabelSuggestion.getLabel()))
+                .buffer(1000)
+                .doOnNext(occupationLabelSearchRepository::saveAll)
+                .doOnNext(jobs ->
+                    log.info("Index {} chunk #{}, {} / {}", OccupationLabel.class.getSimpleName(), index.incrementAndGet(), counter.get(), total))
+                .doOnComplete(() -> {
+                        stopWatch.stop();
+                        log.info("Indexed {} suggestions of {} entities from {} in {} s", occupationLabelSearchRepository.count(), total, OccupationLabel.class.getSimpleName(), stopWatch.getTotalTimeSeconds());
+                    }
+                )
+                .subscribe(jobs -> removeAllElementFromHibernatePrimaryCache());
         } catch (Exception ex) {
             log.error("Index of OccupationLabel table failed", ex);
         }
@@ -154,30 +154,30 @@ public class ElasticsearchOccupationLabelIndexer {
         }
 
         return Flux.just(new OccupationLabelSuggestion()
-                .id(occupationLabels.size() == 1 ? occupationLabels.get(0).getId() : UUID.randomUUID())
-                .code(key.getCode())
-                .type(key.getType())
-                .classifier("default")
-                .language(key.getLanguage())
-                .contextKey(String.format("%s:%s", key.getType(), key.getLanguage()))
-                .mappings(getOccupationLabelMapping(key.getType(), key.getCode()))
-                .occupationSuggestions(labels.values().stream().flatMap(this::extractSuggestions).filter(StringUtils::hasText).distinct().collect(Collectors.toSet()))
-                .label(label));
+            .id(occupationLabels.size() == 1 ? occupationLabels.get(0).getId() : UUID.randomUUID())
+            .code(key.getCode())
+            .type(key.getType())
+            .classifier("default")
+            .language(key.getLanguage())
+            .contextKey(String.format("%s:%s", key.getType(), key.getLanguage()))
+            .mappings(getOccupationLabelMapping(key.getType(), key.getCode()))
+            .occupationSuggestions(labels.values().stream().flatMap(this::extractSuggestions).filter(StringUtils::hasText).distinct().collect(Collectors.toSet()))
+            .label(label));
     }
 
     private Publisher<? extends OccupationLabelSuggestion> toX28OccupationLabelPublisher(OccupationLabelKey key) {
         List<OccupationLabel> occupationLabels = occupationLabelRepository.findByCodeAndTypeAndLanguage(key.getCode(), key.getType(), key.getLanguage());
         return Flux.fromStream(occupationLabels.stream()
-                .map(occupationLabel -> new OccupationLabelSuggestion()
-                        .id(occupationLabel.getId())
-                        .code(key.getCode())
-                        .type(key.getType())
-                        .classifier(occupationLabel.getClassifier())
-                        .language(key.getLanguage())
-                        .contextKey(String.format("%s:%s", key.getType(), key.getLanguage()))
-                        .mappings(getOccupationLabelMapping(key.getType(), key.getCode()))
-                        .occupationSuggestions(ImmutableSet.of(occupationLabel.getLabel()))
-                        .label(occupationLabel.getLabel())));
+            .map(occupationLabel -> new OccupationLabelSuggestion()
+                .id(occupationLabel.getId())
+                .code(key.getCode())
+                .type(key.getType())
+                .classifier(occupationLabel.getClassifier())
+                .language(key.getLanguage())
+                .contextKey(String.format("%s:%s", key.getType(), key.getLanguage()))
+                .mappings(getOccupationLabelMapping(key.getType(), key.getCode()))
+                .occupationSuggestions(ImmutableSet.of(occupationLabel.getLabel()))
+                .label(occupationLabel.getLabel())));
     }
 
     private void disableHibernateSecondaryCache() {

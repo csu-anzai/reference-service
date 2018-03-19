@@ -15,26 +15,23 @@
 
 eureka:
     client:
-        enabled: false
+        enabled: true
     instance:
         appname: referenceservice
         instanceId: referenceservice:${spring.application.instance-id:${random.value}}
 
 spring:
-    profiles:
-        active: test
     application:
         name: referenceservice
     jackson:
         serialization.write_dates_as_timestamps: false
     cache:
-        type: none
+        type: simple
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
-        url: jdbc:h2:mem:referenceservice;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-#        url: jdbc:h2:file:./build/h2db/db/referenceservice;DB_CLOSE_DELAY=-1
+        url: jdbc:h2:mem:referenceservice;DB_CLOSE_DELAY=-1
         name:
-        username: referenceservice
+        username:
         password:
     jpa:
         database-platform: io.github.jhipster.domain.util.FixedH2Dialect
@@ -55,10 +52,9 @@ spring:
     data:
         elasticsearch:
             cluster-name:
-            properties:
-                path:
-                    logs: build/elasticsearch/log
-                    data: build/elasticsearch/data
+            cluster-nodes: localhost:9300
+    liquibase:
+        contexts: test
     mail:
         host: localhost
     messages:
@@ -67,14 +63,7 @@ spring:
         favicon:
             enabled: false
     thymeleaf:
-        mode: XHTML
-
-liquibase:
-    contexts: test
-
-security:
-    basic:
-        enabled: false
+        mode: HTML
 
 server:
     port: 10344
@@ -123,4 +112,4 @@ jhipster:
 # http://www.jhipster.tech/common-application-properties/
 # ===================================================================
 
-#application:
+# application:

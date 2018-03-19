@@ -24,7 +24,7 @@ public class JobCenterServiceImpl implements JobCenterService {
     private final JobCenterDtoMapper jobCenterMapper;
 
     public JobCenterServiceImpl(JobCenterRepository jobCenterRepository,
-            JobCenterDtoMapper jobCenterMapper) {
+        JobCenterDtoMapper jobCenterMapper) {
 
         this.jobCenterRepository = jobCenterRepository;
         this.jobCenterMapper = jobCenterMapper;
@@ -43,7 +43,7 @@ public class JobCenterServiceImpl implements JobCenterService {
     public Optional<JobCenterDto> findJobCenterByCode(String code, Language language) {
         LOGGER.debug("Request to suggest JobCenter by code : {} and language : {}", code, language);
         return jobCenterRepository.findOneByCode(code)
-                .map(jobCenter -> jobCenterMapper.jobCenterToDto(jobCenter, language));
+            .map(jobCenter -> jobCenterMapper.jobCenterToDto(jobCenter, language));
     }
 
     @Override

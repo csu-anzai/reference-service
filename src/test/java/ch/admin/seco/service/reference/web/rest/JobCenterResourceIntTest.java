@@ -76,6 +76,31 @@ public class JobCenterResourceIntTest {
     private JobCenter jobCenterOne;
     private JobCenter jobCenterTwo;
 
+    private static Address buildAddress(String name, String city, String street, Language language) {
+        return new Address()
+            .name(name)
+            .city(city)
+            .street(street)
+            .houseNumber(HOUSE_NUMBER)
+            .zipCode(ZIP_CODE)
+            .language(language);
+    }
+
+    private static JobCenter buildJobCenter(String code, String email, String phone, String fax, Address... addresses) {
+        return new JobCenter()
+            .code(code)
+            .email(email)
+            .phone(phone)
+            .fax(fax)
+            .addresses(Stream.of(addresses).collect(Collectors.toSet()));
+    }
+
+    private static MockHttpServletRequestBuilder buildJobCenterSearchByCodeRequest(String code, String language) {
+        return get("/api/job-centers")
+            .param("code", code)
+            .param("language", language);
+    }
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
@@ -94,25 +119,6 @@ public class JobCenterResourceIntTest {
         jobCenterOne = buildJobCenter(CODE_ONE, EMAIL_ONE, PHONE_ONE, FAX_ONE, addressEN, addressDE);
         jobCenterTwo = buildJobCenter(CODE_TWO, EMAIL_TWO, PHONE_TWO, FAX_TWO, addressDE);
         jobCenterRepository.saveAll(Arrays.asList(jobCenterOne, jobCenterTwo));
-    }
-
-    private static Address buildAddress(String name, String city, String street, Language language) {
-        return new Address()
-            .name(name)
-            .city(city)
-            .street(street)
-            .houseNumber(HOUSE_NUMBER)
-            .zipCode(ZIP_CODE)
-            .language(language);
-    }
-
-    private static JobCenter buildJobCenter(String code, String email, String phone, String fax, Address... addresses) {
-        return new JobCenter()
-            .code(code)
-            .email(email)
-            .phone(phone)
-            .fax(fax)
-            .addresses(Stream.of(addresses).collect(Collectors.toSet()));
     }
 
     @Test
@@ -152,11 +158,5 @@ public class JobCenterResourceIntTest {
             .andExpect(jsonPath("$.address.name").value(NAME_DE))
             .andExpect(jsonPath("$.address.city").value(CITY_DE))
             .andExpect(jsonPath("$.address.street").value(STREET_DE));
-    }
-
-    private static MockHttpServletRequestBuilder buildJobCenterSearchByCodeRequest(String code, String language) {
-        return get("/api/job-centers")
-            .param("code", code)
-            .param("language", language);
     }
 }

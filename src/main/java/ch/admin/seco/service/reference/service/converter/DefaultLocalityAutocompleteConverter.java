@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -41,6 +42,7 @@ public class DefaultLocalityAutocompleteConverter implements LocalityAutocomplet
     protected List<LocalitySuggestionDto> convertLocalitiesSuggestions(SearchResponse searchResponse, int resultSize) {
         return getSuggestOptionsStream(searchResponse, "cities", "zipCodes")
                 .map(this::toLocalitySuggestionDto)
+                .filter(Objects::nonNull)
                 .collect(mapSupplier, accumulator, mapCombiner)
                 .values().stream()
                 .limit(resultSize)
@@ -49,6 +51,10 @@ public class DefaultLocalityAutocompleteConverter implements LocalityAutocomplet
 
     protected LocalitySuggestionDto toLocalitySuggestionDto(CompletionSuggestion.Entry.Option option) {
         Map<String, Object> source = option.getHit().getSourceAsMap();
+        // 0000 means "Ausland" and must not show for zipcode lookup
+        if ("0000".equals(source.get("zipCode"))) {
+            return null;
+        }
         return new LocalitySuggestionDto()
                 .city(String.class.cast(source.get("city")))
                 .communalCode(Integer.class.cast(source.get("communalCode")))

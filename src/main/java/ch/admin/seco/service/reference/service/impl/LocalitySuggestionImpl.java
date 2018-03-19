@@ -38,7 +38,7 @@ public class LocalitySuggestionImpl {
 
     public LocalitySuggestionImpl(LocalitySearchRepository localitySynonymSearchRepository,
         ElasticsearchTemplate elasticsearchTemplate,
-            LocalityToSuggestionMapper entityToSynonymMapper) {
+        LocalityToSuggestionMapper entityToSynonymMapper) {
 
         this.localitySynonymSearchRepository = localitySynonymSearchRepository;
         this.elasticsearchTemplate = elasticsearchTemplate;
@@ -57,24 +57,6 @@ public class LocalitySuggestionImpl {
         SearchResponse searchResponse = elasticsearchTemplate.suggest(suggestBuilder, LocalitySuggestion.class);
         return LocalityAutocompleteConverterFactory.getConverter(localitySearchDTO)
             .convert(searchResponse, localitySearchDTO.getSize());
-    }
-
-    private SuggestBuilder createSuggestBuilder(LocalitySearchDto localitySearchDTO) {
-        final String query = localitySearchDTO.getQuery();
-        final int increasedResultSize = Math.min(localitySearchDTO.getSize() + 20, 1000); // to factor in duplicate entries as 'Zürich' we increase the result size
-
-        CompletionSuggestionBuilder citySuggestions = new CompletionSuggestionBuilder("citySuggestions")
-            .prefix(query)
-            .size(increasedResultSize);
-        CompletionSuggestionBuilder zipCodeSuggestionBuilder = new CompletionSuggestionBuilder("zipCode")
-            .prefix(query)
-            .size(increasedResultSize);
-
-        return new SuggestBuilder()
-            .addSuggestion("cities", citySuggestions)
-            .addSuggestion("zipCodes", zipCodeSuggestionBuilder)
-            .addSuggestion("cantonCodes", new CompletionSuggestionBuilder("code.canton-suggestions").prefix(query))
-            .addSuggestion("cantonNames", new CompletionSuggestionBuilder("cantonSuggestions").prefix(query));
     }
 
     /**
@@ -96,5 +78,23 @@ public class LocalitySuggestionImpl {
             .getContent()
             .stream().findFirst()
             .map(entityToSynonymMapper::fromSynonym);
+    }
+
+    private SuggestBuilder createSuggestBuilder(LocalitySearchDto localitySearchDTO) {
+        final String query = localitySearchDTO.getQuery();
+        final int increasedResultSize = Math.min(localitySearchDTO.getSize() + 20, 1000); // to factor in duplicate entries as 'Zürich' we increase the result size
+
+        CompletionSuggestionBuilder citySuggestions = new CompletionSuggestionBuilder("citySuggestions")
+            .prefix(query)
+            .size(increasedResultSize);
+        CompletionSuggestionBuilder zipCodeSuggestionBuilder = new CompletionSuggestionBuilder("zipCode")
+            .prefix(query)
+            .size(increasedResultSize);
+
+        return new SuggestBuilder()
+            .addSuggestion("cities", citySuggestions)
+            .addSuggestion("zipCodes", zipCodeSuggestionBuilder)
+            .addSuggestion("cantonCodes", new CompletionSuggestionBuilder("code.canton-suggestions").prefix(query))
+            .addSuggestion("cantonNames", new CompletionSuggestionBuilder("cantonSuggestions").prefix(query));
     }
 }

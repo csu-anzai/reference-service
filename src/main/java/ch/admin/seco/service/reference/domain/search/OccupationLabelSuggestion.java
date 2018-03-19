@@ -182,16 +182,16 @@ public class OccupationLabelSuggestion {
         }
         OccupationLabelSuggestion that = (OccupationLabelSuggestion) o;
         return Objects.equals(getContextKey(), that.getContextKey()) &&
-                Objects.equals(getOccupationSuggestions(), that.getOccupationSuggestions()) &&
-                Objects.equals(getMappings(), that.getMappings());
+            Objects.equals(getOccupationSuggestions(), that.getOccupationSuggestions()) &&
+            Objects.equals(getMappings(), that.getMappings());
     }
 
     @Override
     public String toString() {
         return "OccupationSuggestion{" +
-                "contextKey='" + contextKey + '\'' +
-                ", occupationSuggestions=" + occupationSuggestions +
-                ", mappings=" + mappings +
-                "} " + super.toString();
+            "contextKey='" + contextKey + '\'' +
+            ", occupationSuggestions=" + occupationSuggestions +
+            ", mappings=" + mappings +
+            "} " + super.toString();
     }
 }
