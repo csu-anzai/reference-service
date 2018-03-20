@@ -60,7 +60,7 @@ management:
             expose: '*'
     endpoint:
         health:
-            show-details: WHEN_AUTHORIZED
+            show-details: true
     info:
         git:
             mode: full
