@@ -105,10 +105,10 @@ configurations {
 }
 
 repositories {
-    jcenter()
-    maven { url 'https://alvch.jfrog.io/alvch/libs-releases' }
     maven { url 'https://repo.spring.io/release' }
     maven { url 'https://repo.spring.io/milestone' }
+    maven { url 'https://alvch.jfrog.io/alvch/libs-releases' }
+    jcenter()
     maven { url 'https://dl.bintray.com/jhipster/maven' }
 }
 
