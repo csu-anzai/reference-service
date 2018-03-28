@@ -5,14 +5,12 @@ buildscript {
         jcenter()
         maven { url "http://repo.spring.io/plugins-release" }
         maven { url "https://plugins.gradle.org/m2/" }
-        // TODO To remove after final Spring Boot 2 release
         maven { url "https://repo.spring.io/milestone" }
-        maven { url "https://repo.spring.io/snapshot" }
         maven { url "https://dl.bintray.com/jhipster/maven" }
     }
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${spring_boot_version}"
-        classpath "io.spring.gradle:propdeps-plugin:0.0.9.RELEASE"
+        classpath "io.spring.gradle:propdeps-plugin:0.0.10.RELEASE"
         classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.4.17"
         //jhipster-needle-gradle-buildscript-dependency - JHipster will add additional gradle build script plugins here
     }
@@ -22,6 +20,7 @@ plugins {
     id "org.sonarqube" version "2.6.1"
     id "net.ltgt.apt-idea" version "0.13"
     id "io.spring.dependency-management" version "1.0.4.RELEASE"
+    id 'com.avast.gradle.docker-compose' version '0.7.1'
     //jhipster-needle-gradle-plugins - JHipster will add additional gradle plugins here
 }
 
@@ -51,17 +50,14 @@ dependencyManagement {
         dependency 'org.zalando:problem-spring-web:0.22.1'
     }
     imports {
-//                mavenBom 'org.springframework.boot:spring-boot-dependencies:2.0.0.RC1'
-        mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Finchley.M5'
-//        mavenBom 'io.github.jhipster:jhipster-dependencies:' + jhipster_dependencies_version
-        //jhipster-needle-gradle-dependency-management - JHipster will add additional dependencies management here
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${spring_cloud_version}"
     }
 }
 
 defaultTasks 'bootRun'
 
 group = 'ch.admin.seco.service.reference'
-version = version != 'unspecified' ? version : '2.0.3-SNAPSHOT'
+version = version != 'unspecified' ? version : '1.0.0-SNAPSHOT'
 
 description = ''
 
@@ -70,30 +66,13 @@ bootJar {
 }
 
 springBoot {
-    mainClassName = 'ch.admin.seco.service.reference.ReferenceserviceApp'
-    buildInfo()
-}
-
-if (OperatingSystem.current().isWindows()) {
-    task pathingJar(type: Jar) {
-        dependsOn configurations.runtime
-        appendix = 'pathing'
-
-        doFirst {
-            manifest {
-                attributes 'Class-Path': configurations.runtime.files.collect {
-                    it.toURI().toURL().toString().replaceFirst(/file:\/+/, '/').replaceAll(' ', '%20')
-                }.join(' ')
-            }
+    buildInfo({
+        properties {
+            additional = [
+                'number': System.env.TRAVIS_JOB_NUMBER ?: 'n/a'
+            ]
         }
-    }
-
-    bootRun {
-        dependsOn pathingJar
-        doFirst {
-            classpath = files("$buildDir/classes/java/main", "$buildDir/resources/main", pathingJar.archivePath)
-        }
-    }
+    })
 }
 
 task testReport(type: TestReport) {
@@ -106,6 +85,7 @@ apply from: 'gradle/sonar.gradle'
 apply from: 'gradle/liquibase.gradle'
 apply from: 'gradle/mapstruct.gradle'
 apply from: 'gradle/docker.gradle'
+apply from: 'gradle/docker-compose.gradle'
 apply from: 'gradle/maven-publish.gradle'
 //jhipster-needle-gradle-apply-from - JHipster will add additional gradle scripts to be applied here
 
@@ -127,14 +107,11 @@ configurations {
 repositories {
     jcenter()
     maven { url 'https://alvch.jfrog.io/alvch/libs-releases' }
-    // TODO To remove after final Spring Boot 2 release
     maven { url "https://repo.spring.io/milestone" }
-    maven { url "https://repo.spring.io/snapshot" }
     maven { url "https://dl.bintray.com/jhipster/maven" }
 }
 
 dependencies {
-    // TODO To remove after final Spring Boot 2 release
     compile "javax.xml.bind:jaxb-api"
     compile "org.springframework.boot:spring-boot-starter-cache"
     compile "org.springframework.boot:spring-boot-starter-webflux"
@@ -228,7 +205,7 @@ task cleanResources(type: Delete) {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.4'
+    gradleVersion = '4.6'
 }
 
 task stage(dependsOn: 'bootJar') {
