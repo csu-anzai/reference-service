@@ -17,10 +17,6 @@
             file="config/liquibase/changelog/20171122090000_added_entity_Occupation_Label.xml"
             relativeToChangelogFile="false"/>
     <include
-            file="config/liquibase/changelog/20180119090000_update_Canton.xml"
-            relativeToChangelogFile="false"/>
-
-    <include
         file="config/liquibase/changelog/20180220190000_added_entity_ReportingObligation.xml"
         relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
