@@ -38,32 +38,36 @@ spring:
     jackson:
         serialization.indent_output: true
     datasource:
+        password: s3cr3t
         type: com.zaxxer.hikari.HikariDataSource
-        url: jdbc:h2:file:./build/h2db/db/referenceservice;DB_CLOSE_DELAY=-1
+        url: jdbc:postgresql://dev.job-room.ch:5437/referenceservice
         username: referenceservice
-        password:
-    h2:
-        console:
-            enabled: false
     jpa:
-        database-platform: io.github.jhipster.domain.util.FixedH2Dialect
-        database: H2
-        show-sql: false
+        database: POSTGRESQL
+        database-platform: io.github.jhipster.domain.util.FixedPostgreSQL82Dialect
         properties:
-            hibernate.id.new_generator_mappings: true
-            hibernate.cache.use_second_level_cache: true
-            hibernate.cache.use_query_cache: false
-            hibernate.generate_statistics: true
-            hibernate.cache.region.factory_class: com.hazelcast.hibernate.HazelcastCacheRegionFactory
-            hibernate.cache.hazelcast.instance_name: referenceservice
-            hibernate.cache.use_minimal_puts: true
-            hibernate.cache.hazelcast.use_lite_member: true
+          hibernate:
+            cache:
+              hazelcast:
+                instance_name: referenceservice
+                use_lite_member: true
+              region:
+                factory_class: com.hazelcast.hibernate.HazelcastCacheRegionFactory
+              use_minimal_puts: true
+              use_query_cache: false
+              use_second_level_cache: true
+            generate_statistics: false
+            id:
+              new_generator_mappings: true
+        show-sql: false
+
     data:
         elasticsearch:
             cluster-name:
             cluster-nodes: localhost:9300
     liquibase:
         contexts: dev
+        drop-first: true
     mail:
         host: localhost
         port: 25
