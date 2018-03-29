@@ -17,5 +17,7 @@ public interface JobCenterService {
      */
     Optional<JobCenterDto> findJobCenterByCode(String code, Language language);
 
+    Optional<JobCenterDto> findJobCenterByLocation(String countryCode, String postalCode, Language language);
+
     JobCenter save(JobCenter jobCenter);
 }

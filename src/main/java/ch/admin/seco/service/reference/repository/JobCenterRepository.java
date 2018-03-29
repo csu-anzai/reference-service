@@ -13,4 +13,6 @@ public interface JobCenterRepository extends JpaRepository<JobCenter, UUID> {
 
     Optional<JobCenter> findOneByCode(String code);
 
+    Optional<JobCenter> findOneByPostalCodes(String postalCode);
+
 }

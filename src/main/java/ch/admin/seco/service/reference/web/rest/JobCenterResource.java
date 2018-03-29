@@ -44,6 +44,18 @@ public class JobCenterResource {
         return ResponseUtil.wrapOrNotFound(jobCenter);
     }
 
+    @GetMapping("/job-centers/by-location")
+    @Timed
+    public ResponseEntity<JobCenterDto> searchJobCenterByLocation(
+        @RequestParam String countryCode,
+        @RequestParam(required = false) String postalCode) {
+        Language language = Language.safeValueOf(LocaleContextHolder.getLocale().getLanguage());
+        LOGGER.debug("REST request to suggest JobCenter by location: countryCode={}, postalCode={} and language {}",
+            countryCode, postalCode, language);
+        Optional<JobCenterDto> jobCenter = jobCenterService.findJobCenterByLocation(countryCode, postalCode, language);
+        return ResponseUtil.wrapOrNotFound(jobCenter);
+    }
+
     @PatchMapping("/job-centers")
     @Timed
     public ResponseEntity<JobCenter> createOrUpdate(@RequestBody JobCenter jobCenter) {

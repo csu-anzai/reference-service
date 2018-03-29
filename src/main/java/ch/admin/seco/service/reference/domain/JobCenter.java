@@ -55,6 +55,12 @@ public class JobCenter extends AbstractAuditingEntity implements Serializable {
     @CollectionTable(name = "job_center_addresses", joinColumns = @JoinColumn(name = "job_center_id"))
     private Set<Address> addresses;
 
+    @ElementCollection
+    @CollectionTable(name = "job_center_postal_codes",
+        joinColumns = @JoinColumn(name = "job_center_code", referencedColumnName = "code"))
+    @Column(name = "postal_code")
+    private Set<String> postalCodes;
+
     public UUID getId() {
         return id;
     }
@@ -146,6 +152,19 @@ public class JobCenter extends AbstractAuditingEntity implements Serializable {
         return this;
     }
 
+    public Set<String> getPostalCodes() {
+        return postalCodes;
+    }
+
+    public void setPostalCodes(Set<String> postalCodes) {
+        this.postalCodes = postalCodes;
+    }
+
+    public JobCenter postalCodes(Set<String> postalCodes) {
+        this.postalCodes = postalCodes;
+        return this;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
@@ -175,6 +194,7 @@ public class JobCenter extends AbstractAuditingEntity implements Serializable {
             ", fax='" + fax + '\'' +
             ", showContactDetailsToPublic=" + showContactDetailsToPublic +
             ", addresses=" + addresses +
+            ", postalCodes=" + postalCodes +
             "}";
     }
 }

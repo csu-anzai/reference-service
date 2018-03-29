@@ -1,7 +1,10 @@
 package ch.admin.seco.service.reference.service.impl;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,6 +22,45 @@ import ch.admin.seco.service.reference.service.dto.mapper.JobCenterDtoMapper;
 public class JobCenterServiceImpl implements JobCenterService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JobCenterServiceImpl.class);
+    private final static String CH_LAND_CODE = "CH";
+    private static final String EU_JOB_CENTER_POSTAL_CODE = "9999";
+    private static final String OTHER_JOB_CENTER_POSTAL_CODE = "9998";
+    private final static List<String> EU_COUNTRIES = Arrays.asList(
+        "MT",
+        "IS",
+        "BE",
+        "AT",
+        "ES",
+        "PT",
+        "IE",
+        "AX",
+        "CZ",
+        "FR",
+        "PL",
+        "SJ",
+        "NO",
+        "LT",
+        "LU",
+        "RO",
+        "SI",
+        "NL",
+        "SE",
+        "DE",
+        "GR",
+        "CY",
+        "HR",
+        "LI",
+        "LV",
+        "BG",
+        "SK",
+        "IT",
+        "UK",
+        "GB",
+        "EE",
+        "FI",
+        "DK",
+        "HU"
+    );
 
     private final JobCenterRepository jobCenterRepository;
     private final JobCenterDtoMapper jobCenterMapper;
@@ -43,6 +85,19 @@ public class JobCenterServiceImpl implements JobCenterService {
     public Optional<JobCenterDto> findJobCenterByCode(String code, Language language) {
         LOGGER.debug("Request to suggest JobCenter by code : {} and language : {}", code, language);
         return jobCenterRepository.findOneByCode(code)
+            .map(jobCenter -> jobCenterMapper.jobCenterToDto(jobCenter, language));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<JobCenterDto> findJobCenterByLocation(String countryCode, String postalCode, Language language) {
+        String jobCenterPostalCode = postalCode;
+        if (!CH_LAND_CODE.equalsIgnoreCase(countryCode)) {
+            jobCenterPostalCode = EU_COUNTRIES.contains(StringUtils.upperCase(countryCode))
+                ? EU_JOB_CENTER_POSTAL_CODE : OTHER_JOB_CENTER_POSTAL_CODE;
+        }
+
+        return jobCenterRepository.findOneByPostalCodes(jobCenterPostalCode)
             .map(jobCenter -> jobCenterMapper.jobCenterToDto(jobCenter, language));
     }
 

@@ -19,6 +19,10 @@
     <include
         file="config/liquibase/changelog/20180220190000_added_entity_ReportingObligation.xml"
         relativeToChangelogFile="false"/>
+
+    <include
+        file="config/liquibase/changelog/20180329140000_added_JobCenter_postalCode_mapping.xml"
+        relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
 </databaseChangeLog>
