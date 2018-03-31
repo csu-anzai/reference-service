@@ -39,7 +39,7 @@ public class LoggingConfiguration {
     private final JHipsterProperties jHipsterProperties;
     private LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
 
-    public LoggingConfiguration(@Value("${spring.application.name}") String appName, @Value("${server.port}") String serverPort,
+    public LoggingConfiguration(@Value("${spring.application.name}") String appName, @Value("${server.port:8080}") String serverPort,
         @Value("${info.project.version}") String version, JHipsterProperties jHipsterProperties) {
         this.appName = appName;
         this.serverPort = serverPort;
