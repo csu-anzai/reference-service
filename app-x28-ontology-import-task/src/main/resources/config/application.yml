@@ -1,0 +1,33 @@
+
+##############################
+#  PROJECT - INFO
+##############################
+info:
+    project:
+        version: #project.version#
+
+
+##############################
+#  MESSAGEBROKER - KAFKA
+##############################
+spring:
+    cloud:
+        stream:
+            bindings:
+                output:
+                    destination: reference.occupation-label
+                    group: x28-importer-task
+
+
+##############################
+#  X28 SFTP
+##############################
+jobroom:
+    x28:
+        sftp:
+            localDirectory: /tmp/batch/ontology-x28-import
+            remoteDirectory: jobroom/ontology
+            fileNamePattern: ontology_seco_current.xml.gz
+            host: admin.x28.ch
+            username: replace-with-username
+            password: replace-with-password

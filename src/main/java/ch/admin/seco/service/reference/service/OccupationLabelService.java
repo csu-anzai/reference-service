@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import ch.admin.seco.service.reference.application.dto.CreateOccupationLabelDto;
 import ch.admin.seco.service.reference.domain.OccupationLabel;
 import ch.admin.seco.service.reference.domain.OccupationLabelMapping;
 import ch.admin.seco.service.reference.domain.enums.Language;
@@ -18,7 +19,7 @@ import ch.admin.seco.service.reference.service.dto.ProfessionCodeDTO;
  */
 public interface OccupationLabelService {
 
-    OccupationLabel save(OccupationLabel occupationLabel);
+    OccupationLabel save(CreateOccupationLabelDto createOccupationLabelDto);
 
     @Transactional(readOnly = true)
     Optional<OccupationLabelMapping> findOneOccupationMapping(ProfessionCodeDTO professionCode);

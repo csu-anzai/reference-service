@@ -1,1 +1,3 @@
 rootProject.name = 'referenceservice'
+include 'app-x28-ontology-import-task'
+include 'application'

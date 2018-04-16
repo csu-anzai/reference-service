@@ -108,12 +108,12 @@ public class OccupationLabelResourceIntTest {
             //                              avam      x28
             createOccupationLabelMappingX28("68913", "11002714")
         );
-        this.occupationLabelService.save(createAvamOccupationLabel("68913", Language.de, 'm', "Java-Programmierer"));
-        this.occupationLabelService.save(createX28OccupationLabel("11002714", Language.en, "Javascript Developer"));
-        this.occupationLabelService.save(createX28OccupationLabel("11002714", Language.de, "Javascript-Entwickler"));
-        this.occupationLabelService.save(createX28OccupationLabel("11002714", Language.de, "Javascript-Entwicklerin"));
-        this.occupationLabelService.save(createSBN5OccupationLabel("36102", Language.de, "Programmierer/innen"));
-        this.occupationLabelService.save(createSBN3OccupationLabel("361", Language.de, "Berufe der Informatik"));
+        this.occupationLabelRepository.save(createAvamOccupationLabel("68913", Language.de, 'm', "Java-Programmierer"));
+        this.occupationLabelRepository.save(createX28OccupationLabel("11002714", Language.en, "Javascript Developer"));
+        this.occupationLabelRepository.save(createX28OccupationLabel("11002714", Language.de, "Javascript-Entwickler"));
+        this.occupationLabelRepository.save(createX28OccupationLabel("11002714", Language.de, "Javascript-Entwicklerin"));
+        this.occupationLabelRepository.save(createSBN5OccupationLabel("36102", Language.de, "Programmierer/innen"));
+        this.occupationLabelRepository.save(createSBN3OccupationLabel("361", Language.de, "Berufe der Informatik"));
 
         this.elasticsearchOccupationLabelIndexer.reindexOccupationLabel();
     }

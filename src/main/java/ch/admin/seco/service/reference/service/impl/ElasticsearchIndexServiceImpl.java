@@ -5,6 +5,7 @@ import java.util.concurrent.CompletableFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import ch.admin.seco.service.reference.service.ElasticsearchIndexService;
@@ -23,11 +24,12 @@ public class ElasticsearchIndexServiceImpl implements ElasticsearchIndexService 
         this.elasticsearchOccupationLabelIndexer = elasticsearchOccupationLabelIndexer;
     }
 
+    @Scheduled(cron = "0 0 5 * * *")
     public void reindexAll() {
 
         CompletableFuture.allOf(
-            CompletableFuture.runAsync(elasticsearchLocalityIndexer::reindexLocalities),
-            CompletableFuture.runAsync(elasticsearchOccupationLabelIndexer::reindexOccupationLabel)
+                CompletableFuture.runAsync(elasticsearchLocalityIndexer::reindexLocalities),
+                CompletableFuture.runAsync(elasticsearchOccupationLabelIndexer::reindexOccupationLabel)
         ).join();
 
         log.info("ReindexAll finished");

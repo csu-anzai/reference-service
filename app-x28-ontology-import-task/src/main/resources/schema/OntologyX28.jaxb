@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jaxb:bindings
+        xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance"
+        xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+        xmlns:annox="http://annox.dev.java.net"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/jaxb http://java.sun.com/xml/ns/jaxb/bindingschema_2_0.xsd"
+        jaxb:version="2.1">
+
+
+    <jaxb:bindings schemaLocation="OntologyX28.xsd">
+        <jaxb:bindings node="/xs:schema//xs:complexType[@name='Row']">
+            <annox:annotate>
+                <annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement"
+                                name="row"/>
+            </annox:annotate>
+            <jaxb:class name="Row"/>
+        </jaxb:bindings>
+    </jaxb:bindings>
+</jaxb:bindings>

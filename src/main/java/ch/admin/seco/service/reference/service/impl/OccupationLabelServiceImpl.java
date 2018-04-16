@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ch.admin.seco.service.reference.application.dto.CreateOccupationLabelDto;
 import ch.admin.seco.service.reference.domain.OccupationLabel;
 import ch.admin.seco.service.reference.domain.OccupationLabelMapping;
 import ch.admin.seco.service.reference.domain.enums.Language;
@@ -41,9 +42,9 @@ public class OccupationLabelServiceImpl implements OccupationLabelService {
     private final GenderNeutralOccupationLabelGenerator labelGenerator;
 
     public OccupationLabelServiceImpl(OccupationLabelMappingRepository occupationMappingRepository,
-        OccupationLabelRepository occupationLabelRepository,
-        OccupationLabelSuggestionImpl occupationSuggestion,
-        GenderNeutralOccupationLabelGenerator labelGenerator) {
+            OccupationLabelRepository occupationLabelRepository,
+            OccupationLabelSuggestionImpl occupationSuggestion,
+            GenderNeutralOccupationLabelGenerator labelGenerator) {
 
         this.occupationMappingRepository = occupationMappingRepository;
         this.occupationLabelRepository = occupationLabelRepository;
@@ -52,8 +53,17 @@ public class OccupationLabelServiceImpl implements OccupationLabelService {
     }
 
     @Override
-    public OccupationLabel save(OccupationLabel occupationLabel) {
-        return this.occupationLabelRepository.save(occupationLabel);
+    public OccupationLabel save(CreateOccupationLabelDto createOccupationLabelDto) {
+        OccupationLabel occupationLabel = findOccupationLabel(createOccupationLabelDto);
+
+        occupationLabel
+                .classifier(createOccupationLabelDto.getClassifier())
+                .label(createOccupationLabelDto.getLabel())
+                .language(Language.safeValueOf(createOccupationLabelDto.getLanguageIsoCode()))
+                .code(createOccupationLabelDto.getProfessionCode())
+                .type(ProfessionCodeType.valueOf(createOccupationLabelDto.getProfessionCodeType()));
+
+        return occupationLabelRepository.save(occupationLabel);
     }
 
     @Override
@@ -83,13 +93,13 @@ public class OccupationLabelServiceImpl implements OccupationLabelService {
         log.debug("Request to get OccupationLabels : professionCode:{}, language:{}", professionCode, language);
         final ProfessionCodeType codeType = professionCode.getCodeType();
         List<OccupationLabel> occupationLabels = occupationLabelRepository
-            .findByCodeAndTypeAndLanguage(professionCode.getCode(), codeType, language);
+                .findByCodeAndTypeAndLanguage(professionCode.getCode(), codeType, language);
         if (occupationLabels.isEmpty()) {
             occupationLabels = occupationLabelRepository
-                .findByCodeAndTypeAndLanguage(professionCode.getCode(), codeType, Language.de);
+                    .findByCodeAndTypeAndLanguage(professionCode.getCode(), codeType, Language.de);
         }
         Map<String, String> labels = occupationLabels.stream()
-            .collect(toMap(item -> hasText(item.getClassifier()) ? item.getClassifier() : "default", OccupationLabel::getLabel));
+                .collect(toMap(item -> hasText(item.getClassifier()) ? item.getClassifier() : "default", OccupationLabel::getLabel));
         if (!labels.containsKey("default")) {
             labels.put("default", labelGenerator.generate(labels.get("m"), labels.get("f")));
         }
@@ -101,28 +111,36 @@ public class OccupationLabelServiceImpl implements OccupationLabelService {
     public Optional<Map<String, String>> getOccupationLabels(ProfessionCodeDTO professionCode, Language language, String classifier) {
         log.debug("Request to get OccupationLabels : professionCode:{}, classifier:{}, language:{}", professionCode, classifier, language);
         return ofNullable(getBestMatchingOccupationLabel(professionCode, language, classifier))
-            .map(item -> ImmutableMap.of("label", item.getLabel()));
+                .map(item -> ImmutableMap.of("label", item.getLabel()));
+    }
+
+    private OccupationLabel findOccupationLabel(CreateOccupationLabelDto createOccupationLabelDto) {
+        return occupationLabelRepository.findByCodeAndTypeAndClassifier(
+                createOccupationLabelDto.getProfessionCode(),
+                ProfessionCodeType.valueOf(createOccupationLabelDto.getProfessionCodeType()),
+                createOccupationLabelDto.getClassifier()
+        ).stream().findFirst().orElseGet(() -> new OccupationLabel<>());
     }
 
     private OccupationLabel getBestMatchingOccupationLabel(ProfessionCodeDTO professionCode, Language language, String classifier) {
         final ProfessionCodeType codeType = professionCode.getCodeType();
         return occupationLabelRepository.findOneByCodeAndTypeAndLanguageAndClassifier(professionCode.getCode(),
-            codeType, language, classifier)
-            .orElseGet(() ->
-                // if the requested language was not found try to get another language
-                occupationLabelRepository.findByCodeAndTypeAndClassifier(professionCode.getCode(), codeType, classifier)
-                    .stream()
-                    .reduce((bestMatch, current) -> {
-                        if (isNull(bestMatch)) {
-                            // select the first entry as default
-                            return current;
-                        } else if (Language.de.equals(current.getLanguage())) {
-                            // German labels have priority
-                            return current;
-                        }
-                        return bestMatch;
-                    })
-                    .orElse(null)
-            );
+                codeType, language, classifier)
+                .orElseGet(() ->
+                        // if the requested language was not found try to get another language
+                        occupationLabelRepository.findByCodeAndTypeAndClassifier(professionCode.getCode(), codeType, classifier)
+                                .stream()
+                                .reduce((bestMatch, current) -> {
+                                    if (isNull(bestMatch)) {
+                                        // select the first entry as default
+                                        return current;
+                                    } else if (Language.de.equals(current.getLanguage())) {
+                                        // German labels have priority
+                                        return current;
+                                    }
+                                    return bestMatch;
+                                })
+                                .orElse(null)
+                );
     }
 }

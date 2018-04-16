@@ -87,6 +87,14 @@ spring:
     thymeleaf:
         mode: HTML
 
+    cloud:
+        stream:
+            bindings:
+                reference-occupation-label:
+                    destination: reference.occupation-label
+                    group: referenceadservice
+
+
 server:
     session:
         cookie:

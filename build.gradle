@@ -1,5 +1,3 @@
-import org.gradle.internal.os.OperatingSystem
-
 buildscript {
     repositories {
         jcenter()
@@ -21,99 +19,105 @@ plugins {
     id "net.ltgt.apt-idea" version "0.13"
     id "io.spring.dependency-management" version "1.0.4.RELEASE"
     id 'com.avast.gradle.docker-compose' version '0.7.1'
+    id 'io.github.http-builder-ng.http-plugin' version '0.1.1'
     //jhipster-needle-gradle-plugins - JHipster will add additional gradle plugins here
 }
 
+
+//apply from: 'gradle/sonar.gradle'
 apply plugin: 'java'
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-// Until JHipster supports JDK 9
-assert System.properties['java.specification.version'] == '1.8'
-
-apply plugin: 'maven'
 apply plugin: 'org.springframework.boot'
-apply plugin: 'propdeps'
-apply plugin: 'io.spring.dependency-management'
-apply plugin: 'idea'
-
-dependencyManagement {
-    dependencies {
-        dependency 'com.google.guava:guava:23.5-jre'
-        dependency 'com.mattbertolini:liquibase-slf4j:2.0.0'
-        dependency 'commons-io:commons-io:2.6'
-        dependency 'com.ryantenney.metrics:metrics-spring:3.1.3'
-        dependency "io.github.jhipster:jhipster:${jhipster_dependencies_version}"
-        dependency 'io.jsonwebtoken:jjwt:0.9.0'
-        dependency 'io.springfox:springfox-bean-validators:2.8.0'
-        dependency 'io.springfox:springfox-swagger2:2.8.0'
-        dependency 'javax.xml.bind:jaxb-api:2.3.0'
-        dependency 'net.logstash.logback:logstash-logback-encoder:4.11'
-        dependency 'org.zalando:problem-spring-web:0.22.1'
-    }
-    imports {
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${spring_cloud_version}"
-    }
-}
-
-defaultTasks 'bootRun'
-
-group = 'ch.admin.seco.service.reference'
-version = version != 'unspecified' ? version : '1.0.0-SNAPSHOT'
-
-description = ''
-
-bootJar {
-    mainClassName = 'ch.admin.seco.service.reference.ReferenceserviceApp'
-}
-
-springBoot {
-    buildInfo({
-        properties {
-            additional = [
-                'number': System.env.TRAVIS_JOB_NUMBER ?: 'n/a'
-            ]
-        }
-    })
-}
-
-task testReport(type: TestReport) {
-    destinationDir = file("$buildDir/reports/tests")
-    reportOn test
-}
-
-apply from: 'gradle/checkstyle.gradle'
-apply from: 'gradle/sonar.gradle'
 apply from: 'gradle/liquibase.gradle'
 apply from: 'gradle/mapstruct.gradle'
 apply from: 'gradle/docker.gradle'
 apply from: 'gradle/docker-compose.gradle'
 apply from: 'gradle/maven-publish.gradle'
-//jhipster-needle-gradle-apply-from - JHipster will add additional gradle scripts to be applied here
 
-if (project.hasProperty('prod')) {
-    apply from: 'gradle/profile_prod.gradle'
-} else {
-    apply from: 'gradle/profile_dev.gradle'
-}
+allprojects {
+    group = 'ch.admin.seco.service.reference'
+    version = version != 'unspecified' ? version : '1.0.0-SNAPSHOT'
 
-if (project.hasProperty('zipkin')) {
-    apply from: 'gradle/zipkin.gradle'
-}
+    apply plugin: 'java'
+    apply plugin: 'idea'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'propdeps'
 
-configurations {
-    providedRuntime
-    compile.exclude module: "spring-boot-starter-tomcat"
-}
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
 
-repositories {
-    maven { url 'https://repo.spring.io/release' }
-    maven { url 'https://repo.spring.io/milestone' }
-    jcenter()
-    maven { url 'https://alvch.jfrog.io/alvch/libs-releases' }
-    maven { url 'https://dl.bintray.com/jhipster/maven' }
+    configurations {
+        providedRuntime
+        compile.exclude module: "spring-boot-starter-tomcat"
+    }
+
+    repositories {
+        maven { url 'https://repo.spring.io/release' }
+        maven { url 'https://repo.spring.io/milestone' }
+        jcenter()
+        maven { url 'https://alvch.jfrog.io/alvch/libs-releases' }
+        maven { url 'https://dl.bintray.com/jhipster/maven' }
+    }
+
+    dependencyManagement {
+        dependencies {
+            dependency 'com.google.guava:guava:23.5-jre'
+            dependency 'org.codehaus.jackson:jackson-core-asl:1.9.13'
+            dependency 'com.mattbertolini:liquibase-slf4j:2.0.0'
+            dependency 'com.ryantenney.metrics:metrics-spring:3.1.3'
+            dependency "io.github.jhipster:jhipster:${jhipster_dependencies_version}"
+            dependency 'io.jsonwebtoken:jjwt:0.9.0'
+            dependency 'io.springfox:springfox-bean-validators:2.8.0'
+            dependency 'io.springfox:springfox-swagger2:2.8.0'
+            dependency 'io.springfox:springfox-swagger-ui:2.8.0'
+            dependency 'net.logstash.logback:logstash-logback-encoder:4.11'
+            dependency 'org.hibernate.validator:hibernate-validator:6.0.7.Final'
+            dependency 'org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.2.Final'
+            dependency 'org.zalando:problem-spring-web:0.22.1'
+            dependency 'com.googlecode.libphonenumber:libphonenumber:8.9.2'
+            dependency 'junit:junit:4.12'
+        }
+        imports {
+            mavenBom 'org.springframework.boot:spring-boot-dependencies:2.0.0.RELEASE'
+            mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Finchley.M7'
+        }
+    }
+
+    plugins.withType(org.springframework.boot.gradle.plugin.SpringBootPlugin).whenPluginAdded {
+        defaultTasks 'bootRun'
+
+        springBoot {
+            buildInfo({
+                properties {
+                    additional = [
+                        'number': System.env.TRAVIS_JOB_NUMBER ?: 'n/a'
+                    ]
+                }
+            })
+        }
+
+        task stage(dependsOn: 'bootJar') {
+        }
+
+        compileJava.dependsOn processResources
+        processResources.dependsOn cleanResources, bootBuildInfo
+        bootBuildInfo.mustRunAfter cleanResources
+    }
+
+    task testReport(type: TestReport) {
+        destinationDir = file("$buildDir/reports/tests")
+        reportOn test
+    }
+
+    apply from: "${rootProject.rootDir}/gradle/checkstyle.gradle"
+    //jhipster-needle-gradle-apply-from - JHipster will add additional gradle scripts to be applied here
+
+    task cleanResources(type: Delete) {
+        delete 'build/resources'
+    }
 }
 
 dependencies {
+    compile project(':application')
     compile "javax.xml.bind:jaxb-api"
     compile "org.springframework.boot:spring-boot-starter-cache"
     compile "org.springframework.boot:spring-boot-starter-webflux"
@@ -139,7 +143,7 @@ dependencies {
     compile "org.hibernate:hibernate-core"
     compile "com.zaxxer:HikariCP"
     compile "org.apache.commons:commons-lang3"
-    compile "commons-io:commons-io"
+//    compile "commons-io:commons-io"
     compile "javax.transaction:javax.transaction-api"
     compile "org.hibernate:hibernate-entitymanager"
     compile "org.hibernate:hibernate-envers"
@@ -172,6 +176,8 @@ dependencies {
     compile "org.springframework.cloud:spring-cloud-starter-config"
     compile "org.springframework.cloud:spring-cloud-starter-openfeign"
     compile "org.springframework.cloud:spring-cloud-spring-service-connector"
+    compile 'org.springframework.cloud:spring-cloud-starter-stream-kafka'
+
     compile "org.springframework:spring-context-support"
     compile "org.springframework.security:spring-security-config"
     compile "org.springframework.security:spring-security-data"
@@ -196,41 +202,14 @@ dependencies {
     testCompile "com.mattbertolini:liquibase-slf4j"
     testCompile "org.hamcrest:hamcrest-library"
     testCompile "com.h2database:h2"
+    testCompile 'org.springframework.cloud:spring-cloud-stream-test-support'
+
     optional("org.springframework.boot:spring-boot-configuration-processor") {
         exclude group: 'com.vaadin.external.google', module: 'android-json'
     }
     //jhipster-needle-gradle-dependency - JHipster will add additional dependencies here
 }
 
-task cleanResources(type: Delete) {
-    delete 'build/resources'
-}
-
 task wrapper(type: Wrapper) {
     gradleVersion = '4.6'
-}
-
-task stage(dependsOn: 'bootJar') {
-}
-
-compileJava.dependsOn processResources
-processResources.dependsOn cleanResources, bootBuildInfo
-bootBuildInfo.mustRunAfter cleanResources
-
-afterEvaluate {
-    bootJar {
-        manifest {
-            attributes(
-                (java.util.jar.Attributes.Name.IMPLEMENTATION_TITLE.toString()): project.name,
-                (java.util.jar.Attributes.Name.IMPLEMENTATION_VERSION.toString()): project.version,
-                (java.util.jar.Attributes.Name.IMPLEMENTATION_VENDOR.toString()): 'mimacom ag',
-                'Created-By': System.getProperty('java.version') + ' (' + System.getProperty('java.vendor') + ')',
-                'Build-Time': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                'Built-With': "gradle-${project.getGradle().getGradleVersion()}, groovy-${GroovySystem.getVersion()}",
-                'Built-By': System.getProperty('user.name'),
-                'Built-On': "${InetAddress.localHost.hostName}/${InetAddress.localHost.hostAddress}",
-                'Spring-Version': org.springframework.core.SpringVersion.getVersion()
-            )
-        }
-    }
 }
