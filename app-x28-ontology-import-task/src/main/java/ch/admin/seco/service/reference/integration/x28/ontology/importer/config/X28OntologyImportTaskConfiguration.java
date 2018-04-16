@@ -40,8 +40,8 @@ import ch.admin.seco.service.reference.integration.x28.ontology.importer.Field;
 import ch.admin.seco.service.reference.integration.x28.ontology.importer.Row;
 
 @Configuration
-public class X28OntologyImportTaskConfig {
-    private static final Logger LOG = LoggerFactory.getLogger(X28OntologyImportTaskConfig.class);
+public class X28OntologyImportTaskConfiguration {
+    private static final Logger LOG = LoggerFactory.getLogger(X28OntologyImportTaskConfiguration.class);
     private static final String PARAMETER_XML_FILE_PATH = "XML_FILE_PATH";
     private static final String PARAMETER_LAST_MODIFIED_TIME = "LAST_MODIFIED_TIME";
 
@@ -51,7 +51,7 @@ public class X28OntologyImportTaskConfig {
     private final MessageSource<File> x28OntologyDataFileMessageSource;
 
     @Autowired
-    public X28OntologyImportTaskConfig(
+    public X28OntologyImportTaskConfiguration(
             JobBuilderFactory jobBuilderFactory,
             StepBuilderFactory stepBuilderFactory,
             MessageSource<File> x28OntologyDataFileMessageSource,

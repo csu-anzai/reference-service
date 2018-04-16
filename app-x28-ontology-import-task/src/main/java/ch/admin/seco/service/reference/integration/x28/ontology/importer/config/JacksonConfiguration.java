@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class JacksonConfig {
+public class JacksonConfiguration {
 
     /*
      * Jackson Afterburner module to speed up serialization/deserialization.

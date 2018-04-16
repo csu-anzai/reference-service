@@ -1,4 +1,3 @@
-apply plugin: 'org.sonarqube'
 apply plugin: 'jacoco'
 
 jacoco {

@@ -4,6 +4,7 @@ apply from: "${rootProject.rootDir}/gradle/maven-publish.gradle"
 
 dependencies {
     compile project(':application')
+    compile project(':infrastructure')
     compile 'org.springframework.boot:spring-boot-starter-batch'
     compile 'org.springframework.cloud:spring-cloud-starter-task'
     compile 'org.springframework.cloud:spring-cloud-starter-stream-kafka'

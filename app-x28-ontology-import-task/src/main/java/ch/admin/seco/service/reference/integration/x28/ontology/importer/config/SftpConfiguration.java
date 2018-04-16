@@ -13,7 +13,7 @@ import org.springframework.integration.sftp.inbound.SftpInboundFileSynchronizing
 import org.springframework.integration.sftp.session.DefaultSftpSessionFactory;
 
 @Configuration
-public class SftpConfig {
+public class SftpConfiguration {
 
     @Bean
     public DefaultSftpSessionFactory x28SftpSessionFactory(X28Properties x28Properties) {

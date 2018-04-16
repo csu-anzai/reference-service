@@ -1,4 +1,9 @@
 apply plugin: 'checkstyle'
 
-checkstyle.configFile file('gradle/config/checkstyle.xml')
+checkstyle {
+    // use one common config file for all subprojects
+    configFile = project(':').file('gradle/config/checkstyle.xml')
+    configProperties = [ "suppressionFile" : project(':').file('gradle/config/checkstyle-suppression.xml')]
+}
+
 checkstyleTest.enabled false

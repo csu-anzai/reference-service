@@ -60,7 +60,8 @@ local.properties
 *.ids
 *.orig
 classes/
-/out
+out/
+
 
 ######################
 # Visual Studio Code
@@ -70,14 +71,14 @@ classes/
 ######################
 # Maven
 ######################
-/log/
-/target/
+log/
+target/
 
 ######################
 # Gradle
 ######################
 .gradle/
-/build/
+build/
 
 ######################
 # Package Files
