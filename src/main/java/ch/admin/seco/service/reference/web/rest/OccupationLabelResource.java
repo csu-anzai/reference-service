@@ -3,6 +3,7 @@ package ch.admin.seco.service.reference.web.rest;
 import static org.springframework.context.i18n.LocaleContextHolder.getLocale;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -11,6 +12,8 @@ import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import ch.admin.seco.service.reference.domain.OccupationLabel;
 import ch.admin.seco.service.reference.domain.OccupationLabelMapping;
 import ch.admin.seco.service.reference.domain.enums.Language;
 import ch.admin.seco.service.reference.domain.enums.ProfessionCodeType;
@@ -58,6 +62,20 @@ public class OccupationLabelResource {
         log.debug("REST request to suggest for a page of OccupationSynonyms for query {}", prefix);
         OccupationLabelAutocompleteDto result = occupationService.suggest(prefix, getLanguage(), types, resultSize);
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @GetMapping("/_search/occupations")
+    @Timed
+    public Page<OccupationLabel> searchOccupation(@RequestParam(required = false) String prefix, Pageable pageable) {
+        log.debug("REST request to search AVAM occupations with prefix `{}` and page `{}`", prefix, pageable);
+        return occupationService.getAvamOccupations(prefix, getLanguage(), pageable);
+    }
+
+    @GetMapping("/occupations/label/mapped-by/{codeType}/{code}")
+    @Timed
+    public List<OccupationLabel> getOccupationsForClassification(ProfessionCodeDTO professionCode) {
+        log.debug("REST request to search occupation belong to classification {}:{}", professionCode.getCodeType(), professionCode.getCode());
+        return occupationService.getOccupationsByClassification(professionCode, getLanguage());
     }
 
     @GetMapping("/occupations/label/{codeType}/{code}")

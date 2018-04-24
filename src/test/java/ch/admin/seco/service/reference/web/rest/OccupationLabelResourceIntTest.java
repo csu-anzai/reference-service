@@ -104,11 +104,15 @@ public class OccupationLabelResourceIntTest {
             //                         bfs     avam  sbn3  sbn5
             createOccupationMapping("33302009", "68913", "361", "36102", "Java-Programmierer")
         );
+        this.occupationLabelMappingRepository.save(
+            createOccupationMapping("33302011", "68904", "361", "36102", "Systemprogrammierer EDV")
+        );
         this.occupationLabelMappingX28Repository.save(
             //                              avam      x28
             createOccupationLabelMappingX28("68913", "11002714")
         );
         this.occupationLabelService.save(createAvamOccupationLabel("68913", Language.de, 'm', "Java-Programmierer"));
+        this.occupationLabelService.save(createAvamOccupationLabel("68904", Language.en, 'm', "Data programmer"));
         this.occupationLabelService.save(createX28OccupationLabel("11002714", Language.en, "Javascript Developer"));
         this.occupationLabelService.save(createX28OccupationLabel("11002714", Language.de, "Javascript-Entwickler"));
         this.occupationLabelService.save(createX28OccupationLabel("11002714", Language.de, "Javascript-Entwicklerin"));
@@ -239,6 +243,33 @@ public class OccupationLabelResourceIntTest {
             .andExpect(jsonPath("$.sbn3Code").value("361"))
             .andExpect(jsonPath("$.sbn5Code").value("36102"))
             .andExpect(jsonPath("$.description").value("Java-Programmierer"));
+    }
+
+    @Test
+    public void getOccupationLabelsForSBN3Code() throws Exception {
+        sut.perform(get("/api/occupations/label/mapped-by/sbn3/361"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[0].code").value("68913"))
+            .andExpect(jsonPath("$.[0].type").value("AVAM"))
+            .andExpect(jsonPath("$.[0].language").value("de"))
+            .andExpect(jsonPath("$.[0].label").value("Java-Programmierer"));
+    }
+
+    @Test
+    public void getOccupationLabelsForSBN5Code() throws Exception {
+        sut.perform(get("/api/occupations/label/mapped-by/sbn5/36102"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].code").value(hasItem("68904")))
+            .andExpect(jsonPath("$.[*].type").value(hasItem("AVAM")))
+            .andExpect(jsonPath("$.[*].language").value(hasItem("en")))
+            .andExpect(jsonPath("$.[*].label").value(hasItem("Data programmer")))
+            // Fallback to default de language
+            .andExpect(jsonPath("$.[*].code").value(hasItem("68913")))
+            .andExpect(jsonPath("$.[*].type").value(hasItem("AVAM")))
+            .andExpect(jsonPath("$.[*].language").value(hasItem("de")))
+            .andExpect(jsonPath("$.[*].label").value(hasItem("Java-Programmierer")));
     }
 
     private OccupationLabel createAvamOccupationLabel(String code, Language lang, char gender, String label) {

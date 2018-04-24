@@ -1,10 +1,12 @@
 package ch.admin.seco.service.reference.service;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import ch.admin.seco.service.reference.domain.OccupationLabel;
 import ch.admin.seco.service.reference.domain.OccupationLabelMapping;
@@ -20,7 +22,6 @@ public interface OccupationLabelService {
 
     OccupationLabel save(OccupationLabel occupationLabel);
 
-    @Transactional(readOnly = true)
     Optional<OccupationLabelMapping> findOneOccupationMapping(ProfessionCodeDTO professionCode);
 
     /**
@@ -34,10 +35,12 @@ public interface OccupationLabelService {
      */
     OccupationLabelAutocompleteDto suggest(String prefix, Language language, Collection<ProfessionCodeType> types, int resultSize);
 
-    @Transactional(readOnly = true)
     Map<String, String> getOccupationLabels(ProfessionCodeDTO professionCode, Language language);
 
-    @Transactional(readOnly = true)
     Optional<Map<String, String>> getOccupationLabels(ProfessionCodeDTO professionCode, Language language,
         String classifier);
+
+    Page<OccupationLabel> getAvamOccupations(String prefix, Language language, Pageable page);
+
+    List<OccupationLabel> getOccupationsByClassification(ProfessionCodeDTO professionCodeDTO, Language language);
 }

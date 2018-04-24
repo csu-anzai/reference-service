@@ -1,5 +1,7 @@
 package ch.admin.seco.service.reference.service.dto;
 
+import java.util.Set;
+
 public class ReportingObligationDTO {
 
     private boolean hasReportingObligation;
@@ -7,6 +9,8 @@ public class ReportingObligationDTO {
     private ProfessionCodeDTO professionCode;
 
     private String label;
+
+    private Set<String> cantons;
 
     public ReportingObligationDTO() {
     }
@@ -35,6 +39,15 @@ public class ReportingObligationDTO {
 
     public ReportingObligationDTO label(String label) {
         this.label = label;
+        return this;
+    }
+
+    public Set<String> getCantons() {
+        return cantons;
+    }
+
+    public ReportingObligationDTO cantons(Set<String> cantons) {
+        this.cantons = cantons;
         return this;
     }
 }

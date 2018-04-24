@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.Arrays;
 import java.util.HashSet;
 
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -54,7 +55,7 @@ public class ReportingObligationResourceIntTest {
     private ReportingObligationRepository reportingObligationRepository;
 
     @Autowired
-    private  OccupationLabelMappingRepository occupationMappingRepository;
+    private OccupationLabelMappingRepository occupationMappingRepository;
 
     @Before
     public void setUp() {
@@ -107,7 +108,8 @@ public class ReportingObligationResourceIntTest {
         mockMvc.perform(get("/api/reporting-obligations/check-by/sbn5/56456"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.hasReportingObligation").value(false))
-            .andExpect(jsonPath("$.professionCode.code").value("56456"));
+            .andExpect(jsonPath("$.professionCode.code").value("56456"))
+            .andExpect(jsonPath("$.cantons").value(Matchers.containsInAnyOrder("AG", "ZH", "BE")));
     }
 
     @Test
@@ -171,7 +173,8 @@ public class ReportingObligationResourceIntTest {
             .param("cantonCode", "SO"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.hasReportingObligation").value(true))
-            .andExpect(jsonPath("$.professionCode.code").value("56456"));
+            .andExpect(jsonPath("$.professionCode.code").value("56456"))
+            .andExpect(jsonPath("$.cantons").value(Matchers.containsInAnyOrder("AG", "SO", "BE")));
     }
 
     @Test
@@ -186,7 +189,8 @@ public class ReportingObligationResourceIntTest {
             .param("cantonCode", "SO"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.hasReportingObligation").value(false))
-            .andExpect(jsonPath("$.professionCode.code").value("56456"));
+            .andExpect(jsonPath("$.professionCode.code").value("56456"))
+            .andExpect(jsonPath("$.cantons").value(Matchers.containsInAnyOrder("AG", "ZH", "BE")));
     }
 
     @Test

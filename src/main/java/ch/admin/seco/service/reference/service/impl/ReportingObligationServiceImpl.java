@@ -53,13 +53,6 @@ public class ReportingObligationServiceImpl implements ReportingObligationServic
         }
     }
 
-    private ReportingObligationDTO checkReportingObligation(String cantonCode, ProfessionCodeDTO sbn5ProfessionCode) {
-        return new ReportingObligationDTO()
-            .hasReportingObligation(hasMatchingReportingObligation(sbn5ProfessionCode.getCode(), cantonCode))
-            .label(resolveDefaultOccupationLabel(sbn5ProfessionCode))
-            .professionCode(sbn5ProfessionCode);
-    }
-
     private Optional<ProfessionCodeDTO> resolveToSbn5Code(ProfessionCodeDTO professionCode) {
         if (ProfessionCodeType.SBN5.equals(professionCode.getCodeType())) {
             return Optional.of(professionCode);
@@ -73,10 +66,16 @@ public class ReportingObligationServiceImpl implements ReportingObligationServic
         }
     }
 
-    private boolean hasMatchingReportingObligation(String sbn5Code, String cantonCode) {
-        return reportingObligationRepository.findOneBySbn5Code(sbn5Code)
-            .map(reportingObligation -> reportingObligation.isAppliedForSwissOrCanton(cantonCode))
-            .orElse(false);
+    private ReportingObligationDTO checkReportingObligation(String cantonCode, ProfessionCodeDTO sbn5ProfessionCode) {
+        final ReportingObligationDTO reportingObligationDTO = new ReportingObligationDTO()
+            .label(resolveDefaultOccupationLabel(sbn5ProfessionCode))
+            .professionCode(sbn5ProfessionCode);
+
+        reportingObligationRepository.findOneBySbn5Code(sbn5ProfessionCode.getCode()).ifPresent(obligation -> {
+            reportingObligationDTO.hasReportingObligation(obligation.isAppliedForSwissOrCanton(cantonCode))
+                .cantons(obligation.getCantonCodes());
+        });
+        return reportingObligationDTO;
     }
 
     private String resolveDefaultOccupationLabel(ProfessionCodeDTO professionCode) {

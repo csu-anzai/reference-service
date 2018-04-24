@@ -6,14 +6,21 @@ import static java.util.stream.Collectors.toMap;
 import static org.springframework.util.StringUtils.hasText;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import com.google.common.collect.ImmutableMap;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,7 +38,7 @@ import ch.admin.seco.service.reference.service.dto.ProfessionCodeDTO;
  * Service Implementation for managing Occupation.
  */
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class OccupationLabelServiceImpl implements OccupationLabelService {
 
     private final Logger log = LoggerFactory.getLogger(OccupationLabelServiceImpl.class);
@@ -52,6 +59,7 @@ public class OccupationLabelServiceImpl implements OccupationLabelService {
     }
 
     @Override
+    @Transactional
     public OccupationLabel save(OccupationLabel occupationLabel) {
         return this.occupationLabelRepository.save(occupationLabel);
     }
@@ -71,14 +79,12 @@ public class OccupationLabelServiceImpl implements OccupationLabelService {
         return Optional.empty();
     }
 
-    @Transactional(readOnly = true)
     @Override
     public OccupationLabelAutocompleteDto suggest(String prefix, Language language, Collection<ProfessionCodeType> types, int resultSize) {
         return occupationSuggestionImpl.suggest(prefix, language, types, resultSize);
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Map<String, String> getOccupationLabels(ProfessionCodeDTO professionCode, Language language) {
         log.debug("Request to get OccupationLabels : professionCode:{}, language:{}", professionCode, language);
         final ProfessionCodeType codeType = professionCode.getCodeType();
@@ -97,7 +103,6 @@ public class OccupationLabelServiceImpl implements OccupationLabelService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Optional<Map<String, String>> getOccupationLabels(ProfessionCodeDTO professionCode, Language language, String classifier) {
         log.debug("Request to get OccupationLabels : professionCode:{}, classifier:{}, language:{}", professionCode, classifier, language);
         return ofNullable(getBestMatchingOccupationLabel(professionCode, language, classifier))
@@ -124,5 +129,45 @@ public class OccupationLabelServiceImpl implements OccupationLabelService {
                     })
                     .orElse(null)
             );
+    }
+
+    @Override
+    public Page<OccupationLabel> getAvamOccupations(String prefix, Language language, Pageable page) {
+        if (StringUtils.isEmpty(prefix)) {
+            return occupationLabelRepository.findAllByTypeAndLanguage(ProfessionCodeType.AVAM, language, page);
+        } else {
+            return occupationLabelRepository.findAllByLabelStartingWithIgnoreCaseAndTypeAndLanguage(prefix,
+                ProfessionCodeType.AVAM, language, page);
+        }
+    }
+
+    @Override
+    public List<OccupationLabel> getOccupationsByClassification(ProfessionCodeDTO professionCodeDTO, Language language) {
+        Function<OccupationLabelMapping, OccupationLabel> getOccupationLabelByAvamCode = (occupationLabelMapping) ->
+            occupationLabelRepository.findByCodeAndTypeAndLanguage(occupationLabelMapping.getAvamCode(), ProfessionCodeType.AVAM, language)
+                .stream().findFirst()
+                .orElseGet(() ->
+                    occupationLabelRepository
+                        .findByCodeAndTypeAndLanguage(occupationLabelMapping.getAvamCode(), ProfessionCodeType.AVAM, Language.de)
+                        .stream().findFirst().orElse(null)
+                );
+
+
+        List<OccupationLabelMapping> occupationLabelMappings = getOccupationLabelMappingsForSbnClassification(professionCodeDTO);
+        return occupationLabelMappings.stream()
+            .map(getOccupationLabelByAvamCode)
+            .filter(Objects::nonNull)
+            .collect(Collectors.toList());
+    }
+
+    private List<OccupationLabelMapping> getOccupationLabelMappingsForSbnClassification(ProfessionCodeDTO professionCodeDTO) {
+        switch (professionCodeDTO.getCodeType()) {
+            case SBN5:
+                return occupationMappingRepository.findBySbn5Code(professionCodeDTO.getCode());
+            case SBN3:
+                return occupationMappingRepository.findBySbn3Code(professionCodeDTO.getCode());
+            default:
+                return Collections.emptyList();
+        }
     }
 }

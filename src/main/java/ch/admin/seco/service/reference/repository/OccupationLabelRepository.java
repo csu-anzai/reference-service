@@ -12,6 +12,8 @@ import java.util.stream.Stream;
 
 import javax.persistence.QueryHint;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.QueryHints;
@@ -45,4 +47,8 @@ public interface OccupationLabelRepository extends JpaRepository<OccupationLabel
         return findByCodeAndTypeAndLanguage(professionCode, professionType, language).stream()
             .collect(Collectors.toMap(OccupationLabel::getClassifier, OccupationLabel::getLabel));
     }
+
+    Page<OccupationLabel> findAllByTypeAndLanguage(ProfessionCodeType professionType, Language language, Pageable page);
+
+    Page<OccupationLabel> findAllByLabelStartingWithIgnoreCaseAndTypeAndLanguage(String prefix, ProfessionCodeType professionType, Language language, Pageable page);
 }

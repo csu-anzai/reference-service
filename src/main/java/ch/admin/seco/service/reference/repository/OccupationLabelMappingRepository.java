@@ -22,4 +22,8 @@ public interface OccupationLabelMappingRepository extends JpaRepository<Occupati
     Optional<OccupationLabelMapping> findOneByX28Code(String x28Code);
 
     List<OccupationLabelMapping> findByBfsCode(String bfsCode);
+
+    List<OccupationLabelMapping> findBySbn3Code(String sbn3Code);
+
+    List<OccupationLabelMapping> findBySbn5Code(String sbn5Code);
 }
