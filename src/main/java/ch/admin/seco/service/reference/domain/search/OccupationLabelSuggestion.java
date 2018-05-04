@@ -47,7 +47,6 @@ public class OccupationLabelSuggestion {
 
     private Map<ProfessionCodeType, String> mappings;
 
-
     public UUID getId() {
         return id;
     }

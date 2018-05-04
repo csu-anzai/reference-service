@@ -11,16 +11,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.ImmutableMap;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +29,8 @@ import ch.admin.seco.service.reference.repository.OccupationLabelMappingReposito
 import ch.admin.seco.service.reference.repository.OccupationLabelRepository;
 import ch.admin.seco.service.reference.service.OccupationLabelService;
 import ch.admin.seco.service.reference.service.dto.OccupationLabelAutocompleteDto;
+import ch.admin.seco.service.reference.service.dto.OccupationLabelDto;
+import ch.admin.seco.service.reference.service.dto.OccupationLabelSearchRequestDto;
 import ch.admin.seco.service.reference.service.dto.ProfessionCodeDTO;
 
 /**
@@ -44,12 +43,12 @@ public class OccupationLabelServiceImpl implements OccupationLabelService {
     private final Logger log = LoggerFactory.getLogger(OccupationLabelServiceImpl.class);
     private final OccupationLabelMappingRepository occupationMappingRepository;
     private final OccupationLabelRepository occupationLabelRepository;
-    private final OccupationLabelSuggestionImpl occupationSuggestionImpl;
+    private final OccupationLabelSearchServiceImpl occupationSuggestionImpl;
     private final GenderNeutralOccupationLabelGenerator labelGenerator;
 
     public OccupationLabelServiceImpl(OccupationLabelMappingRepository occupationMappingRepository,
         OccupationLabelRepository occupationLabelRepository,
-        OccupationLabelSuggestionImpl occupationSuggestion,
+        OccupationLabelSearchServiceImpl occupationSuggestion,
         GenderNeutralOccupationLabelGenerator labelGenerator) {
 
         this.occupationMappingRepository = occupationMappingRepository;
@@ -132,30 +131,24 @@ public class OccupationLabelServiceImpl implements OccupationLabelService {
     }
 
     @Override
-    public Page<OccupationLabel> getAvamOccupations(String prefix, Language language, Pageable page) {
-        if (StringUtils.isEmpty(prefix)) {
-            return occupationLabelRepository.findAllByTypeAndLanguage(ProfessionCodeType.AVAM, language, page);
-        } else {
-            return occupationLabelRepository.findAllByLabelStartingWithIgnoreCaseAndTypeAndLanguage(prefix,
-                ProfessionCodeType.AVAM, language, page);
-        }
+    public Page<OccupationLabel> search(OccupationLabelSearchRequestDto searchRequest, Language language) {
+        return occupationSuggestionImpl.search(searchRequest, Language.de);
     }
 
     @Override
-    public List<OccupationLabel> getOccupationsByClassification(ProfessionCodeDTO professionCodeDTO, Language language) {
-        Function<OccupationLabelMapping, OccupationLabel> getOccupationLabelByAvamCode = (occupationLabelMapping) ->
-            occupationLabelRepository.findByCodeAndTypeAndLanguage(occupationLabelMapping.getAvamCode(), ProfessionCodeType.AVAM, language)
-                .stream().findFirst()
-                .orElseGet(() ->
-                    occupationLabelRepository
-                        .findByCodeAndTypeAndLanguage(occupationLabelMapping.getAvamCode(), ProfessionCodeType.AVAM, Language.de)
-                        .stream().findFirst().orElse(null)
-                );
-
-
+    public List<OccupationLabelDto> getOccupationLabelsByClassification(ProfessionCodeDTO professionCodeDTO, Language language) {
         List<OccupationLabelMapping> occupationLabelMappings = getOccupationLabelMappingsForSbnClassification(professionCodeDTO);
         return occupationLabelMappings.stream()
-            .map(getOccupationLabelByAvamCode)
+            .map(occupationLabelMapping -> {
+                Map<String, String> labels = getOccupationLabels(new ProfessionCodeDTO()
+                    .codeType(ProfessionCodeType.AVAM)
+                    .code(occupationLabelMapping.getAvamCode()), language);
+                return new OccupationLabelDto()
+                    .type(ProfessionCodeType.AVAM)
+                    .code(occupationLabelMapping.getAvamCode())
+                    .language(language)
+                    .labels(labels);
+            })
             .filter(Objects::nonNull)
             .collect(Collectors.toList());
     }

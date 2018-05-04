@@ -252,8 +252,7 @@ public class OccupationLabelResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[0].code").value("68913"))
             .andExpect(jsonPath("$.[0].type").value("AVAM"))
-            .andExpect(jsonPath("$.[0].language").value("de"))
-            .andExpect(jsonPath("$.[0].label").value("Java-Programmierer"));
+            .andExpect(jsonPath("$.[0].labels.default").value("Java-Programmierer"));
     }
 
     @Test
@@ -263,13 +262,10 @@ public class OccupationLabelResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].code").value(hasItem("68904")))
             .andExpect(jsonPath("$.[*].type").value(hasItem("AVAM")))
-            .andExpect(jsonPath("$.[*].language").value(hasItem("en")))
-            .andExpect(jsonPath("$.[*].label").value(hasItem("Data programmer")))
-            // Fallback to default de language
+            .andExpect(jsonPath("$.[*].labels.default").value(hasItem("Data programmer")))
             .andExpect(jsonPath("$.[*].code").value(hasItem("68913")))
             .andExpect(jsonPath("$.[*].type").value(hasItem("AVAM")))
-            .andExpect(jsonPath("$.[*].language").value(hasItem("de")))
-            .andExpect(jsonPath("$.[*].label").value(hasItem("Java-Programmierer")));
+            .andExpect(jsonPath("$.[*].labels.default").value(hasItem("Java-Programmierer")));
     }
 
     private OccupationLabel createAvamOccupationLabel(String code, Language lang, char gender, String label) {

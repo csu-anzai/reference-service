@@ -30,6 +30,8 @@ import ch.admin.seco.service.reference.domain.enums.Language;
 import ch.admin.seco.service.reference.domain.enums.ProfessionCodeType;
 import ch.admin.seco.service.reference.service.OccupationLabelService;
 import ch.admin.seco.service.reference.service.dto.OccupationLabelAutocompleteDto;
+import ch.admin.seco.service.reference.service.dto.OccupationLabelDto;
+import ch.admin.seco.service.reference.service.dto.OccupationLabelSearchRequestDto;
 import ch.admin.seco.service.reference.service.dto.ProfessionCodeDTO;
 
 /**
@@ -64,18 +66,19 @@ public class OccupationLabelResource {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @GetMapping("/_search/occupations")
+    @GetMapping("/_search/occupations/label/{codeType}")
     @Timed
-    public Page<OccupationLabel> searchOccupation(@RequestParam(required = false) String prefix, Pageable pageable) {
-        log.debug("REST request to search AVAM occupations with prefix `{}` and page `{}`", prefix, pageable);
-        return occupationService.getAvamOccupations(prefix, getLanguage(), pageable);
+    public Page<OccupationLabel> searchOccupation(@PathVariable ProfessionCodeType codeType,
+        @RequestParam(required = false) String prefix, Pageable pageable) {
+        log.debug("REST request to search {} occupations labels with prefix `{}` and page `{}`", codeType, prefix, pageable);
+        return occupationService.search(new OccupationLabelSearchRequestDto(codeType, prefix, pageable), getLanguage());
     }
 
     @GetMapping("/occupations/label/mapped-by/{codeType}/{code}")
     @Timed
-    public List<OccupationLabel> getOccupationsForClassification(ProfessionCodeDTO professionCode) {
+    public List<OccupationLabelDto> getOccupationLabelsForClassification(ProfessionCodeDTO professionCode) {
         log.debug("REST request to search occupation belong to classification {}:{}", professionCode.getCodeType(), professionCode.getCode());
-        return occupationService.getOccupationsByClassification(professionCode, getLanguage());
+        return occupationService.getOccupationLabelsByClassification(professionCode, getLanguage());
     }
 
     @GetMapping("/occupations/label/{codeType}/{code}")

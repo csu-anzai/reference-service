@@ -6,13 +6,14 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 import ch.admin.seco.service.reference.domain.OccupationLabel;
 import ch.admin.seco.service.reference.domain.OccupationLabelMapping;
 import ch.admin.seco.service.reference.domain.enums.Language;
 import ch.admin.seco.service.reference.domain.enums.ProfessionCodeType;
 import ch.admin.seco.service.reference.service.dto.OccupationLabelAutocompleteDto;
+import ch.admin.seco.service.reference.service.dto.OccupationLabelDto;
+import ch.admin.seco.service.reference.service.dto.OccupationLabelSearchRequestDto;
 import ch.admin.seco.service.reference.service.dto.ProfessionCodeDTO;
 
 /**
@@ -40,7 +41,7 @@ public interface OccupationLabelService {
     Optional<Map<String, String>> getOccupationLabels(ProfessionCodeDTO professionCode, Language language,
         String classifier);
 
-    Page<OccupationLabel> getAvamOccupations(String prefix, Language language, Pageable page);
+    Page<OccupationLabel> search(OccupationLabelSearchRequestDto searchRequest, Language language);
 
-    List<OccupationLabel> getOccupationsByClassification(ProfessionCodeDTO professionCodeDTO, Language language);
+    List<OccupationLabelDto> getOccupationLabelsByClassification(ProfessionCodeDTO professionCodeDTO, Language language);
 }

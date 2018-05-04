@@ -3,38 +3,39 @@ package ch.admin.seco.service.reference.service.dto;
 import java.util.Map;
 
 import ch.admin.seco.service.reference.domain.enums.Language;
+import ch.admin.seco.service.reference.domain.enums.ProfessionCodeType;
 
 public class OccupationLabelDto {
-    private int code;
+    private String code;
 
-    private String type;
+    private ProfessionCodeType type;
 
     private Language language;
 
     private Map<String, String> labels;
 
-    public int getCode() {
+    public String getCode() {
         return code;
     }
 
-    public void setCode(int code) {
+    public void setCode(String code) {
         this.code = code;
     }
 
-    public OccupationLabelDto code(int code) {
+    public OccupationLabelDto code(String code) {
         this.code = code;
         return this;
     }
 
-    public String getType() {
+    public ProfessionCodeType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(ProfessionCodeType type) {
         this.type = type;
     }
 
-    public OccupationLabelDto type(String type) {
+    public OccupationLabelDto type(ProfessionCodeType type) {
         this.type = type;
         return this;
     }

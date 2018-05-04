@@ -1,31 +1,24 @@
 package ch.admin.seco.service.reference.service.impl;
 
-import static ch.admin.seco.service.reference.domain.enums.ProfessionCodeType.SBN3;
-import static ch.admin.seco.service.reference.domain.enums.ProfessionCodeType.SBN5;
-import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
-import static org.elasticsearch.search.suggest.SuggestBuilders.completionSuggestion;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableMap;
 import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.common.xcontent.ToXContent;
-import org.elasticsearch.search.suggest.SuggestBuilder;
 import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
-import org.elasticsearch.search.suggest.completion.context.CategoryQueryContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
+import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -36,20 +29,22 @@ import ch.admin.seco.service.reference.domain.enums.ProfessionCodeType;
 import ch.admin.seco.service.reference.domain.search.OccupationLabelSuggestion;
 import ch.admin.seco.service.reference.repository.OccupationLabelRepository;
 import ch.admin.seco.service.reference.service.dto.OccupationLabelAutocompleteDto;
+import ch.admin.seco.service.reference.service.dto.OccupationLabelSearchRequestDto;
 import ch.admin.seco.service.reference.service.dto.OccupationLabelSuggestionDto;
 
 /**
- * Service Implementation for suggesting Occupation.
+ * Service Implementation for search Occupation.
  */
 @Service
-public class OccupationLabelSuggestionImpl {
+@Transactional(readOnly = true)
+public class OccupationLabelSearchServiceImpl {
 
-    private final Logger LOGGER = LoggerFactory.getLogger(OccupationLabelSuggestionImpl.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(OccupationLabelSearchServiceImpl.class);
     private final ElasticsearchTemplate elasticsearchTemplate;
     private final OccupationLabelRepository occupationLabelRepository;
     private final ObjectMapper objectMapper;
 
-    OccupationLabelSuggestionImpl(ElasticsearchTemplate elasticsearchTemplate,
+    OccupationLabelSearchServiceImpl(ElasticsearchTemplate elasticsearchTemplate,
         OccupationLabelRepository occupationLabelRepository) {
 
         this.elasticsearchTemplate = elasticsearchTemplate;
@@ -59,28 +54,19 @@ public class OccupationLabelSuggestionImpl {
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
     }
 
-    @Transactional(readOnly = true)
     public OccupationLabelAutocompleteDto suggest(String prefix, Language language, Collection<ProfessionCodeType> types, int resultSize) {
         LOGGER.debug("Request to suggest for a page of Occupations for query {}", prefix);
 
         SearchResponse suggestResponse = elasticsearchTemplate.suggest(
-            buildSuggestRequest(prefix, language, types, resultSize),
+            new OccupationLabelSearchQueryBuilder().buildSuggestQuery(prefix, language, types, resultSize),
             OccupationLabelSuggestion.class);
 
         List<OccupationLabelSuggestionDto> occupations = mapOccupations(suggestResponse, resultSize);
         List<OccupationLabel> classifications = Collections.emptyList();
-        if (hasClassificationType(types)) {
+        if (ProfessionCodeType.hasClassificationType(types)) {
             classifications = mapClassifications(suggestResponse, resultSize, occupations, language);
         }
         return new OccupationLabelAutocompleteDto(occupations, classifications);
-    }
-
-    boolean hasClassificationType(Collection<ProfessionCodeType> types) {
-        return types.stream().anyMatch(type -> isClassification(type));
-    }
-
-    boolean isClassification(ProfessionCodeType type) {
-        return SBN3.equals(type) || SBN5.equals(type);
     }
 
     private List<OccupationLabelSuggestionDto> mapOccupations(SearchResponse suggestResponse, int resultSize) {
@@ -128,7 +114,7 @@ public class OccupationLabelSuggestionImpl {
             .map(OccupationLabelSuggestionDto::getMappings)
             .filter(Objects::nonNull)
             .flatMap(mappings -> mappings.entrySet().stream()
-                .filter(mapping -> isClassification(mapping.getKey())))
+                .filter(mapping -> ProfessionCodeType.isClassification(mapping.getKey())))
             .distinct()
             .flatMap(entry -> occupationLabelRepository.findByCodeAndTypeAndLanguage(entry.getValue(), entry.getKey(), language).stream());
     }
@@ -141,57 +127,11 @@ public class OccupationLabelSuggestionImpl {
             .sorted(Comparator.comparing(OccupationLabelSuggestionDto::getLabel));
     }
 
-    private SuggestBuilder buildSuggestRequest(String prefix, Language language, Collection<ProfessionCodeType> types, int resultSize) {
-        Map<Type, List<ProfessionCodeType>> typeMap = types.stream().collect(groupingBy(this::getType));
-        List<ProfessionCodeType> occupationTypes = typeMap.get(Type.OCCUPATION);
-        List<ProfessionCodeType> classificationTypes = typeMap.get(Type.CLASSIFICATION);
-
-        SuggestBuilder suggestBuilder = new SuggestBuilder();
-        if (!CollectionUtils.isEmpty(occupationTypes)) {
-            suggestBuilder
-                .addSuggestion("occupation",
-                    completionSuggestion("label")
-                        .prefix(prefix)
-                        .size(resultSize)
-                        .contexts(createContext(language, occupationTypes)))
-                .addSuggestion("occupationSuggestions",
-                    completionSuggestion("occupationSuggestions")
-                        .prefix(prefix)
-                        .size(resultSize)
-                        .contexts(createContext(language, occupationTypes)));
-        }
-        if (!CollectionUtils.isEmpty(classificationTypes)) {
-            suggestBuilder
-                .addSuggestion("classification",
-                    completionSuggestion("label")
-                        .prefix(prefix)
-                        .size(resultSize)
-                        .contexts(createContext(language, classificationTypes)))
-                .addSuggestion("classificationSuggestions",
-                    completionSuggestion("occupationSuggestions")
-                        .prefix(prefix)
-                        .size(resultSize)
-                        .contexts(createContext(language, classificationTypes)));
-        }
-        return suggestBuilder;
-    }
-
-    private Type getType(ProfessionCodeType type) {
-        return isClassification(type) ? Type.CLASSIFICATION : Type.OCCUPATION;
-    }
-
-    private Map<String, List<? extends ToXContent>> createContext(Language language, Collection<ProfessionCodeType> types) {
-        Objects.requireNonNull(types, "types must not be null");
-
-        return ImmutableMap.of("key",
-            types.stream()
-                .map(type -> String.format("%s:%s", type.name(), language.name()))
-                .map(key -> CategoryQueryContext.builder().setCategory(key).build())
-                .collect(toList()));
-    }
-
-    enum Type {
-        OCCUPATION, CLASSIFICATION
+    public Page<OccupationLabel> search(OccupationLabelSearchRequestDto searchRequest, Language language) {
+        final SearchQuery searchQuery = new OccupationLabelSearchQueryBuilder()
+            .buildSearchQuery(searchRequest, language);
+        return elasticsearchTemplate.queryForPage(searchQuery, OccupationLabelSuggestion.class)
+            .map(occupationLabelSuggestion -> objectMapper.convertValue(occupationLabelSuggestion, OccupationLabel.class));
     }
 }
 
