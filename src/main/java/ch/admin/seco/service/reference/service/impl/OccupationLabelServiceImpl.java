@@ -132,7 +132,7 @@ public class OccupationLabelServiceImpl implements OccupationLabelService {
 
     @Override
     public Page<OccupationLabel> search(OccupationLabelSearchRequestDto searchRequest, Language language) {
-        return occupationSuggestionImpl.search(searchRequest, Language.de);
+        return occupationSuggestionImpl.search(searchRequest, language);
     }
 
     @Override
