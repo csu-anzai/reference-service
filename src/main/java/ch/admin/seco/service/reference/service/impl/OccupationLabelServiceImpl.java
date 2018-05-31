@@ -7,6 +7,7 @@ import static org.springframework.util.StringUtils.hasText;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -150,6 +151,7 @@ public class OccupationLabelServiceImpl implements OccupationLabelService {
                     .labels(labels);
             })
             .filter(Objects::nonNull)
+            .sorted(Comparator.comparing(occupationLabel -> occupationLabel.getLabels().get("default")))
             .collect(Collectors.toList());
     }
 

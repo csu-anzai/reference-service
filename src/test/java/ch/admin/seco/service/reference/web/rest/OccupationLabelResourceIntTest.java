@@ -250,9 +250,9 @@ public class OccupationLabelResourceIntTest {
         sut.perform(get("/api/occupations/label/mapped-by/sbn3/361"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[0].code").value("68913"))
+            .andExpect(jsonPath("$.[0].code").value("68904"))
             .andExpect(jsonPath("$.[0].type").value("AVAM"))
-            .andExpect(jsonPath("$.[0].labels.default").value("Java-Programmierer"));
+            .andExpect(jsonPath("$.[0].labels.default").value("Data programmer"));
     }
 
     @Test
@@ -260,12 +260,12 @@ public class OccupationLabelResourceIntTest {
         sut.perform(get("/api/occupations/label/mapped-by/sbn5/36102"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].code").value(hasItem("68904")))
-            .andExpect(jsonPath("$.[*].type").value(hasItem("AVAM")))
-            .andExpect(jsonPath("$.[*].labels.default").value(hasItem("Data programmer")))
-            .andExpect(jsonPath("$.[*].code").value(hasItem("68913")))
-            .andExpect(jsonPath("$.[*].type").value(hasItem("AVAM")))
-            .andExpect(jsonPath("$.[*].labels.default").value(hasItem("Java-Programmierer")));
+            .andExpect(jsonPath("$.[0].code").value("68904"))
+            .andExpect(jsonPath("$.[0].type").value("AVAM"))
+            .andExpect(jsonPath("$.[0].labels.default").value("Data programmer"))
+            .andExpect(jsonPath("$.[1].code").value("68913"))
+            .andExpect(jsonPath("$.[1].type").value("AVAM"))
+            .andExpect(jsonPath("$.[1].labels.default").value("Java-Programmierer"));
     }
 
     private OccupationLabel createAvamOccupationLabel(String code, Language lang, char gender, String label) {
