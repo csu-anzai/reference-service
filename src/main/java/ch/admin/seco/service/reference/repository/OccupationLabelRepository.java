@@ -31,6 +31,7 @@ public interface OccupationLabelRepository extends JpaRepository<OccupationLabel
     @Query("select o from OccupationLabel o")
     Stream<OccupationLabel> streamAll();
 
+    List<OccupationLabel> findByCodeAndType(String professionCode, ProfessionCodeType professionType);
     List<OccupationLabel> findByCodeAndTypeAndLanguage(String professionCode, ProfessionCodeType professionType, Language language);
 
     Optional<OccupationLabel> findOneByCodeAndTypeAndLanguageAndClassifier(String professionCode, ProfessionCodeType professionType, Language language, String classifier);

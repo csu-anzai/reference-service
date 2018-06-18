@@ -38,6 +38,8 @@ public interface OccupationLabelService {
 
     Map<String, String> getOccupationLabels(ProfessionCodeDTO professionCode, Language language);
 
+    Map<String, Map<String, String>> getOccupationLabels(ProfessionCodeDTO professionCode);
+
     Optional<Map<String, String>> getOccupationLabels(ProfessionCodeDTO professionCode, Language language,
         String classifier);
 

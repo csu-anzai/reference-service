@@ -89,6 +89,15 @@ public class OccupationLabelResource {
             .body(occupationService.getOccupationLabels(professionCode, getLanguage()));
     }
 
+    @GetMapping("/occupations/label/all-languages/{codeType}/{code}")
+    @Timed
+    public ResponseEntity<Map<String, Map<String, String>>> getOccupationLabelsInAllLanguages(
+        ProfessionCodeDTO professionCode) {
+        return ResponseEntity.ok()
+            .headers(createCacheHeader())
+            .body(occupationService.getOccupationLabels(professionCode));
+    }
+
     @GetMapping("/occupations/label/{codeType}/{code}/{classifier}")
     @Timed
     public ResponseEntity<Map<String, String>> getOccupationLabels(ProfessionCodeDTO professionCode,

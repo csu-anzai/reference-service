@@ -210,6 +210,15 @@ public class OccupationLabelResourceIntTest {
     }
 
     @Test
+    public void getOccupationLabelsAllLanguagesByKey() throws Exception {
+        sut.perform(get("/api/occupations/label/all-languages/sbn5/36102"))
+            .andDo(h -> System.out.println(h.getResponse().getContentAsString()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.de.default").value("Programmierer/innen"));
+    }
+
+    @Test
     public void getOccupationMappingByAvamCode() throws Exception {
         sut.perform(get("/api/occupations/label/mapping/avam/68913"))
             .andExpect(status().isOk())

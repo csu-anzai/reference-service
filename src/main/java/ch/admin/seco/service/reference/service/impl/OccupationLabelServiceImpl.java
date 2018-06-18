@@ -103,6 +103,19 @@ public class OccupationLabelServiceImpl implements OccupationLabelService {
     }
 
     @Override
+    public Map<String, Map<String, String>> getOccupationLabels(ProfessionCodeDTO professionCode) {
+        log.debug("Request to get OccupationLabels : professionCode:{}", professionCode);
+        List<OccupationLabel> occupationLabels = occupationLabelRepository
+            .findByCodeAndType(professionCode.getCode(), professionCode.getCodeType());
+        Map<String, Map<String, String>> labels = occupationLabels.stream()
+            .collect(Collectors.groupingBy((OccupationLabel label) -> label.getLanguage().name(),
+                toMap(item -> hasText(item.getClassifier()) ? item.getClassifier() : "default", OccupationLabel::getLabel)));
+        labels.forEach((lang, map) -> map.computeIfAbsent("default",
+            (k) -> labelGenerator.generate(map.get("m"), map.get("f"))));
+        return labels;
+    }
+
+    @Override
     public Optional<Map<String, String>> getOccupationLabels(ProfessionCodeDTO professionCode, Language language, String classifier) {
         log.debug("Request to get OccupationLabels : professionCode:{}, classifier:{}, language:{}", professionCode, classifier, language);
         return ofNullable(getBestMatchingOccupationLabel(professionCode, language, classifier))
