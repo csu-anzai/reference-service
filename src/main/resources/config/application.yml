@@ -117,17 +117,6 @@ jhipster:
         #max-age: 1800
     mail:
         from: referenceservice@localhost
-    swagger:
-        default-include-pattern: /api/.*
-        title: referenceservice API
-        description: referenceservice API documentation
-        version: 0.0.1
-        terms-of-service-url:
-        contact-name:
-        contact-url:
-        contact-email:
-        license:
-        license-url:
     ribbon:
         display-on-active-profiles: dev
 
