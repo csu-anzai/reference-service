@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 
 import org.hamcrest.Matchers;
@@ -187,6 +188,36 @@ public class ReportingObligationResourceIntTest {
 
         mockMvc.perform(get("/api/reporting-obligations/check-by-canton/sbn5/56456")
             .param("cantonCode", "SO"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.hasReportingObligation").value(false))
+            .andExpect(jsonPath("$.professionCode.code").value("56456"))
+            .andExpect(jsonPath("$.cantons").value(Matchers.containsInAnyOrder("AG", "ZH", "BE")));
+    }
+
+    @Test
+    @Transactional
+    public void shouldReturnTrueWhenCheckWithoutCantonAndReportingObligationAppliedForSwiss() throws Exception {
+        saveReportingObligations(
+            new ReportingObligation().sbn5Code("56456")
+                .cantonCodes(Collections.emptySet())
+        );
+
+        mockMvc.perform(get("/api/reporting-obligations/check-by-canton/sbn5/56456"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.hasReportingObligation").value(true))
+            .andExpect(jsonPath("$.professionCode.code").value("56456"))
+            .andExpect(jsonPath("$.cantons").value(Matchers.empty()));
+    }
+
+    @Test
+    @Transactional
+    public void shouldReturnFalseWhenCheckWithoutCantonAndReportingObligationAppliedForCantons() throws Exception {
+        saveReportingObligations(
+            new ReportingObligation().sbn5Code("56456")
+                .cantonCodes(new HashSet<>(Arrays.asList("AG", "ZH", "BE")))
+        );
+
+        mockMvc.perform(get("/api/reporting-obligations/check-by-canton/sbn5/56456"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.hasReportingObligation").value(false))
             .andExpect(jsonPath("$.professionCode.code").value("56456"))

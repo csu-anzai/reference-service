@@ -44,7 +44,7 @@ public class ReportingObligationResource {
     @GetMapping("/reporting-obligations/check-by-canton/{codeType}/{code}")
     @Timed
     public ResponseEntity<ReportingObligationDTO> hasReportingObligationForCanton(ProfessionCodeDTO professionCodeDTO,
-        @RequestParam String cantonCode) {
+        @RequestParam(required = false) String cantonCode) {
         log.debug("REST request to check reporting obligation for canton '{}' by {}", cantonCode, professionCodeDTO);
         return ResponseUtil.wrapOrNotFound(this.reportingObligationService
             .findReportingObligation(professionCodeDTO, cantonCode), createCacheHeader());
