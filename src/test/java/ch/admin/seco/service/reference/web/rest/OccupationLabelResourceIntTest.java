@@ -112,6 +112,7 @@ public class OccupationLabelResourceIntTest {
             createOccupationLabelMappingX28("68913", "11002714")
         );
         this.occupationLabelService.save(createAvamOccupationLabel("68913", Language.de, 'm', "Java-Programmierer"));
+        this.occupationLabelService.save(createAvamOccupationLabel("68913", Language.en, 'm', "Java-Programmer"));
         this.occupationLabelService.save(createAvamOccupationLabel("68904", Language.en, 'm', "Data programmer"));
         this.occupationLabelService.save(createX28OccupationLabel("11002714", Language.en, "Javascript Developer"));
         this.occupationLabelService.save(createX28OccupationLabel("11002714", Language.de, "Javascript-Entwickler"));
@@ -210,15 +211,6 @@ public class OccupationLabelResourceIntTest {
     }
 
     @Test
-    public void getOccupationLabelsAllLanguagesByKey() throws Exception {
-        sut.perform(get("/api/occupations/label/all-languages/sbn5/36102"))
-            .andDo(h -> System.out.println(h.getResponse().getContentAsString()))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.de.default").value("Programmierer/innen"));
-    }
-
-    @Test
     public void getOccupationMappingByAvamCode() throws Exception {
         sut.perform(get("/api/occupations/label/mapping/avam/68913"))
             .andExpect(status().isOk())
@@ -228,6 +220,20 @@ public class OccupationLabelResourceIntTest {
             .andExpect(jsonPath("$.sbn3Code").value("361"))
             .andExpect(jsonPath("$.sbn5Code").value("36102"))
             .andExpect(jsonPath("$.description").value("Java-Programmierer"));
+    }
+
+    @Test
+    public void getOccupationLabelsMappingByAvamCode() throws Exception {
+        sut.perform(get("/api/occupations/label/mapping/all-languages/avam/68913"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.bfsCode").value("33302009"))
+            .andExpect(jsonPath("$.avamCode").value("68913"))
+            .andExpect(jsonPath("$.sbn3Code").value("361"))
+            .andExpect(jsonPath("$.sbn5Code").value("36102"))
+            .andExpect(jsonPath("$.description").value("Java-Programmierer"))
+            .andExpect(jsonPath("$.labelDe").value("Java-Programmierer"))
+            .andExpect(jsonPath("$.labelEn").value("Java-Programmer"));
     }
 
     @Test
@@ -274,7 +280,7 @@ public class OccupationLabelResourceIntTest {
             .andExpect(jsonPath("$.[0].labels.default").value("Data programmer"))
             .andExpect(jsonPath("$.[1].code").value("68913"))
             .andExpect(jsonPath("$.[1].type").value("AVAM"))
-            .andExpect(jsonPath("$.[1].labels.default").value("Java-Programmierer"));
+            .andExpect(jsonPath("$.[1].labels.default").value("Java-Programmer"));
     }
 
     private OccupationLabel createAvamOccupationLabel(String code, Language lang, char gender, String label) {

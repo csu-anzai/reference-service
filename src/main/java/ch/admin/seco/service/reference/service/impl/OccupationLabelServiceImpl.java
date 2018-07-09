@@ -31,6 +31,7 @@ import ch.admin.seco.service.reference.repository.OccupationLabelRepository;
 import ch.admin.seco.service.reference.service.OccupationLabelService;
 import ch.admin.seco.service.reference.service.dto.OccupationLabelAutocompleteDto;
 import ch.admin.seco.service.reference.service.dto.OccupationLabelDto;
+import ch.admin.seco.service.reference.service.dto.OccupationLabelMappingDto;
 import ch.admin.seco.service.reference.service.dto.OccupationLabelSearchRequestDto;
 import ch.admin.seco.service.reference.service.dto.ProfessionCodeDTO;
 
@@ -80,6 +81,46 @@ public class OccupationLabelServiceImpl implements OccupationLabelService {
     }
 
     @Override
+    public Optional<OccupationLabelMappingDto> findOneOccupationLabelMappingInAllLanguages(ProfessionCodeDTO professionCode) {
+        log.debug("Request to get OccupationLabelMapping in all languages : {}", professionCode);
+
+        return findOneOccupationMapping(professionCode)
+            .map((occupationMapping) -> {
+                OccupationLabelMappingDto occupationLabelMappingDto = new OccupationLabelMappingDto();
+                occupationLabelMappingDto.setId(occupationMapping.getId());
+                occupationLabelMappingDto.setAvamCode(occupationMapping.getAvamCode());
+                occupationLabelMappingDto.setBfsCode(occupationMapping.getBfsCode());
+                occupationLabelMappingDto.setSbn3Code(occupationMapping.getSbn3Code());
+                occupationLabelMappingDto.setSbn5Code(occupationMapping.getSbn5Code());
+                occupationLabelMappingDto.setDescription(occupationMapping.getDescription());
+
+                List<OccupationLabel> occupationLabels = occupationLabelRepository.findByCodeAndType(
+                    professionCode.getCode(), professionCode.getCodeType());
+
+                Map<String, Map<String, String>> labels = occupationLabels.stream()
+                    .collect(Collectors.groupingBy((OccupationLabel label) -> label.getLanguage().name(),
+                        toMap(item -> hasText(item.getClassifier()) ? item.getClassifier() : "default", OccupationLabel::getLabel)));
+                labels.forEach((lang, map) -> map.computeIfAbsent("default",
+                    (k) -> labelGenerator.generate(map.get("m"), map.get("f"))));
+
+                if (labels.containsKey(Language.de.name())) {
+                    occupationLabelMappingDto.setLabelDe(labels.get(Language.de.name()).get("default"));
+                }
+                if (labels.containsKey(Language.en.name())) {
+                    occupationLabelMappingDto.setLabelEn(labels.get(Language.en.name()).get("default"));
+                }
+                if (labels.containsKey(Language.fr.name())) {
+                    occupationLabelMappingDto.setLabelFr(labels.get(Language.fr.name()).get("default"));
+                }
+                if (labels.containsKey(Language.it.name())) {
+                    occupationLabelMappingDto.setLabelIt(labels.get(Language.it.name()).get("default"));
+                }
+
+                return occupationLabelMappingDto;
+            });
+    }
+
+    @Override
     public OccupationLabelAutocompleteDto suggest(String prefix, Language language, Collection<ProfessionCodeType> types, int resultSize) {
         return occupationSuggestionImpl.suggest(prefix, language, types, resultSize);
     }
@@ -99,19 +140,6 @@ public class OccupationLabelServiceImpl implements OccupationLabelService {
         if (!labels.containsKey("default")) {
             labels.put("default", labelGenerator.generate(labels.get("m"), labels.get("f")));
         }
-        return labels;
-    }
-
-    @Override
-    public Map<String, Map<String, String>> getOccupationLabels(ProfessionCodeDTO professionCode) {
-        log.debug("Request to get OccupationLabels : professionCode:{}", professionCode);
-        List<OccupationLabel> occupationLabels = occupationLabelRepository
-            .findByCodeAndType(professionCode.getCode(), professionCode.getCodeType());
-        Map<String, Map<String, String>> labels = occupationLabels.stream()
-            .collect(Collectors.groupingBy((OccupationLabel label) -> label.getLanguage().name(),
-                toMap(item -> hasText(item.getClassifier()) ? item.getClassifier() : "default", OccupationLabel::getLabel)));
-        labels.forEach((lang, map) -> map.computeIfAbsent("default",
-            (k) -> labelGenerator.generate(map.get("m"), map.get("f"))));
         return labels;
     }
 

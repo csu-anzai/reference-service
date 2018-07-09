@@ -31,6 +31,7 @@ import ch.admin.seco.service.reference.domain.enums.ProfessionCodeType;
 import ch.admin.seco.service.reference.service.OccupationLabelService;
 import ch.admin.seco.service.reference.service.dto.OccupationLabelAutocompleteDto;
 import ch.admin.seco.service.reference.service.dto.OccupationLabelDto;
+import ch.admin.seco.service.reference.service.dto.OccupationLabelMappingDto;
 import ch.admin.seco.service.reference.service.dto.OccupationLabelSearchRequestDto;
 import ch.admin.seco.service.reference.service.dto.ProfessionCodeDTO;
 
@@ -89,15 +90,6 @@ public class OccupationLabelResource {
             .body(occupationService.getOccupationLabels(professionCode, getLanguage()));
     }
 
-    @GetMapping("/occupations/label/all-languages/{codeType}/{code}")
-    @Timed
-    public ResponseEntity<Map<String, Map<String, String>>> getOccupationLabelsInAllLanguages(
-        ProfessionCodeDTO professionCode) {
-        return ResponseEntity.ok()
-            .headers(createCacheHeader())
-            .body(occupationService.getOccupationLabels(professionCode));
-    }
-
     @GetMapping("/occupations/label/{codeType}/{code}/{classifier}")
     @Timed
     public ResponseEntity<Map<String, String>> getOccupationLabels(ProfessionCodeDTO professionCode,
@@ -111,6 +103,13 @@ public class OccupationLabelResource {
     public ResponseEntity<OccupationLabelMapping> getOccupationMapping(ProfessionCodeDTO professionCode) {
         return ResponseUtil.wrapOrNotFound(
             occupationService.findOneOccupationMapping(professionCode), createCacheHeader());
+    }
+
+    @GetMapping("/occupations/label/mapping/all-languages/{codeType}/{code}")
+    @Timed
+    public ResponseEntity<OccupationLabelMappingDto> getOccupationMappingInAllLanguages(ProfessionCodeDTO professionCode) {
+        return ResponseUtil.wrapOrNotFound(
+            occupationService.findOneOccupationLabelMappingInAllLanguages(professionCode), createCacheHeader());
     }
 
     private Language getLanguage() {

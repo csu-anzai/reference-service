@@ -15,6 +15,7 @@ import ch.admin.seco.service.reference.service.dto.OccupationLabelAutocompleteDt
 import ch.admin.seco.service.reference.service.dto.OccupationLabelDto;
 import ch.admin.seco.service.reference.service.dto.OccupationLabelSearchRequestDto;
 import ch.admin.seco.service.reference.service.dto.ProfessionCodeDTO;
+import ch.admin.seco.service.reference.service.dto.OccupationLabelMappingDto;
 
 /**
  * Service Interface for managing Occupations.
@@ -24,6 +25,8 @@ public interface OccupationLabelService {
     OccupationLabel save(OccupationLabel occupationLabel);
 
     Optional<OccupationLabelMapping> findOneOccupationMapping(ProfessionCodeDTO professionCode);
+
+    Optional<OccupationLabelMappingDto> findOneOccupationLabelMappingInAllLanguages(ProfessionCodeDTO professionCode);
 
     /**
      * Search for the occupationSynonym corresponding to the query.
@@ -37,8 +40,6 @@ public interface OccupationLabelService {
     OccupationLabelAutocompleteDto suggest(String prefix, Language language, Collection<ProfessionCodeType> types, int resultSize);
 
     Map<String, String> getOccupationLabels(ProfessionCodeDTO professionCode, Language language);
-
-    Map<String, Map<String, String>> getOccupationLabels(ProfessionCodeDTO professionCode);
 
     Optional<Map<String, String>> getOccupationLabels(ProfessionCodeDTO professionCode, Language language,
         String classifier);
