@@ -113,8 +113,12 @@ public class OccupationLabelMappingDto {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) { return true; }
-        if (o == null || getClass() != o.getClass()) { return false; }
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         OccupationLabelMappingDto that = (OccupationLabelMappingDto) o;
         return Objects.equals(id, that.id) &&
             Objects.equals(bfsCode, that.bfsCode) &&

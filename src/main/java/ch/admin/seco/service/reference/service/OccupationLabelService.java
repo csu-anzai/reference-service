@@ -13,9 +13,9 @@ import ch.admin.seco.service.reference.domain.enums.Language;
 import ch.admin.seco.service.reference.domain.enums.ProfessionCodeType;
 import ch.admin.seco.service.reference.service.dto.OccupationLabelAutocompleteDto;
 import ch.admin.seco.service.reference.service.dto.OccupationLabelDto;
+import ch.admin.seco.service.reference.service.dto.OccupationLabelMappingDto;
 import ch.admin.seco.service.reference.service.dto.OccupationLabelSearchRequestDto;
 import ch.admin.seco.service.reference.service.dto.ProfessionCodeDTO;
-import ch.admin.seco.service.reference.service.dto.OccupationLabelMappingDto;
 
 /**
  * Service Interface for managing Occupations.
