@@ -25,6 +25,4 @@
         <loadData tableName="postal_code_job_center_mapping"
                   file="config/liquibase/changelog/data/job-centers-by-postal-code.csv"/>
     </changeSet>
-
-
 </databaseChangeLog>

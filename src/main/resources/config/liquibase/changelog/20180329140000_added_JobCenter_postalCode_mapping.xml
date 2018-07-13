@@ -18,11 +18,4 @@
                        constraintName="pk_job_center_postal_codes"
                        tableName="job_center_postal_codes"/>
     </changeSet>
-
-    <changeSet id="20180329140000-2" author="olko">
-        <!-- Set the checksum of the current updated csv file -->
-        <validCheckSum>7:443aa4e3b07648a7c96c675b7f0dab5a</validCheckSum>
-        <loadData tableName="job_center_postal_codes"
-                  file="config/liquibase/changelog/data/job-centers-by-postal-code.csv"/>
-    </changeSet>
 </databaseChangeLog>
