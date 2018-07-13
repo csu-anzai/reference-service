@@ -1,11 +1,14 @@
 package ch.admin.seco.service.reference.web.rest;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -20,6 +23,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -65,6 +69,14 @@ public class JobCenterResourceIntTest {
     private static final String HOUSE_NUMBER = "12";
     private static final String ZIP_CODE = "9000";
 
+    private static final String CODE_TO_UPDATE = "JC11";
+    private static final String CODE_TO_CREATE = "JC01";
+    private static final String POSTAL_CODE_FOUR = "PO04";
+    private static final String POSTAL_CODE_FIVE = "PO05";
+    private static final String POSTAL_CODE_SIX = "PO6";
+    private static final String POSTAL_CODE_SEVEN = "PO7";
+    private static final String POSTAL_CODE_EIGHT = "PO8";
+
     @Autowired
     private JobCenterRepository jobCenterRepository;
 
@@ -79,6 +91,9 @@ public class JobCenterResourceIntTest {
 
     @Autowired
     private ExceptionTranslator exceptionTranslator;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     private MockMvc restJobCenterMockMvc;
 
@@ -226,5 +241,55 @@ public class JobCenterResourceIntTest {
             .andExpect(jsonPath("$.address.name").value(NAME_DE))
             .andExpect(jsonPath("$.address.city").value(CITY_DE))
             .andExpect(jsonPath("$.address.street").value(STREET_DE));
+    }
+
+    @Test
+    @Transactional
+    public void createJobCenter() throws Exception {
+        // GIVEN
+        Address addressEN = buildAddress(NAME_EN, CITY_EN, STREET_EN, Language.en);
+        JobCenter jobCenterToCreate = buildJobCenter(CODE_TO_CREATE, EMAIL_ONE, PHONE_ONE, FAX_ONE, null, addressEN, addressEN);
+        addPostalCodeJobCenterMapping(POSTAL_CODE_FOUR, CODE_TO_CREATE);
+        addPostalCodeJobCenterMapping(POSTAL_CODE_FIVE, CODE_TO_CREATE);
+
+        // WHEN
+        restJobCenterMockMvc.perform(patch("/api/job-centers")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(jobCenterToCreate)))
+            .andExpect(status().isOk());
+
+        // THEN
+        Optional<JobCenter> jobCenter = this.jobCenterRepository.findOneByCode(CODE_TO_CREATE);
+        assertThat(jobCenter).isPresent();
+        assertThat(jobCenter.get().getPostalCodes()).containsExactlyInAnyOrder(POSTAL_CODE_FOUR, POSTAL_CODE_FIVE);
+
+    }
+
+    @Test
+    @Transactional
+    public void updateJobCenter() throws Exception {
+        // GIVEN
+        Address addressEN = buildAddress(NAME_EN, CITY_EN, STREET_EN, Language.en);
+        JobCenter newJobcenter = buildJobCenter(CODE_TO_UPDATE, EMAIL_ONE, PHONE_ONE, FAX_ONE, POSTAL_CODE_SIX, addressEN, addressEN);
+        this.jobCenterRepository.save(newJobcenter);
+
+        addPostalCodeJobCenterMapping(POSTAL_CODE_SEVEN, CODE_TO_UPDATE);
+        addPostalCodeJobCenterMapping(POSTAL_CODE_EIGHT, CODE_TO_UPDATE);
+        JobCenter jobCenterToUpdate = buildJobCenter(CODE_TO_UPDATE, EMAIL_ONE, PHONE_ONE, FAX_ONE, POSTAL_CODE_SIX, addressEN, addressEN);
+
+        // WHEN
+        restJobCenterMockMvc.perform(patch("/api/job-centers")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(jobCenterToUpdate)))
+            .andExpect(status().isOk());
+
+        // THEN
+        Optional<JobCenter> jobCenter = this.jobCenterRepository.findOneByCode(CODE_TO_UPDATE);
+        assertThat(jobCenter).isPresent();
+        assertThat(jobCenter.get().getPostalCodes()).containsExactlyInAnyOrder(POSTAL_CODE_SEVEN, POSTAL_CODE_EIGHT);
+    }
+
+    private void addPostalCodeJobCenterMapping(String postalCode, String jobCenterCode) {
+        this.jdbcTemplate.update("insert into postal_code_job_center_mapping (postal_code, job_center_code) values(?, ?)", postalCode, jobCenterCode);
     }
 }

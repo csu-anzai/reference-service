@@ -1,6 +1,7 @@
 package ch.admin.seco.service.reference.domain;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
@@ -59,7 +60,7 @@ public class JobCenter extends AbstractAuditingEntity implements Serializable {
     @CollectionTable(name = "job_center_postal_codes",
         joinColumns = @JoinColumn(name = "job_center_code", referencedColumnName = "code"))
     @Column(name = "postal_code")
-    private Set<String> postalCodes;
+    private Set<String> postalCodes = new HashSet<>();
 
     public UUID getId() {
         return id;
@@ -156,12 +157,13 @@ public class JobCenter extends AbstractAuditingEntity implements Serializable {
         return postalCodes;
     }
 
-    public void setPostalCodes(Set<String> postalCodes) {
-        this.postalCodes = postalCodes;
+    private void setPostalCodes(Set<String> postalCodes) {
+        this.postalCodes.clear();
+        this.postalCodes.addAll(postalCodes);
     }
 
     public JobCenter postalCodes(Set<String> postalCodes) {
-        this.postalCodes = postalCodes;
+        this.setPostalCodes(postalCodes);
         return this;
     }
 

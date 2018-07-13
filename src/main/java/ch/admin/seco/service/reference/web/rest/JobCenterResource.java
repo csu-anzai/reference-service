@@ -2,6 +2,8 @@ package ch.admin.seco.service.reference.web.rest;
 
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import com.codahale.metrics.annotation.Timed;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -58,7 +60,7 @@ public class JobCenterResource {
 
     @PatchMapping("/job-centers")
     @Timed
-    public ResponseEntity<JobCenter> createOrUpdate(@RequestBody JobCenter jobCenter) {
+    public ResponseEntity<JobCenter> createOrUpdate(@Valid @RequestBody JobCenter jobCenter) {
         LOGGER.debug("REST request to update JobCenter {}", jobCenter);
         JobCenter result = jobCenterService.save(jobCenter);
         return ResponseEntity.ok()

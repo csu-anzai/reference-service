@@ -1,13 +1,16 @@
 package ch.admin.seco.service.reference.service.impl;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,9 +22,13 @@ import ch.admin.seco.service.reference.service.dto.JobCenterDto;
 import ch.admin.seco.service.reference.service.dto.mapper.JobCenterDtoMapper;
 
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class JobCenterServiceImpl implements JobCenterService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JobCenterServiceImpl.class);
+
+    private static final String JOB_CENTER_POSTAL_CODE_MAPPING_QUERY = "select postal_code from postal_code_job_center_mapping where job_center_code = ?";
+
     private final static String CH_LAND_CODE = "CH";
     private static final String EU_JOB_CENTER_POSTAL_CODE = "9999";
     private static final String OTHER_JOB_CENTER_POSTAL_CODE = "9998";
@@ -64,12 +71,15 @@ public class JobCenterServiceImpl implements JobCenterService {
 
     private final JobCenterRepository jobCenterRepository;
     private final JobCenterDtoMapper jobCenterMapper;
+    private final JdbcTemplate jdbcTemplate;
 
     public JobCenterServiceImpl(JobCenterRepository jobCenterRepository,
-        JobCenterDtoMapper jobCenterMapper) {
+        JobCenterDtoMapper jobCenterMapper,
+        JdbcTemplate jdbcTemplate) {
 
         this.jobCenterRepository = jobCenterRepository;
         this.jobCenterMapper = jobCenterMapper;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     /**
@@ -105,7 +115,19 @@ public class JobCenterServiceImpl implements JobCenterService {
     public JobCenter save(JobCenter jobCenter) {
         LOGGER.debug("Request to save JobCenter : {}", jobCenter);
 
+        jobCenter.postalCodes(resolvePostalCode(jobCenter.getCode()));
+
         jobCenterRepository.findOneByCode(jobCenter.getCode()).ifPresent(currentJobCenter -> jobCenter.setId(currentJobCenter.getId()));
+
         return jobCenterRepository.save(jobCenter);
+    }
+
+    private Set<String> resolvePostalCode(String jobCenterCode) {
+        final List<String> postalCodes = this.jdbcTemplate.queryForList(JOB_CENTER_POSTAL_CODE_MAPPING_QUERY,
+            new String[] {jobCenterCode},
+            String.class
+        );
+
+        return new HashSet<>(postalCodes);
     }
 }
