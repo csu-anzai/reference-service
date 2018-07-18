@@ -25,5 +25,8 @@
     <include
             file="config/liquibase/changelog/20180712160000_added_postal_code_job_center_mapping.xml"
             relativeToChangelogFile="false"/>
+    <include
+            file="config/liquibase/changelog/20180718140000_updated_Occupation_Label_data.xml"
+            relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
 </databaseChangeLog>

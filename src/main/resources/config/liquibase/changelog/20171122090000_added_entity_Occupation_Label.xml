@@ -44,6 +44,7 @@
     </changeSet>
 
     <changeSet id="20171122090000-2" author="miwr" context="!test">
+        <validCheckSum>ANY</validCheckSum>
         <loadData tableName="occupation_label_mapping"
                   file="config/liquibase/changelog/data/occupation-label-mapping.csv"/>
     </changeSet>
@@ -82,6 +83,7 @@
     </changeSet>
 
     <changeSet id="20171122090000-5" author="miwr" context="!test">
+        <validCheckSum>ANY</validCheckSum>
         <loadData tableName="occupation_label"
                   file="config/liquibase/changelog/data/occupation-label-avam.csv"/>
         <loadData tableName="occupation_label"

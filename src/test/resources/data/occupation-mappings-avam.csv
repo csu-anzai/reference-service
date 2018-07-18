@@ -21,7 +21,7 @@ AVAM_CODE,BFS_CODE,SBN_5,SBN_3,Text DE W,Text FR W,Text IT W,Text DE M,Text FR M
 63920,11103005,11103,111,Agrotechnikerin,agro-technicienne,agro-tecnico,Agrotechniker,agro-technicien,agro-tecnico,,Agricultural technician/engineer,
 63928,11103003,11103,111,Besamungstechnikerin,technicienne en insémination artificiell,tecnico inseminazione artificiale,Besamungstechniker,technicien en insémination artificielle,tecnico inseminazione artificiale,,Artificial insemination technician,
 15112,11103014,11103,111,Hirtin,pasteuse (secteur agricole),pastora (settore dell'agricoltura),Hirt,pasteur (secteur agricole),pastore (settore dell'agricoltura),,,
-15405,11103015,11103,111,Landwirtschaftliche Betriebs- und Dorfhelferin,vulgarisatrice agricole,consulente agricolo,Landwirschaftlicher Betriebs- und Dorfhelfer,vulgarisateur agricole,consulente agricolo,,Agricultural consultant,
+15405,11103015,11103,111,Landwirtschaftliche Betriebs- und Dorfhelferin,vulgarisatrice agricole,consulente agricolo,Landwirtschaftlicher Betriebs- und Dorfhelfer,vulgarisateur agricole,consulente agricolo,,Agricultural consultant,
 15404,11103015,11103,111,landwirtschaftliche Beraterin,conseillère en vulgarisation agricole,consulente di volgarizzazione agricolo,landwirtschaftlicher Berater,conseiller en vulgarisation agricole,consulente di volgarizzazione agricolo,,Agricultural consultant,
 15400,11103014,11103,111,Sonstige landwirtschaftliche Berufe,Autres professions de l'agriculture,Altre professioni agricole,Sonstige landwirtschaftliche Berufe,Autres professions de l'agriculture,Altre professioni agricole,,,
 21900,11103001,11103,111,Sonstige Nahrungsmittelherstellerinnen,Autres professions de la boucherie,Professioni speciali inerenti alla macelleria,Sonstige Nahrungsmittelhersteller,Autres professions de la boucherie,Professioni speciali inerenti alla macelleria,,Agricultural estate manager,
@@ -2545,7 +2545,6 @@ AVAM_CODE,BFS_CODE,SBN_5,SBN_3,Text DE W,Text FR W,Text IT W,Text DE M,Text FR M
 78707,39103014,61103,611,Weinkellnerin,sommelière en vins,cameriera ai vini,Weinkellner,sommelier en vins,cameriere ai vini,,Wine waiter,Wine waitress
 15080,39104005,61104,611,Etagengouvernante,Gouvernante d'étage,Governante ai piani,Etagengouvernante,Gouvernant d'étage,Governante ai piani,,,Floor governess (hotel)
 78320,39104007,61104,611,Hotel-Gouvernante,gouvernante d'hôtel,governante d'albergo,Hotel-Gouvernante,gouvernante d'hôtel,governante d'albergo,,,Governess (hotel)
-78325,39104007,61104,611,Zimmerfrau/Lingerie,femme de chambre/lingère,cameriera ai piani / lingerista,Zimmerfrau/Lingerie,garçon d'étages/lingerie,cameriera ai piani / lingerista,,,Governess (hotel)
 79038,39105050,61105,611,Alleinköchin,cuisinière seule,cuoca unica,Alleinkoch,cuisinier seul,cuoco unico,,,
 79004,39105062,61105,611,Chefin de partie,cheffe de partie,capo partita,Chef de partie,chef de partie,capo partita,,,
 79002,39105027,61105,611,Diätköchin EFZ,cuisinière en diététique CFC,cuoca per la dieta AFC,Diätkoch EFZ,cuisinier en diététique CFC,cuoco per la dieta AFC,,Diet cook,
