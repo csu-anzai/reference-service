@@ -7,7 +7,7 @@
     <changeSet id="20180718140000-1" author="mabi" context="!test" runOnChange="true">
         <validCheckSum>ANY</validCheckSum>
         <delete tableName="occupation_label">
-            <where>classifier = 'AVAM'</where>
+            <where>type='AVAM'</where>
         </delete>
         <loadData tableName="occupation_label"
                         file="config/liquibase/changelog/data/occupation-label-avam.csv"/>
