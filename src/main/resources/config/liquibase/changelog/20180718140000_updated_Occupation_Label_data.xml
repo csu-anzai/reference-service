@@ -6,13 +6,13 @@
 
     <changeSet id="20180718140000-1" author="mabi" context="!test">
         <validCheckSum>ANY</validCheckSum>
-        <loadUpdateData tableName="occupation_label" primaryKey="id"
+        <loadUpdateData tableName="occupation_label" primaryKey="id" onlyUpdate="true"
                         file="config/liquibase/changelog/data/occupation-label-avam.csv"/>
     </changeSet>
 
     <changeSet id="20180718140000-2" author="mabi" context="!test">
         <validCheckSum>ANY</validCheckSum>
-        <loadUpdateData tableName="occupation_label_mapping" primaryKey="id"
+        <loadUpdateData tableName="occupation_label_mapping" primaryKey="id" onlyUpdate="true"
                         file="config/liquibase/changelog/data/occupation-label-mapping.csv"/>
     </changeSet>
 </databaseChangeLog>
