@@ -478,4 +478,46 @@ public class LocalityResourceIntTest {
         List<Locality> localityList = localityRepository.findAll();
         assertThat(localityList).hasSize(databaseSizeBeforeTest);
     }
+
+    @Test
+    @Transactional
+    public void searchByZiCode() throws Exception {
+        saveLocalities(
+            createLocalityEntity().zipCode("3001"),
+            createLocalityEntity().zipCode("3002"),
+            createLocalityEntity().zipCode("3002")
+        );
+
+        final MockHttpServletRequestBuilder requestBuilder = get("/api/localities")
+            .param("zipCode", "3002");
+        restLocalityMockMvc.perform(requestBuilder)
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.length()").value(2));
+    }
+
+    @Test
+    @Transactional
+    public void searchByZipCodeAndCitySynonym() throws Exception {
+        saveLocalities(
+            createLocalityEntity().zipCode("7000").city("Chur"),
+            createLocalityEntity().zipCode("7001").city("Chur")
+        );
+
+        final MockHttpServletRequestBuilder requestBuilder = get("/api/localities")
+            .param("zipCode", "7000")
+            .param("city", "Coira");
+        restLocalityMockMvc.perform(requestBuilder)
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.zipCode").value("7000"))
+            .andExpect(jsonPath("$.city").value("Chur"));
+    }
+
+    @Test
+    public void searchNotExistingLocalityByZipCodeAndCity() throws Exception {
+        final MockHttpServletRequestBuilder requestBuilder = get("/api/localities")
+            .param("zipCode", "7000")
+            .param("city", "Chur");
+        restLocalityMockMvc.perform(requestBuilder)
+            .andExpect(status().isNotFound());
+    }
 }

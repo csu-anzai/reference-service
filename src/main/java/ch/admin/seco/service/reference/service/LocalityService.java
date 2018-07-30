@@ -55,4 +55,6 @@ public interface LocalityService {
     Optional<Locality> findNearestLocality(GeoPoint geoPoint);
 
     List<Locality> findByZipCode(String zipCode);
+
+    Optional<Locality> findByZipCodeAndCity(String zipCode, String city);
 }

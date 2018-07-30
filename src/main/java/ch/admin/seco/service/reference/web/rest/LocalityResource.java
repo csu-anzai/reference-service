@@ -153,4 +153,11 @@ public class LocalityResource {
         log.debug("REST request to suggest Locality by zipCode({})", zipCode);
         return localityService.findByZipCode(zipCode);
     }
+
+    @GetMapping(value = "/localities", params = {"zipCode", "city"})
+    @Timed
+    public ResponseEntity<Locality> findLocalityByZipCodeAndCity(@RequestParam String zipCode, @RequestParam String city) {
+        log.debug("REST request to suggest Locality by zipCode({}) and city({})", zipCode, city);
+        return ResponseUtil.wrapOrNotFound(localityService.findByZipCodeAndCity(zipCode, city));
+    }
 }

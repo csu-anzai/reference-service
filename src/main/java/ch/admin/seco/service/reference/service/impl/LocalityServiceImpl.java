@@ -119,4 +119,9 @@ public class LocalityServiceImpl implements LocalityService {
     public void index(Locality locality) {
         localitySynonymSearchRepository.index(entityToSynonymMapper.toLocalitySuggestion(locality));
     }
+
+    @Override
+    public Optional<Locality> findByZipCodeAndCity(String zipCode, String city) {
+        return localitySuggestion.findByZipCodeAndCity(zipCode, city);
+    }
 }

@@ -5,6 +5,8 @@ import java.util.Optional;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.common.geo.GeoDistance;
 import org.elasticsearch.common.unit.DistanceUnit;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.sort.GeoDistanceSortBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.suggest.SuggestBuilder;
@@ -14,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,27 +62,6 @@ public class LocalitySuggestionImpl {
             .convert(searchResponse, localitySearchDTO.getSize());
     }
 
-    /**
-     * Search for the nearest locality to the geo point.
-     *
-     * @param geoPoint the geo point from which to suggest
-     * @return nearest entity to geo point
-     */
-    public Optional<Locality> findNearestLocality(GeoPoint geoPoint) {
-        GeoDistanceSortBuilder distanceSortBuilder = SortBuilders.geoDistanceSort("geoPoint", geoPoint.getLatitude(), geoPoint.getLongitude())
-            .unit(DistanceUnit.KILOMETERS)
-            .geoDistance(GeoDistance.PLANE);
-
-        NativeSearchQuery query = new NativeSearchQueryBuilder()
-            .withSort(distanceSortBuilder)
-            .withPageable(PageRequest.of(0, 1))
-            .build();
-        return localitySynonymSearchRepository.search(query)
-            .getContent()
-            .stream().findFirst()
-            .map(entityToSynonymMapper::fromSynonym);
-    }
-
     private SuggestBuilder createSuggestBuilder(LocalitySearchDto localitySearchDTO) {
         final String query = localitySearchDTO.getQuery();
         final int increasedResultSize = Math.min(localitySearchDTO.getSize() + 20, 1000); // to factor in duplicate entries as 'Zürich' we increase the result size
@@ -96,5 +78,42 @@ public class LocalitySuggestionImpl {
             .addSuggestion("zipCodes", zipCodeSuggestionBuilder)
             .addSuggestion("cantonCodes", new CompletionSuggestionBuilder("code.canton-suggestions").prefix(query))
             .addSuggestion("cantonNames", new CompletionSuggestionBuilder("cantonSuggestions").prefix(query));
+    }
+
+    /**
+     * Search for the nearest locality to the geo point.
+     *
+     * @param geoPoint the geo point from which to suggest
+     * @return nearest entity to geo point
+     */
+    public Optional<Locality> findNearestLocality(GeoPoint geoPoint) {
+        GeoDistanceSortBuilder distanceSortBuilder = SortBuilders.geoDistanceSort("geoPoint", geoPoint.getLatitude(), geoPoint.getLongitude())
+            .unit(DistanceUnit.KILOMETERS)
+            .geoDistance(GeoDistance.PLANE);
+
+        NativeSearchQuery query = new NativeSearchQueryBuilder()
+            .withSort(distanceSortBuilder)
+            .withPageable(PageRequest.of(0, 1))
+            .build();
+        return findOneLocality(query);
+    }
+
+    private Optional<Locality> findOneLocality(SearchQuery query) {
+        return localitySynonymSearchRepository.search(query)
+            .getContent()
+            .stream().findFirst()
+            .map(entityToSynonymMapper::fromSynonym);
+    }
+
+    public Optional<Locality> findByZipCodeAndCity(String zipCode, String city) {
+        final BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery()
+            .must(QueryBuilders.termQuery("zipCode", zipCode))
+            .must(QueryBuilders.matchQuery("citySuggestions", city));
+
+        final NativeSearchQuery query = new NativeSearchQueryBuilder()
+            .withFilter(queryBuilder)
+            .withPageable(PageRequest.of(0, 1))
+            .build();
+        return findOneLocality(query);
     }
 }
