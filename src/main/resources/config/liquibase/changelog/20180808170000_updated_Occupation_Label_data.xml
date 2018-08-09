@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20180808170000-1" author="men" context="!test" runOnChange="true">
+        <validCheckSum>ANY</validCheckSum>
+        <delete tableName="occupation_label">
+            <where>type='AVAM'</where>
+        </delete>
+        <loadData tableName="occupation_label"
+                        file="config/liquibase/changelog/data/occupation-label-avam.csv"/>
+    </changeSet>
+</databaseChangeLog>
