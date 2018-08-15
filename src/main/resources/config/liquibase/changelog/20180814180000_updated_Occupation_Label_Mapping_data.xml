@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20180814180000-1" author="varu" context="!test">
+        <delete tableName="occupation_label_mapping_x28"/>
+        <loadData tableName="occupation_label_mapping_x28"
+            file="config/liquibase/changelog/data/occupation-label-mapping-x28.csv">
+        </loadData>
+    </changeSet>
+</databaseChangeLog>

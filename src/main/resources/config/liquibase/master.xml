@@ -34,5 +34,8 @@
     <include
         file="config/liquibase/changelog/20180808170000_updated_Occupation_Label_data.xml"
         relativeToChangelogFile="false"/>
+    <include
+        file="config/liquibase/changelog/20180814180000_updated_Occupation_Label_Mapping_data.xml"
+        relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
 </databaseChangeLog>
