@@ -95,6 +95,7 @@
     </changeSet>
 
     <changeSet id="20171122090000-8" author="miwr">
+        <validCheckSum>ANY</validCheckSum>
         <createTable tableName="occupation_label_mapping_x28">
             <column name="id" type="uuid">
                 <constraints primaryKey="true" nullable="false"/>
