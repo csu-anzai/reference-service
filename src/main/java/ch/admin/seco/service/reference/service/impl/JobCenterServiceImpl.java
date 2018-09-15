@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -109,6 +110,15 @@ public class JobCenterServiceImpl implements JobCenterService {
 
         return jobCenterRepository.findOneByPostalCodes(jobCenterPostalCode)
             .map(jobCenter -> jobCenterMapper.jobCenterToDto(jobCenter, language));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<JobCenterDto> findAllJobCenters(Language language) {
+        return jobCenterRepository.findAll()
+            .stream()
+            .map(jobCenter -> jobCenterMapper.jobCenterToDto(jobCenter, language))
+            .collect(Collectors.toList());
     }
 
     @Override

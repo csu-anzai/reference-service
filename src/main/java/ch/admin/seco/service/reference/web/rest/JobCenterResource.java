@@ -1,5 +1,6 @@
 package ch.admin.seco.service.reference.web.rest;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -35,6 +36,15 @@ public class JobCenterResource {
 
     public JobCenterResource(JobCenterService jobCenterService) {
         this.jobCenterService = jobCenterService;
+    }
+
+    @GetMapping("/job-centers/all")
+    @Timed
+    public ResponseEntity<List<JobCenterDto>> searchAllJobCenters() {
+        Language language = Language.safeValueOf(LocaleContextHolder.getLocale().getLanguage());
+        LOGGER.debug("REST request to suggest all JobCenters by language {}", language);
+        return ResponseEntity.ok()
+            .body(jobCenterService.findAllJobCenters(language));
     }
 
     @GetMapping("/job-centers")

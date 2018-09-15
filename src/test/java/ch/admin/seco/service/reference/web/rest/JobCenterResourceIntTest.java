@@ -1,6 +1,7 @@
 package ch.admin.seco.service.reference.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -241,6 +242,15 @@ public class JobCenterResourceIntTest {
             .andExpect(jsonPath("$.address.name").value(NAME_DE))
             .andExpect(jsonPath("$.address.city").value(CITY_DE))
             .andExpect(jsonPath("$.address.street").value(STREET_DE));
+    }
+
+    @Test
+    @Transactional
+    public void searchAllJobCenters() throws Exception {
+        restJobCenterMockMvc.perform(get("/api/job-centers/all")
+            .param("language", "en"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$", hasSize(3)));
     }
 
     @Test
