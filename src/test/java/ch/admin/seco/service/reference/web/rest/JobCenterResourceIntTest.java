@@ -123,8 +123,7 @@ public class JobCenterResourceIntTest {
     }
 
     private static MockHttpServletRequestBuilder buildJobCenterSearchByCodeRequest(String code, String language) {
-        return get("/api/job-centers")
-            .param("code", code)
+        return get("/api/job-centers/" + code)
             .param("language", language);
     }
 
@@ -247,7 +246,7 @@ public class JobCenterResourceIntTest {
     @Test
     @Transactional
     public void searchAllJobCenters() throws Exception {
-        restJobCenterMockMvc.perform(get("/api/job-centers/all")
+        restJobCenterMockMvc.perform(get("/api/job-centers")
             .param("language", "en"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$", hasSize(3)));

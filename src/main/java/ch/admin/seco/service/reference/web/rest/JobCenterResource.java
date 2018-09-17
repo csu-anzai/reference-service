@@ -14,6 +14,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,7 +39,7 @@ public class JobCenterResource {
         this.jobCenterService = jobCenterService;
     }
 
-    @GetMapping("/job-centers/all")
+    @GetMapping("/job-centers")
     @Timed
     public ResponseEntity<List<JobCenterDto>> searchAllJobCenters() {
         Language language = Language.safeValueOf(LocaleContextHolder.getLocale().getLanguage());
@@ -47,14 +48,29 @@ public class JobCenterResource {
             .body(jobCenterService.findAllJobCenters(language));
     }
 
-    @GetMapping("/job-centers")
+    /**
+     * Search for job center by code.
+     *
+     * @param code code
+     * @return jobCenter DTO
+     * @deprecated use searchJobCenterByCode instead of this
+     */
+    @GetMapping(value = "/job-centers", params = "code")
     @Timed
-    public ResponseEntity<JobCenterDto> searchJobCenterByCode(@RequestParam String code) {
+    @Deprecated
+    public ResponseEntity<JobCenterDto> searchJobCenterByCodeParameter(@RequestParam String code) {
+        return searchJobCenterByCode(code);
+    }
+
+    @GetMapping("/job-centers/{code}")
+    @Timed
+    public ResponseEntity<JobCenterDto> searchJobCenterByCode(@PathVariable String code) {
         Language language = Language.safeValueOf(LocaleContextHolder.getLocale().getLanguage());
         LOGGER.debug("REST request to suggest JobCenter by code {} and language {}", code, language);
         Optional<JobCenterDto> jobCenter = jobCenterService.findJobCenterByCode(code, language);
         return ResponseUtil.wrapOrNotFound(jobCenter);
     }
+
 
     @GetMapping("/job-centers/by-location")
     @Timed
