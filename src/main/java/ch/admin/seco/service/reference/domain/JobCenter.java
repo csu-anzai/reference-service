@@ -18,6 +18,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -54,6 +55,7 @@ public class JobCenter extends AbstractAuditingEntity implements Serializable {
     @Valid
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "job_center_addresses", joinColumns = @JoinColumn(name = "job_center_id"))
+    @NotEmpty
     private Set<Address> addresses;
 
     @ElementCollection
