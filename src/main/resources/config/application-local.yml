@@ -1,0 +1,52 @@
+server:
+    port: 8083
+
+# ===================================================================
+# Spring Boot
+# ===================================================================
+spring:
+    devtools:
+        restart:
+            enabled: true
+        livereload:
+            enabled: true
+    datasource:
+        type: com.zaxxer.hikari.HikariDataSource
+        url: jdbc:postgresql://localhost:5434/referenceservice
+        username: referenceservice
+        password:
+    jpa:
+        database-platform: io.github.jhipster.domain.util.FixedPostgreSQL82Dialect
+        database: POSTGRESQL
+        show-sql: false
+        properties:
+            hibernate.id.new_generator_mappings: true
+            hibernate.cache.use_second_level_cache: true
+            hibernate.cache.use_query_cache: false
+            hibernate.generate_statistics: false
+            hibernate.cache.region.factory_class: com.hazelcast.hibernate.HazelcastCacheRegionFactory
+            hibernate.cache.hazelcast.instance_name: referenceservice
+            hibernate.cache.use_minimal_puts: true
+            hibernate.cache.hazelcast.use_lite_member: true
+    data:
+        elasticsearch:
+            cluster-name:
+            cluster-nodes: localhost:9300
+    messages:
+        cache-duration: 1s
+    thymeleaf:
+        cache: false
+    zipkin:
+        enabled: false
+    sleuth:
+        enabled: false
+        annotation:
+            enabled: false
+
+# ===================================================================
+# Logging
+# ===================================================================
+logging:
+    level:
+        ROOT: INFO
+        ch.admin.seco.service.candidate: DEBUG

@@ -8,6 +8,16 @@
                     "german_normalization",
                     "asciifolding"
                 ]
+            },
+            "city_analyzer": {
+                "tokenizer": "standard",
+                "filter": [
+                    "city_synonyms",
+                    "canton_synonyms",
+                    "lowercase",
+                    "german_normalization",
+                    "asciifolding"
+                ]
             }
         },
         "tokenizer": {
@@ -24,6 +34,55 @@
                     "lowercase",
                     "german_normalization",
                     "asciifolding"
+                ]
+            }
+        },
+        "filter": {
+            "canton_synonyms": {
+                "type": "synonym",
+                "synonyms": [
+                    "Aargau, Aargau, Argovie, Argovia",
+                    "Basel-Landschaft, Basel-Landschaft, Bâle-Campagne, Basilea-Campagna, Baselland",
+                    "Basel-Stadt, Basel-Stadt, Bâle-Ville, Basilea-Città",
+                    "Graubünden, Graubünden, Grisons, Grigioni",
+                    "Jura, Jura, Giura",
+                    "Thurgau, Thurgau, Thurgovie, Turgovia",
+                    "Ticino, Tessin, Ticino",
+                    "Vaud, Waadt, Vaud,",
+                    "Valais / Wallis, Wallis, Valais, Vallese"
+                ]
+            },
+            "city_synonyms": {
+                "type": "synonym",
+                "synonyms": [
+                    "Basel, Basel, Bâle, Basilea",
+                    "Bern, Bern, Berne",
+                    "Biel / Bienne, Biel, Bienne, Bienna",
+                    "Chur, Chur, Coire, Coira",
+                    "Delémont, Delsberg, Delémont,",
+                    "Fribourg, Freiburg, Fribourg, Friburgo",
+                    "Genève, Genf, Genève, Ginevra, Geneva",
+                    "Grenchen, Grenchen, Granges,",
+                    "Lausanne, Lausanne, Losanna,",
+                    "Leukerbad, Leukerbad, Loèche-les-Bains",
+                    "Luzern, Luzern, Lucerne, Lucerna",
+                    "Meyriez, Merlach, Meyriez,",
+                    "Muntelier, Muntelier, Montilier",
+                    "Murten, Murten, Morat",
+                    "Moutier, Münster, Moutier",
+                    "Neuchâtel, Neuenburg, Neuchâtel",
+                    "La Neuveville, Neuenstadt, La Neuveville",
+                    "Porrentruy, Pruntrut, Porrentruy",
+                    "Schaffhausen, Schaffhausen, Schaffhouse, Sciaffusa",
+                    "Schwyz, Schwyz, Svitto",
+                    "Sierre, Siders, Sierre",
+                    "Sion, Sitten, Sion",
+                    "Solothurn, Solothurn, Soleure, Soletta",
+                    "St. Gallen, St. Gallen, Saint-Gall, S. Gallo, San Gallo, Sankt Gallen",
+                    "Thun, Thun, Thoune",
+                    "Visp, Visp, Viège",
+                    "Zug, Zug, Zoug, Zugo",
+                    "Zürich, Zürich, Zurich, Zurigo, Zurich"
                 ]
             }
         }

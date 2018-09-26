@@ -1,6 +1,6 @@
 version: '2'
 services:
-    elasticsearch:
+    referenceservice-elasticsearch:
         image: elasticsearch:5.6.5
         # volumes:
         #     - ~/volumes/jhipster/referenceservice/elasticsearch/:/usr/share/elasticsearch/data/

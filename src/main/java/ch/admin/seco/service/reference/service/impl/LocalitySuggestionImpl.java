@@ -108,7 +108,7 @@ public class LocalitySuggestionImpl {
     public Optional<Locality> findByZipCodeAndCity(String zipCode, String city) {
         final BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery()
             .must(QueryBuilders.termQuery("zipCode", zipCode))
-            .must(QueryBuilders.matchQuery("citySuggestions", city));
+            .must(QueryBuilders.matchQuery("city", city));
 
         final NativeSearchQuery query = new NativeSearchQueryBuilder()
             .withFilter(queryBuilder)

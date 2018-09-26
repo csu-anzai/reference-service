@@ -2,26 +2,13 @@ package ch.admin.seco.service.reference.service.impl;
 
 import static java.util.Objects.isNull;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import javax.annotation.PostConstruct;
-
-import org.slf4j.LoggerFactory;
-
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 
 import ch.admin.seco.service.reference.domain.Canton;
 import ch.admin.seco.service.reference.domain.Locality;
@@ -30,8 +17,6 @@ import ch.admin.seco.service.reference.domain.search.LocalitySuggestion;
 
 @Component
 class LocalityToSuggestionMapper {
-
-    private Map<String, String[]> synonymsMap;
 
     Locality fromSynonym(LocalitySuggestion localitySuggestion) {
         return new Locality()
@@ -70,11 +55,8 @@ class LocalityToSuggestionMapper {
         }
         Set<String> suggestions = new HashSet<>();
         suggestions.add(term);
-        CollectionUtils.mergeArrayIntoCollection(synonymsMap.get(term.toLowerCase()), suggestions);
         Pattern pattern = Pattern.compile("[-_/\\\\. ]+");
-
         nextSubTerm(term, suggestions, pattern);
-
         suggestions.remove("");
         suggestions.remove(null);
         return suggestions;
@@ -87,35 +69,5 @@ class LocalityToSuggestionMapper {
             suggestions.add(term);
             nextSubTerm(term, suggestions, pattern);
         }
-    }
-
-    @PostConstruct
-    private void init() {
-        this.synonymsMap = loadLocalitySynonyms();
-    }
-
-    private Map<String, String[]> loadLocalitySynonyms() {
-        ClassPathResource file = new ClassPathResource("config/elasticsearch/settings/locality-synonyms.txt");
-        Map<String, String[]> synonymsMap = new HashMap<>();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
-            reader.lines()
-                .filter(line -> !line.startsWith("#"))
-                .map(line -> line.split(","))
-                .filter(tokens -> tokens.length > 1)
-                .forEach(tokens -> {
-                    for (int i = 0; i < tokens.length; i++) {
-                        tokens[i] = tokens[i].trim();
-                    }
-
-                    Stream.of(tokens)
-                        .map(String::toLowerCase)
-                        .collect(Collectors.toMap(String::toLowerCase, token -> tokens, (a, b) -> a, () -> synonymsMap));
-                });
-        } catch (IOException e) {
-            LoggerFactory.getLogger(this.getClass())
-                .error("Failed to load locality-synonyms.txt", e);
-
-        }
-        return synonymsMap;
     }
 }

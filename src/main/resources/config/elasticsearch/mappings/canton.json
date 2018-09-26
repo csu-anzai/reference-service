@@ -3,7 +3,7 @@
         "properties": {
             "name": {
                 "type": "text",
-                "analyzer": "ascii_folding"
+                "analyzer": "city_analyzer"
             },
             "code": {
                 "type": "keyword",
@@ -16,7 +16,7 @@
             },
             "cantonSuggestions": {
                 "type": "completion",
-                "analyzer": "ascii_folding",
+                "analyzer": "city_analyzer",
                 "preserve_separators": false,
                 "preserve_position_increments": false
             }
