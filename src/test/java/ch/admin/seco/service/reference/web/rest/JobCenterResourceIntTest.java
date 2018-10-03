@@ -25,6 +25,7 @@ import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -254,6 +255,7 @@ public class JobCenterResourceIntTest {
 
     @Test
     @Transactional
+    @WithMockUser(roles = "ADMIN")
     public void createJobCenter() throws Exception {
         // GIVEN
         Address addressEN = buildAddress(NAME_EN, CITY_EN, STREET_EN, Language.en);
@@ -276,6 +278,7 @@ public class JobCenterResourceIntTest {
 
     @Test
     @Transactional
+    @WithMockUser(roles = "ADMIN")
     public void updateJobCenter() throws Exception {
         // GIVEN
         Address addressEN = buildAddress(NAME_EN, CITY_EN, STREET_EN, Language.en);

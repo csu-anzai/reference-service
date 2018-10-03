@@ -1,5 +1,6 @@
 package ch.admin.seco.service.reference.web.rest;
 
+import static ch.admin.seco.service.reference.web.rest.TestUtil.doAsAdmin;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -26,6 +27,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -130,6 +137,7 @@ public class LocalityResourceIntTest {
 
     @Test
     @Transactional
+    @WithMockUser(roles = "ADMIN")
     public void createLocality() throws Exception {
         int databaseSizeBeforeCreate = localityRepository.findAll().size();
 
@@ -157,6 +165,7 @@ public class LocalityResourceIntTest {
 
     @Test
     @Transactional
+    @WithMockUser(roles = "ADMIN")
     public void createLocalityWithExistingId() throws Exception {
         int databaseSizeBeforeCreate = localityRepository.findAll().size();
 
@@ -242,6 +251,7 @@ public class LocalityResourceIntTest {
 
     @Test
     @Transactional
+    @WithMockUser(roles = "ADMIN")
     public void updateLocality() throws Exception {
         // Initialize the database
         localityService.save(locality);
@@ -284,7 +294,7 @@ public class LocalityResourceIntTest {
     @Transactional
     public void searchLocality() throws Exception {
         // Initialize the database
-        localityService.save(locality);
+        doAsAdmin(()-> localityService.save(locality));
         cantonSearchRepository.save(new CantonSuggestion()
                 .id(UUID.randomUUID())
                 .code("BE")
@@ -307,7 +317,7 @@ public class LocalityResourceIntTest {
     @Test
     @Transactional
     public void searchLocalityByZipCode() throws Exception {
-        saveLocalities(
+        saveLocalitiesAsAdmin(
                 createLocalityEntity().zipCode("3001"),
                 createLocalityEntity().city("Ebersecken").zipCode("3002"),
                 createLocalityEntity().city("Dachsen").zipCode("4001")
@@ -327,7 +337,7 @@ public class LocalityResourceIntTest {
     @Test
     @Transactional
     public void searchLocalityByZipCodeWithDistinctResult() throws Exception {
-        saveLocalities(
+        saveLocalitiesAsAdmin(
                 createLocalityEntity().zipCode("3001"),
                 createLocalityEntity().zipCode("3002"),
                 createLocalityEntity().zipCode("3003"),
@@ -363,14 +373,14 @@ public class LocalityResourceIntTest {
     @Test
     @Transactional
     public void searchNearestLocality() throws Exception {
-        localityService.save(locality);
+        doAsAdmin(() -> localityService.save(locality));
         Locality locality2 = new Locality().city(UPDATED_CITY)
                 .zipCode(UPDATED_ZIP_CODE)
                 .communalCode(UPDATED_COMMUNAL_CODE)
                 .cantonCode(UPDATED_CANTON_CODE)
                 .regionCode(UPDATED_REGION_CODE)
                 .geoPoint(new GeoPoint(UPDATED_LAT, UPDATED_LON));
-        localityService.save(locality2);
+        doAsAdmin(() -> localityService.save(locality2));
 
         MockHttpServletRequestBuilder requestBuilder = get("/api/_search/localities/nearest")
                 .param("latitude", UPDATED_LAT.toString())
@@ -390,6 +400,7 @@ public class LocalityResourceIntTest {
 
     @Test
     @Transactional
+    @WithMockUser(roles = "ADMIN")
     public void updateNonExistingLocality() throws Exception {
         int databaseSizeBeforeUpdate = localityRepository.findAll().size();
 
@@ -408,6 +419,7 @@ public class LocalityResourceIntTest {
 
     @Test
     @Transactional
+    @WithMockUser(roles = "ADMIN")
     public void deleteLocality() throws Exception {
         // Initialize the database
         localityService.save(locality);
@@ -459,8 +471,8 @@ public class LocalityResourceIntTest {
         assertThat(cantonRepository.count()).isEqualTo(26);
     }
 
-    private void saveLocalities(Locality... localities) {
-        Arrays.asList(localities).forEach(localityService::save);
+    private void saveLocalitiesAsAdmin(Locality... localities) {
+        doAsAdmin(() -> Arrays.asList(localities).forEach(localityService::save));
     }
 
     private void checkLocalityGeoPoint(GeoPoint geoPoint) throws Exception {
@@ -482,7 +494,7 @@ public class LocalityResourceIntTest {
     @Test
     @Transactional
     public void searchByZiCode() throws Exception {
-        saveLocalities(
+        saveLocalitiesAsAdmin(
             createLocalityEntity().zipCode("3001"),
             createLocalityEntity().zipCode("3002"),
             createLocalityEntity().zipCode("3002")
@@ -498,7 +510,7 @@ public class LocalityResourceIntTest {
     @Test
     @Transactional
     public void searchByZipCodeAndCitySynonym() throws Exception {
-        saveLocalities(
+        saveLocalitiesAsAdmin(
             createLocalityEntity().zipCode("7000").city("Chur"),
             createLocalityEntity().zipCode("7001").city("Chur")
         );

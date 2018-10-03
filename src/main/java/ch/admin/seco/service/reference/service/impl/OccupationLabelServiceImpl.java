@@ -28,6 +28,7 @@ import ch.admin.seco.service.reference.domain.enums.Language;
 import ch.admin.seco.service.reference.domain.enums.ProfessionCodeType;
 import ch.admin.seco.service.reference.repository.OccupationLabelMappingRepository;
 import ch.admin.seco.service.reference.repository.OccupationLabelRepository;
+import ch.admin.seco.service.reference.service.IsAdmin;
 import ch.admin.seco.service.reference.service.OccupationLabelService;
 import ch.admin.seco.service.reference.service.dto.OccupationLabelAutocompleteDto;
 import ch.admin.seco.service.reference.service.dto.OccupationLabelDto;
@@ -60,6 +61,7 @@ public class OccupationLabelServiceImpl implements OccupationLabelService {
 
     @Override
     @Transactional
+    @IsAdmin
     public OccupationLabel save(OccupationLabel occupationLabel) {
         return this.occupationLabelRepository.save(occupationLabel);
     }

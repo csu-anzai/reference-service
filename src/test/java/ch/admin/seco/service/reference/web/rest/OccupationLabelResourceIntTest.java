@@ -5,6 +5,7 @@ import static ch.admin.seco.service.reference.domain.enums.ProfessionCodeType.BF
 import static ch.admin.seco.service.reference.domain.enums.ProfessionCodeType.SBN3;
 import static ch.admin.seco.service.reference.domain.enums.ProfessionCodeType.SBN5;
 import static ch.admin.seco.service.reference.domain.enums.ProfessionCodeType.X28;
+import static ch.admin.seco.service.reference.web.rest.TestUtil.doAsAdmin;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -111,13 +112,13 @@ public class OccupationLabelResourceIntTest {
             //                              avam      x28
             createOccupationLabelMappingX28("68913", "11002714")
         );
-        this.occupationLabelService.save(createAvamOccupationLabel("68913", Language.de, 'm', "Java-Programmierer"));
-        this.occupationLabelService.save(createAvamOccupationLabel("68904", Language.en, 'm', "Data programmer"));
-        this.occupationLabelService.save(createX28OccupationLabel("11002714", Language.en, "Javascript Developer"));
-        this.occupationLabelService.save(createX28OccupationLabel("11002714", Language.de, "Javascript-Entwickler"));
-        this.occupationLabelService.save(createX28OccupationLabel("11002714", Language.de, "Javascript-Entwicklerin"));
-        this.occupationLabelService.save(createSBN5OccupationLabel("36102", Language.de, "Programmierer/innen"));
-        this.occupationLabelService.save(createSBN3OccupationLabel("361", Language.de, "Berufe der Informatik"));
+        doAsAdmin(()-> this.occupationLabelService.save(createAvamOccupationLabel("68913", Language.de, 'm', "Java-Programmierer")));
+        doAsAdmin(()-> this.occupationLabelService.save(createAvamOccupationLabel("68904", Language.en, 'm', "Data programmer")));
+        doAsAdmin(()-> this.occupationLabelService.save(createX28OccupationLabel("11002714", Language.en, "Javascript Developer")));
+        doAsAdmin(()-> this.occupationLabelService.save(createX28OccupationLabel("11002714", Language.de, "Javascript-Entwickler")));
+        doAsAdmin(()-> this.occupationLabelService.save(createX28OccupationLabel("11002714", Language.de, "Javascript-Entwicklerin")));
+        doAsAdmin(()-> this.occupationLabelService.save(createSBN5OccupationLabel("36102", Language.de, "Programmierer/innen")));
+        doAsAdmin(()-> this.occupationLabelService.save(createSBN3OccupationLabel("361", Language.de, "Berufe der Informatik")));
 
         this.elasticsearchOccupationLabelIndexer.reindexOccupationLabel();
     }

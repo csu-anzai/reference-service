@@ -7,7 +7,6 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +14,7 @@ import ch.admin.seco.service.reference.domain.Locality;
 import ch.admin.seco.service.reference.domain.valueobject.GeoPoint;
 import ch.admin.seco.service.reference.repository.LocalityRepository;
 import ch.admin.seco.service.reference.repository.search.LocalitySearchRepository;
+import ch.admin.seco.service.reference.service.IsAdmin;
 import ch.admin.seco.service.reference.service.LocalityService;
 import ch.admin.seco.service.reference.service.dto.LocalityAutocompleteDto;
 import ch.admin.seco.service.reference.service.dto.LocalitySearchDto;
@@ -51,6 +51,7 @@ public class LocalityServiceImpl implements LocalityService {
      * @return the persisted entity
      */
     @Override
+    @IsAdmin
     public Locality save(Locality locality) {
         log.debug("Request to save Locality : {}", locality);
         Locality result = localityRepository.save(locality);
@@ -77,6 +78,7 @@ public class LocalityServiceImpl implements LocalityService {
      *  @param id the uuid of the entity
      */
     @Override
+    @IsAdmin
     public void delete(UUID id) {
         log.debug("Request to delete Locality : {}", id);
         localityRepository.findById(id).ifPresent(
@@ -115,13 +117,12 @@ public class LocalityServiceImpl implements LocalityService {
         return localityRepository.findByZipCode(zipCode);
     }
 
-    @Async
-    public void index(Locality locality) {
-        localitySynonymSearchRepository.index(entityToSynonymMapper.toLocalitySuggestion(locality));
-    }
-
     @Override
     public Optional<Locality> findByZipCodeAndCity(String zipCode, String city) {
         return localitySuggestion.findByZipCodeAndCity(zipCode, city);
+    }
+
+    private void index(Locality locality) {
+        localitySynonymSearchRepository.index(entityToSynonymMapper.toLocalitySuggestion(locality));
     }
 }

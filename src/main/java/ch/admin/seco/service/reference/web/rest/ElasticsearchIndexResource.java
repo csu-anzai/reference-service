@@ -6,14 +6,13 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import ch.admin.seco.service.reference.security.AuthoritiesConstants;
 import ch.admin.seco.service.reference.security.SecurityUtils;
 import ch.admin.seco.service.reference.service.ElasticsearchIndexService;
+import ch.admin.seco.service.reference.service.IsAdmin;
 import ch.admin.seco.service.reference.web.rest.util.HeaderUtil;
 
 /**
@@ -38,7 +37,7 @@ public class ElasticsearchIndexResource {
         method = RequestMethod.POST,
         produces = MediaType.TEXT_PLAIN_VALUE)
     @Timed
-    @PreAuthorize("hasAuthority('" + AuthoritiesConstants.ADMIN + "')")
+    @IsAdmin
     public ResponseEntity<Void> reindexAll() {
         log.info("REST request to reindex Elasticsearch by user : {}", SecurityUtils.getCurrentUserLogin());
         elasticsearchIndexService.reindexAll();

@@ -17,6 +17,11 @@ import org.springframework.format.datetime.standard.DateTimeFormatterRegistrar;
 import org.springframework.format.support.DefaultFormattingConversionService;
 import org.springframework.format.support.FormattingConversionService;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 
 /**
  * Utility class for testing REST controllers.
@@ -100,6 +105,27 @@ public class TestUtil {
         registrar.setUseIsoFormat(true);
         registrar.registerFormatters(dfcs);
         return dfcs;
+    }
+
+    public static void doAsAdmin(AsAdminInvoker asAdminInvoker) {
+        SecurityContext initalContext = SecurityContextHolder.getContext();
+        try {
+            prepareTestingSecurityContext("ROLE_ADMIN");
+            asAdminInvoker.doAsAdmin();
+        } finally {
+            SecurityContextHolder.setContext(initalContext);
+        }
+    }
+
+    public interface AsAdminInvoker {
+        void doAsAdmin();
+    }
+
+    private static void prepareTestingSecurityContext(String roles) {
+        SecurityContext emptyContext = SecurityContextHolder.createEmptyContext();
+        User user = new User("user", "password", AuthorityUtils.commaSeparatedStringToAuthorityList(roles));
+        emptyContext.setAuthentication(new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities()));
+        SecurityContextHolder.setContext(emptyContext);
     }
 
     /**

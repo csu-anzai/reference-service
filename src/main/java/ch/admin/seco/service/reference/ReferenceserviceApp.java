@@ -17,6 +17,7 @@ import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.core.env.Environment;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 
 import ch.admin.seco.service.reference.config.ApplicationProperties;
 import ch.admin.seco.service.reference.config.DefaultProfileUtil;
@@ -24,6 +25,7 @@ import ch.admin.seco.service.reference.config.DefaultProfileUtil;
 @SpringBootApplication
 @EnableConfigurationProperties({LiquibaseProperties.class, ApplicationProperties.class})
 @EnableDiscoveryClient
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class ReferenceserviceApp {
 
     private static final Logger log = LoggerFactory.getLogger(ReferenceserviceApp.class);

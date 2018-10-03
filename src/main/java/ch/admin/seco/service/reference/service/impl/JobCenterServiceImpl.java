@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ch.admin.seco.service.reference.domain.JobCenter;
 import ch.admin.seco.service.reference.domain.enums.Language;
 import ch.admin.seco.service.reference.repository.JobCenterRepository;
+import ch.admin.seco.service.reference.service.IsAdmin;
 import ch.admin.seco.service.reference.service.JobCenterService;
 import ch.admin.seco.service.reference.service.dto.JobCenterDto;
 import ch.admin.seco.service.reference.service.dto.mapper.JobCenterDtoMapper;
@@ -122,6 +123,7 @@ public class JobCenterServiceImpl implements JobCenterService {
     }
 
     @Override
+    @IsAdmin
     public JobCenter save(JobCenter jobCenter) {
         LOGGER.debug("Request to save JobCenter : {}", jobCenter);
 
