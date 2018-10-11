@@ -52,6 +52,7 @@
     </changeSet>
 
     <changeSet id="20170808101801-2" author="varu" context="!test">
+        <validCheckSum>ANY</validCheckSum>
         <loadData tableName="locality"
                   file="config/liquibase/changelog/data/locality.csv">
             <column header="language" type="skip"/>
