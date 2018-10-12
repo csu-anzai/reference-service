@@ -31,10 +31,13 @@ public class JobCenterServiceImpl implements JobCenterService {
 
     private static final String JOB_CENTER_POSTAL_CODE_MAPPING_QUERY = "select postal_code from postal_code_job_center_mapping where job_center_code = ?";
 
-    private final static String CH_LAND_CODE = "CH";
-    private static final String EU_JOB_CENTER_POSTAL_CODE = "9999";
+    private static final String EU_EFTA_JOB_CENTER_POSTAL_CODE = "9999";
+
     private static final String OTHER_JOB_CENTER_POSTAL_CODE = "9998";
-    private final static List<String> EU_COUNTRIES = Arrays.asList(
+
+    private static final List<String> CH_LIKE_COUNTRIES = Arrays.asList("CH", "LI", "FL");
+
+    private static final List<String> EU_EFTA_COUNTRIES = Arrays.asList(
         "MT",
         "IS",
         "BE",
@@ -104,9 +107,9 @@ public class JobCenterServiceImpl implements JobCenterService {
     @Transactional(readOnly = true)
     public Optional<JobCenterDto> findJobCenterByLocation(String countryCode, String postalCode, Language language) {
         String jobCenterPostalCode = postalCode;
-        if (!CH_LAND_CODE.equalsIgnoreCase(countryCode)) {
-            jobCenterPostalCode = EU_COUNTRIES.contains(StringUtils.upperCase(countryCode))
-                ? EU_JOB_CENTER_POSTAL_CODE : OTHER_JOB_CENTER_POSTAL_CODE;
+        if (!CH_LIKE_COUNTRIES.contains(StringUtils.upperCase(countryCode))) {
+            jobCenterPostalCode = EU_EFTA_COUNTRIES.contains(StringUtils.upperCase(countryCode))
+                ? EU_EFTA_JOB_CENTER_POSTAL_CODE : OTHER_JOB_CENTER_POSTAL_CODE;
         }
 
         return jobCenterRepository.findOneByPostalCodes(jobCenterPostalCode)
