@@ -35,9 +35,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ch.admin.seco.service.reference.ReferenceserviceApp;
 import ch.admin.seco.service.reference.domain.OccupationLabel;
 import ch.admin.seco.service.reference.domain.OccupationLabelMapping;
+import ch.admin.seco.service.reference.domain.OccupationLabelMappingISCO;
 import ch.admin.seco.service.reference.domain.OccupationLabelMappingX28;
 import ch.admin.seco.service.reference.domain.enums.Language;
 import ch.admin.seco.service.reference.domain.enums.ProfessionCodeType;
+import ch.admin.seco.service.reference.repository.OccupationLabelMappingISCORepository;
 import ch.admin.seco.service.reference.repository.OccupationLabelMappingRepository;
 import ch.admin.seco.service.reference.repository.OccupationLabelMappingX28Repository;
 import ch.admin.seco.service.reference.repository.OccupationLabelRepository;
@@ -82,6 +84,9 @@ public class OccupationLabelResourceIntTest {
     @Autowired
     private ElasticsearchOccupationLabelIndexer elasticsearchOccupationLabelIndexer;
 
+    @Autowired
+    private OccupationLabelMappingISCORepository occupationLabelMappingISCORepository;
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
@@ -100,6 +105,7 @@ public class OccupationLabelResourceIntTest {
         this.occupationLabelMappingRepository.deleteAll();
         this.occupationLabelMappingX28Repository.deleteAll();
         this.occupationLabelSearchRepository.deleteAll();
+        this.occupationLabelMappingISCORepository.deleteAll();
 
         this.occupationLabelMappingRepository.save(
             //                         bfs     avam  sbn3  sbn5
@@ -219,11 +225,13 @@ public class OccupationLabelResourceIntTest {
             .andExpect(jsonPath("$.avamCode").value("68913"))
             .andExpect(jsonPath("$.sbn3Code").value("361"))
             .andExpect(jsonPath("$.sbn5Code").value("36102"))
-            .andExpect(jsonPath("$.description").value("Java-Programmierer"));
+            .andExpect(jsonPath("$.description").value("Java-Programmierer"))
+            .andExpect(jsonPath("$.iscoCode").isEmpty());
     }
 
     @Test
     public void getOccupationMappinByBFSCode() throws Exception {
+        occupationLabelMappingISCORepository.save(createOccupationLabelMappingISCO("33302009", "8844"));
         sut.perform(get("/api/occupations/label/mapping/bfs/33302009"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
@@ -231,7 +239,8 @@ public class OccupationLabelResourceIntTest {
             .andExpect(jsonPath("$.avamCode").value("68913"))
             .andExpect(jsonPath("$.sbn3Code").value("361"))
             .andExpect(jsonPath("$.sbn5Code").value("36102"))
-            .andExpect(jsonPath("$.description").value("Java-Programmierer"));
+            .andExpect(jsonPath("$.description").value("Java-Programmierer"))
+            .andExpect(jsonPath("$.iscoCode").value("8844"));
     }
 
     @Test
@@ -243,7 +252,8 @@ public class OccupationLabelResourceIntTest {
             .andExpect(jsonPath("$.avamCode").value("68913"))
             .andExpect(jsonPath("$.sbn3Code").value("361"))
             .andExpect(jsonPath("$.sbn5Code").value("36102"))
-            .andExpect(jsonPath("$.description").value("Java-Programmierer"));
+            .andExpect(jsonPath("$.description").value("Java-Programmierer"))
+            .andExpect(jsonPath("$.iscoCode").isEmpty());
     }
 
     @Test
@@ -318,5 +328,12 @@ public class OccupationLabelResourceIntTest {
         mapping.setDescription(description);
 
         return mapping;
+    }
+
+    private OccupationLabelMappingISCO createOccupationLabelMappingISCO(String bfsCode, String iscoCode) {
+        final OccupationLabelMappingISCO occupationLabelMappingISCO = new OccupationLabelMappingISCO();
+        occupationLabelMappingISCO.setBfsCode(bfsCode);
+        occupationLabelMappingISCO.setIscoCode(iscoCode);
+        return occupationLabelMappingISCO;
     }
 }

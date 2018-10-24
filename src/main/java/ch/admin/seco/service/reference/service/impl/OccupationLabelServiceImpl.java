@@ -24,14 +24,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ch.admin.seco.service.reference.domain.OccupationLabel;
 import ch.admin.seco.service.reference.domain.OccupationLabelMapping;
+import ch.admin.seco.service.reference.domain.OccupationLabelMappingISCO;
 import ch.admin.seco.service.reference.domain.enums.Language;
 import ch.admin.seco.service.reference.domain.enums.ProfessionCodeType;
+import ch.admin.seco.service.reference.repository.OccupationLabelMappingISCORepository;
 import ch.admin.seco.service.reference.repository.OccupationLabelMappingRepository;
 import ch.admin.seco.service.reference.repository.OccupationLabelRepository;
 import ch.admin.seco.service.reference.service.IsAdmin;
 import ch.admin.seco.service.reference.service.OccupationLabelService;
 import ch.admin.seco.service.reference.service.dto.OccupationLabelAutocompleteDto;
 import ch.admin.seco.service.reference.service.dto.OccupationLabelDto;
+import ch.admin.seco.service.reference.service.dto.OccupationLabelMappingDto;
 import ch.admin.seco.service.reference.service.dto.OccupationLabelSearchRequestDto;
 import ch.admin.seco.service.reference.service.dto.ProfessionCodeDTO;
 
@@ -47,16 +50,19 @@ public class OccupationLabelServiceImpl implements OccupationLabelService {
     private final OccupationLabelRepository occupationLabelRepository;
     private final OccupationLabelSearchServiceImpl occupationSuggestionImpl;
     private final GenderNeutralOccupationLabelGenerator labelGenerator;
+    private final OccupationLabelMappingISCORepository occupationLabelMappingISCORepository;
 
     public OccupationLabelServiceImpl(OccupationLabelMappingRepository occupationMappingRepository,
         OccupationLabelRepository occupationLabelRepository,
         OccupationLabelSearchServiceImpl occupationSuggestion,
-        GenderNeutralOccupationLabelGenerator labelGenerator) {
+        GenderNeutralOccupationLabelGenerator labelGenerator,
+        OccupationLabelMappingISCORepository occupationLabelMappingISCORepository) {
 
         this.occupationMappingRepository = occupationMappingRepository;
         this.occupationLabelRepository = occupationLabelRepository;
         this.occupationSuggestionImpl = occupationSuggestion;
         this.labelGenerator = labelGenerator;
+        this.occupationLabelMappingISCORepository = occupationLabelMappingISCORepository;
     }
 
     @Override
@@ -67,8 +73,20 @@ public class OccupationLabelServiceImpl implements OccupationLabelService {
     }
 
     @Override
-    public Optional<OccupationLabelMapping> findOneOccupationMapping(ProfessionCodeDTO professionCode) {
+    public Optional<OccupationLabelMappingDto> findOneOccupationMapping(ProfessionCodeDTO professionCode) {
         log.debug("Request to get OccupationLabelMapping : {}", professionCode);
+        return findOccupationMapping(professionCode).map(occupationLabelMapping -> new OccupationLabelMappingDto()
+            .id(occupationLabelMapping.getId())
+            .bfsCode(occupationLabelMapping.getBfsCode())
+            .avamCode(occupationLabelMapping.getAvamCode())
+            .sbn3Code(occupationLabelMapping.getSbn3Code())
+            .sbn5Code(occupationLabelMapping.getSbn5Code())
+            .description(occupationLabelMapping.getDescription())
+            .iscoCode(resolveIscoCode(occupationLabelMapping.getBfsCode()))
+        );
+    }
+
+    private Optional<OccupationLabelMapping> findOccupationMapping(ProfessionCodeDTO professionCode) {
         final String code = professionCode.getCode();
         switch (professionCode.getCodeType()) {
             case X28:
@@ -79,6 +97,15 @@ public class OccupationLabelServiceImpl implements OccupationLabelService {
                 return occupationMappingRepository.findByBfsCode(code).stream().findFirst();
         }
         return Optional.empty();
+    }
+
+    private String resolveIscoCode(String bfsCode) {
+        if (hasText(bfsCode)) {
+            return occupationLabelMappingISCORepository.findOneByBfsCode(bfsCode)
+                .map(OccupationLabelMappingISCO::getIscoCode)
+                .orElse(null);
+        }
+        return null;
     }
 
     @Override

@@ -25,12 +25,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ch.admin.seco.service.reference.domain.OccupationLabel;
-import ch.admin.seco.service.reference.domain.OccupationLabelMapping;
 import ch.admin.seco.service.reference.domain.enums.Language;
 import ch.admin.seco.service.reference.domain.enums.ProfessionCodeType;
 import ch.admin.seco.service.reference.service.OccupationLabelService;
 import ch.admin.seco.service.reference.service.dto.OccupationLabelAutocompleteDto;
 import ch.admin.seco.service.reference.service.dto.OccupationLabelDto;
+import ch.admin.seco.service.reference.service.dto.OccupationLabelMappingDto;
 import ch.admin.seco.service.reference.service.dto.OccupationLabelSearchRequestDto;
 import ch.admin.seco.service.reference.service.dto.ProfessionCodeDTO;
 
@@ -99,7 +99,7 @@ public class OccupationLabelResource {
 
     @GetMapping("/occupations/label/mapping/{codeType}/{code}")
     @Timed
-    public ResponseEntity<OccupationLabelMapping> getOccupationMapping(ProfessionCodeDTO professionCode) {
+    public ResponseEntity<OccupationLabelMappingDto> getOccupationMapping(ProfessionCodeDTO professionCode) {
         return ResponseUtil.wrapOrNotFound(
             occupationService.findOneOccupationMapping(professionCode), createCacheHeader());
     }
