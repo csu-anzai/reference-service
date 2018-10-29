@@ -32,8 +32,7 @@ after_success:
 deploy:
 - provider: script
   skip_cleanup: true
-  script: "./gradlew bootJar dependencyCheckAggregate pushDockerImage publish -Pprod -Pzipkin -x test -Pversion=${TRAVIS_JOB_NUMBER}-SNAPSHOT
-    && curl https://dev.job-room.ch:8443/deploy/jr2 --insecure"
+  script: "./gradlew bootJar dependencyCheckAggregate pushDockerImage publish -Pprod -Pzipkin -x test -Pversion=${TRAVIS_JOB_NUMBER}-SNAPSHOT"
   on:
     branch: develop
 
