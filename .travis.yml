@@ -32,7 +32,7 @@ after_success:
 deploy:
 - provider: script
   skip_cleanup: true
-  script: "./gradlew bootJar dependencyCheckAggregate pushDockerImage publish -Pprod -Pzipkin -x test -Pversion=${TRAVIS_JOB_NUMBER}-SNAPSHOT"
+  script: "./gradlew bootJar dependencyCheckAggregate pushDockerImage publish -Pprod -Pzipkin -x test -Pversion=${TRAVIS_JOB_NUMBER}-SNAPSHOT -PaddLatestTagToDockerImage=true"
   on:
     branch: develop
 
