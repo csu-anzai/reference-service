@@ -10,7 +10,7 @@
                 ]
             },
             "city_analyzer": {
-                "tokenizer": "keyword",
+                "tokenizer": "standard",
                 "filter": [
                     "city_synonyms",
                     "canton_synonyms",
@@ -40,8 +40,6 @@
         "filter": {
             "canton_synonyms": {
                 "type": "synonym",
-                "tokenizer": "keyword",
-                "ignore_case": "true",
                 "synonyms": [
                     "Aargau, Aargau, Argovie, Argovia",
                     "Basel-Landschaft, Basel-Landschaft, Bâle-Campagne, Basilea-Campagna, Baselland",
@@ -50,27 +48,25 @@
                     "Jura, Jura, Giura",
                     "Thurgau, Thurgau, Thurgovie, Turgovia",
                     "Ticino, Tessin, Ticino",
-                    "Vaud, Waadt, Vaud",
+                    "Vaud, Waadt, Vaud,",
                     "Valais / Wallis, Wallis, Valais, Vallese"
                 ]
             },
             "city_synonyms": {
                 "type": "synonym",
-                "tokenizer": "keyword",
-                "ignore_case": "true",
                 "synonyms": [
                     "Basel, Basel, Bâle, Basilea",
                     "Bern, Bern, Berna, Berne",
                     "Biel / Bienne, Biel, Bienne, Bienna, Biel/Bienne",
                     "Chur, Chur, Coire, Coira",
-                    "Delémont, Delsberg, Delémont",
+                    "Delémont, Delsberg, Delémont,",
                     "Fribourg, Freiburg, Fribourg, Friburgo",
                     "Genève, Genf, Genève, Ginevra, Geneva",
-                    "Grenchen, Grenchen, Granges",
-                    "Lausanne, Lausanne, Losanna",
+                    "Grenchen, Grenchen, Granges,",
+                    "Lausanne, Lausanne, Losanna,",
                     "Leukerbad, Leukerbad, Loèche-les-Bains",
                     "Luzern, Luzern, Lucerne, Lucerna",
-                    "Meyriez, Merlach, Meyriez",
+                    "Meyriez, Merlach, Meyriez,",
                     "Muntelier, Muntelier, Montilier",
                     "Murten, Murten, Morat",
                     "Moutier, Münster, Moutier",
