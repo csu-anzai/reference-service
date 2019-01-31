@@ -4130,19 +4130,19 @@ a3b84f05-ef73-47d9-9609-41231fc91f19,Chevenez,2906,6809,JU,47.392,7.001,JU02
 4bef722e-9270-4d23-9b34-63d679f4bb46,Fregiécourt,2953,6810,JU,47.413,7.194,JU02
 58c85a0c-62ce-4147-bdc3-887ab15d5e5d,Pleujouse,2953,6810,JU,47.413,7.211,JU02
 f60c4524-ecf1-4589-b589-be674c052b20,Asuel,2954,6810,JU,47.401,7.209,JU02
-0257e3b8-b320-432e-b287-b8ad07d2303b,Vaduz FL,9490,7001,null,47.149,9.524,null
-b47169cd-9175-48c2-a4a7-fbda3369fe7d,Triesen FL,9495,7002,null,47.106,9.53,null
-af4afed0-353e-42ea-b30c-253ba8c4001c,Balzers FL,9496,7003,null,47.065,9.502,A
-6d4bf033-2de6-4aaa-82bf-30d9032e2fa3,Triesenberg FL,9497,7004,null,47.118,9.544,null
-673c8774-0fb1-464a-8a31-a05a92b93210,Schaan FL,9494,7005,null,47.173,9.506,null
-ea7e4829-e927-476e-bb53-4f31e17550d9,Planken FL,9498,7006,null,47.185,9.546,null
-2e36fabc-3e7c-48a1-af72-232c4fac9beb,Nendeln FL,9485,7007,null,47.198,9.544,null
-68c59ab2-933e-4ab8-890e-1fd3d274cf4c,Eschen FL,9492,7007,null,47.209,9.521,null
-3ff65c65-c582-4c0a-a00b-c40b289c0a31,Schaanwald FL,9486,7008,null,47.213,9.562,null
-c058f9f2-22c5-41f4-b7f1-7acb4ce33567,"Mauren FL",9493,7008,null,47.219,9.545,null
-035419f5-6b03-47d0-997a-c6945122260d,Gamprin-Bendern FL,9487,7009,null,47.215,9.506,null
-45e9b73c-23ff-4421-bfa0-be6241518bb8,Ruggell FL,9491,7010,null,47.241,9.529,null
-bc7237cf-e47d-4077-b098-721b5d6e8594,Schellenberg FL,9488,7011,null,47.234,9.551,null
+0257e3b8-b320-432e-b287-b8ad07d2303b,Vaduz FL,9490,7001,FL,47.149,9.524,A
+b47169cd-9175-48c2-a4a7-fbda3369fe7d,Triesen FL,9495,7002,FL,47.106,9.53,A
+af4afed0-353e-42ea-b30c-253ba8c4001c,Balzers FL,9496,7003,FL,47.065,9.502,A
+6d4bf033-2de6-4aaa-82bf-30d9032e2fa3,Triesenberg FL,9497,7004,FL,47.118,9.544,A
+673c8774-0fb1-464a-8a31-a05a92b93210,Schaan FL,9494,7005,FL,47.173,9.506,A
+ea7e4829-e927-476e-bb53-4f31e17550d9,Planken FL,9498,7006,FL,47.185,9.546,A
+2e36fabc-3e7c-48a1-af72-232c4fac9beb,Nendeln FL,9485,7007,FL,47.198,9.544,A
+68c59ab2-933e-4ab8-890e-1fd3d274cf4c,Eschen FL,9492,7007,FL,47.209,9.521,A
+3ff65c65-c582-4c0a-a00b-c40b289c0a31,Schaanwald FL,9486,7008,FL,47.213,9.562,A
+c058f9f2-22c5-41f4-b7f1-7acb4ce33567,"Mauren FL",9493,7008,FL,47.219,9.545,A
+035419f5-6b03-47d0-997a-c6945122260d,Gamprin-Bendern FL,9487,7009,FL,47.215,9.506,A
+45e9b73c-23ff-4421-bfa0-be6241518bb8,Ruggell FL,9491,7010,FL,47.241,9.529,A
+bc7237cf-e47d-4077-b098-721b5d6e8594,Schellenberg FL,9488,7011,FL,47.234,9.551,A
 6d6678f4-4e29-4be5-9466-02abba471232,Vevey,1811,5890,VD,null,null,VD05
 c77f2de1-2d9e-4ea0-9eff-ed9def3eb2b6,Grand-Saconnex,1211,6623,GE,null,null,GE01
 adc7a9ee-65f6-4904-957b-493a29a676a0,Rorschach,9401,3215,SG,null,null,SG02
@@ -4332,7 +4332,7 @@ bd8b6f5f-089e-49ff-9c49-bb6cce561b8e,Olten,4609,2581,SO,null,null,SO03
 8b9c9e34-478f-487c-91c1-a218a2c845fb,Frauenfeld,8503,4566,TG,null,null,TG04
 fe55eb26-e2f6-4b49-ba48-924c7b4e26d1,Zürich,8085,261,ZH,null,null,ZH12
 f58c9d97-42f4-4285-abfe-cf4ff9fbd0d0,Schaffhausen,8201,2939,SH,null,null,SH01
-0a755a42-e285-4897-b55a-42e2851897a9,Abroad,----,9999,null,null,null,null
-a00c0158-1907-4e5b-8c01-5819075e5b87,Ausland,----,9999,null,null,null,null
-3ab3a99c-74fd-422e-b3a9-9c74fdb22e0c,Étranger,----,9999,null,null,null,null
-98d179af-8e70-4b9d-9179-af8e705b9dc2,Estero,----,9999,null,null,null,null
+0a755a42-e285-4897-b55a-42e2851897a9,Abroad,----,9999,99,null,null,A
+a00c0158-1907-4e5b-8c01-5819075e5b87,Ausland,----,9999,99,null,null,A
+3ab3a99c-74fd-422e-b3a9-9c74fdb22e0c,Étranger,----,9999,99,null,null,A
+98d179af-8e70-4b9d-9179-af8e705b9dc2,Estero,----,9999,99,null,null,A
