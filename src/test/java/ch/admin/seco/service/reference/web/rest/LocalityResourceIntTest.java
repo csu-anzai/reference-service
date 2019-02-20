@@ -338,10 +338,10 @@ public class LocalityResourceIntTest {
     @Transactional
     public void searchLocalityByZipCodeWithDistinctResult() throws Exception {
         saveLocalitiesAsAdmin(
-                createLocalityEntity().zipCode("3001"),
-                createLocalityEntity().zipCode("3002"),
-                createLocalityEntity().zipCode("3003"),
-                createLocalityEntity().zipCode("3004"),
+                createLocalityEntity().zipCode("3001").geoPoint(null),
+                createLocalityEntity().zipCode("3002").geoPoint(null),
+                createLocalityEntity().zipCode("3003").geoPoint(new GeoPoint(DEFAULT_LAT, DEFAULT_LON)),
+                createLocalityEntity().zipCode("3004").geoPoint(null),
                 createLocalityEntity().city("Zurich").zipCode("3005"),
                 createLocalityEntity().city("Lucern").zipCode("3006")
         );
@@ -355,11 +355,13 @@ public class LocalityResourceIntTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.localities.length()").value("3"))
                 .andExpect(jsonPath("$.localities[0].city").value(DEFAULT_CITY))
-                .andExpect(jsonPath("$.localities[0].zipCode").isEmpty())
-            .andExpect(jsonPath("$.localities[1].city").value("Zurich"))
-                .andExpect(jsonPath("$.localities[1].zipCode").isEmpty())
-            .andExpect(jsonPath("$.localities[2].city").value("Lucern"))
-                .andExpect(jsonPath("$.localities[2].zipCode").isEmpty());
+                .andExpect(jsonPath("$.localities[0].zipCode").value("3003"))
+                .andExpect(jsonPath("$.localities[0].geoPoint.lat").value(DEFAULT_LAT))
+                .andExpect(jsonPath("$.localities[0].geoPoint.lon").value(DEFAULT_LON))
+                .andExpect(jsonPath("$.localities[1].city").value("Zurich"))
+                .andExpect(jsonPath("$.localities[1].zipCode").value("3005"))
+                .andExpect(jsonPath("$.localities[2].city").value("Lucern"))
+                .andExpect(jsonPath("$.localities[2].zipCode").value("3006"));
     }
 
     @Test

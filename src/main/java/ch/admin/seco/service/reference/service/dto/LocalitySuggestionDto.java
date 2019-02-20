@@ -14,6 +14,8 @@ public class LocalitySuggestionDto {
 
     private String zipCode;
 
+    private GeoPointDto geoPoint;
+
     public String getCity() {
         return city;
     }
@@ -79,9 +81,22 @@ public class LocalitySuggestionDto {
         return this;
     }
 
+    public GeoPointDto getGeoPoint() {
+        return geoPoint;
+    }
+
+    public void setGeoPoint(GeoPointDto geoPoint) {
+        this.geoPoint = geoPoint;
+    }
+
+    public LocalitySuggestionDto geoPoint(GeoPointDto geoPoint) {
+        this.geoPoint = geoPoint;
+        return this;
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hash(city, communalCode, cantonCode, zipCode);
+        return Objects.hash(city, communalCode, cantonCode, zipCode, geoPoint);
     }
 
     @Override
@@ -96,6 +111,7 @@ public class LocalitySuggestionDto {
         return communalCode == that.communalCode &&
             Objects.equals(city, that.city) &&
             Objects.equals(cantonCode, that.cantonCode) &&
-            Objects.equals(zipCode, that.zipCode);
+            Objects.equals(zipCode, that.zipCode) &&
+            Objects.equals(geoPoint, that.geoPoint);
     }
 }
