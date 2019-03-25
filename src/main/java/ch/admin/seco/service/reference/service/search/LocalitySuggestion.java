@@ -1,12 +1,11 @@
-package ch.admin.seco.service.reference.domain.search;
+package ch.admin.seco.service.reference.service.search;
 
-import java.util.Set;
-
+import ch.admin.seco.service.reference.domain.Locality;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Mapping;
 import org.springframework.data.elasticsearch.annotations.Setting;
 
-import ch.admin.seco.service.reference.domain.Locality;
+import java.util.Set;
 
 @Document(indexName = "localities", type = "locality")
 @Mapping(mappingPath = "config/elasticsearch/mappings/locality.json")

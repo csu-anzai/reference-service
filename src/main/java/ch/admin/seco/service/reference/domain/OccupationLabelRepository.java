@@ -1,8 +1,15 @@
-package ch.admin.seco.service.reference.repository;
+package ch.admin.seco.service.reference.domain;
 
-import static org.hibernate.jpa.QueryHints.HINT_CACHE_MODE;
-import static org.hibernate.jpa.QueryHints.HINT_FETCH_SIZE;
+import ch.admin.seco.service.reference.domain.enums.Language;
+import ch.admin.seco.service.reference.domain.enums.ProfessionCodeType;
+import ch.admin.seco.service.reference.domain.valueobject.OccupationLabelKey;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.QueryHints;
 
+import javax.persistence.QueryHint;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -10,18 +17,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.persistence.QueryHint;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.jpa.repository.QueryHints;
-
-import ch.admin.seco.service.reference.domain.OccupationLabel;
-import ch.admin.seco.service.reference.domain.enums.Language;
-import ch.admin.seco.service.reference.domain.enums.ProfessionCodeType;
-import ch.admin.seco.service.reference.domain.valueobject.OccupationLabelKey;
+import static org.hibernate.jpa.QueryHints.HINT_CACHE_MODE;
+import static org.hibernate.jpa.QueryHints.HINT_FETCH_SIZE;
 
 public interface OccupationLabelRepository extends JpaRepository<OccupationLabel, UUID> {
 

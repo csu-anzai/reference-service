@@ -1,15 +1,14 @@
 package ch.admin.seco.service.reference.service.impl;
 
-import java.util.concurrent.CompletableFuture;
-
+import ch.admin.seco.service.reference.service.ElasticsearchIndexService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 
-import ch.admin.seco.service.reference.service.ElasticsearchIndexService;
+import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class ElasticsearchIndexServiceImpl implements ElasticsearchIndexService {
@@ -41,7 +40,7 @@ public class ElasticsearchIndexServiceImpl implements ElasticsearchIndexService 
 
     private void evictAllCaches() {
         cacheManager.getCacheNames().stream()
-                .map(cacheManager::getCache)
+            .map(cacheManager::getCache).filter(Objects::nonNull)
                 .forEach(Cache::clear);
     }
 }

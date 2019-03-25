@@ -1,23 +1,21 @@
 package ch.admin.seco.service.reference.service.impl;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import ch.admin.seco.service.reference.domain.Locality;
+import ch.admin.seco.service.reference.domain.LocalityRepository;
 import ch.admin.seco.service.reference.domain.valueobject.GeoPoint;
-import ch.admin.seco.service.reference.repository.LocalityRepository;
-import ch.admin.seco.service.reference.repository.search.LocalitySearchRepository;
 import ch.admin.seco.service.reference.service.IsAdmin;
 import ch.admin.seco.service.reference.service.LocalityService;
 import ch.admin.seco.service.reference.service.dto.LocalityAutocompleteDto;
 import ch.admin.seco.service.reference.service.dto.LocalitySearchDto;
+import ch.admin.seco.service.reference.service.search.LocalitySearchRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Service Implementation for managing Locality.

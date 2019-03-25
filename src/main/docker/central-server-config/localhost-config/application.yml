@@ -3,11 +3,32 @@ configserver:
     name: Docker JHipster Registry
     status: Connected to the JHipster Registry running in Docker
 
+# ===================================================================
+# JHipster Config
+# ===================================================================
 jhipster:
     security:
         authentication:
             jwt:
                 secret: my-secret-token-to-change-in-production
+                token-validity-in-seconds: 86400
+                token-validity-in-seconds-for-remember-me: 2592000
+        client-authorization:
+            token-service-id: 'jobroom'
+            access-token-uri: http://localhost:8080/api/authenticate
+            client-id: 'admin'
+            client-secret: 'admin'
+
+# ===================================================================
+# Spring Boot Actuator
+# ===================================================================
+management:
+    endpoints:
+        web:
+            base-path: /management
+            exposure:
+                include: '*'
+
 
 eureka:
     client:

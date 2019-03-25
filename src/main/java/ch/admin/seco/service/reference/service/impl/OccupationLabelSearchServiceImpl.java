@@ -1,21 +1,19 @@
 package ch.admin.seco.service.reference.service.impl;
 
-import static java.util.stream.Collectors.toList;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Stream;
-
+import ch.admin.seco.service.reference.domain.OccupationLabel;
+import ch.admin.seco.service.reference.domain.OccupationLabelRepository;
+import ch.admin.seco.service.reference.domain.enums.Language;
+import ch.admin.seco.service.reference.domain.enums.ProfessionCodeType;
+import ch.admin.seco.service.reference.service.dto.OccupationLabelAutocompleteDto;
+import ch.admin.seco.service.reference.service.dto.OccupationLabelSearchRequestDto;
+import ch.admin.seco.service.reference.service.dto.OccupationLabelSuggestionDto;
+import ch.admin.seco.service.reference.service.search.OccupationLabelSuggestion;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
@@ -23,14 +21,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import ch.admin.seco.service.reference.domain.OccupationLabel;
-import ch.admin.seco.service.reference.domain.enums.Language;
-import ch.admin.seco.service.reference.domain.enums.ProfessionCodeType;
-import ch.admin.seco.service.reference.domain.search.OccupationLabelSuggestion;
-import ch.admin.seco.service.reference.repository.OccupationLabelRepository;
-import ch.admin.seco.service.reference.service.dto.OccupationLabelAutocompleteDto;
-import ch.admin.seco.service.reference.service.dto.OccupationLabelSearchRequestDto;
-import ch.admin.seco.service.reference.service.dto.OccupationLabelSuggestionDto;
+import java.util.*;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * Service Implementation for search Occupation.

@@ -1,25 +1,12 @@
 package ch.admin.seco.service.reference.service.impl;
 
-import static ch.admin.seco.service.reference.domain.enums.ProfessionCodeType.AVAM;
-import static ch.admin.seco.service.reference.domain.enums.ProfessionCodeType.BFS;
-import static ch.admin.seco.service.reference.domain.enums.ProfessionCodeType.SBN3;
-import static ch.admin.seco.service.reference.domain.enums.ProfessionCodeType.SBN5;
-import static ch.admin.seco.service.reference.domain.enums.ProfessionCodeType.X28;
-import static java.util.Objects.isNull;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import javax.persistence.EntityManager;
-
+import ch.admin.seco.service.reference.domain.OccupationLabel;
+import ch.admin.seco.service.reference.domain.OccupationLabelMappingRepository;
+import ch.admin.seco.service.reference.domain.OccupationLabelRepository;
+import ch.admin.seco.service.reference.domain.enums.ProfessionCodeType;
+import ch.admin.seco.service.reference.domain.valueobject.OccupationLabelKey;
+import ch.admin.seco.service.reference.service.search.OccupationLabelSearchRepository;
+import ch.admin.seco.service.reference.service.search.OccupationLabelSuggestion;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import org.hibernate.CacheMode;
@@ -27,22 +14,24 @@ import org.hibernate.Session;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import reactor.core.publisher.Flux;
-
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StopWatch;
 import org.springframework.util.StringUtils;
+import reactor.core.publisher.Flux;
 
-import ch.admin.seco.service.reference.domain.OccupationLabel;
-import ch.admin.seco.service.reference.domain.enums.ProfessionCodeType;
-import ch.admin.seco.service.reference.domain.search.OccupationLabelSuggestion;
-import ch.admin.seco.service.reference.domain.valueobject.OccupationLabelKey;
-import ch.admin.seco.service.reference.repository.OccupationLabelMappingRepository;
-import ch.admin.seco.service.reference.repository.OccupationLabelRepository;
-import ch.admin.seco.service.reference.repository.search.OccupationLabelSearchRepository;
+import javax.persistence.EntityManager;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static ch.admin.seco.service.reference.domain.enums.ProfessionCodeType.*;
+import static java.util.Objects.isNull;
 
 @Component
 public class ElasticsearchOccupationLabelIndexer {

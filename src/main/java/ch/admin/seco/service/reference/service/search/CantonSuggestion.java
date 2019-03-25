@@ -1,14 +1,14 @@
-package ch.admin.seco.service.reference.domain.search;
+package ch.admin.seco.service.reference.service.search;
 
-import java.util.Set;
-
+import ch.admin.seco.service.reference.domain.Canton;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Mapping;
 import org.springframework.data.elasticsearch.annotations.Setting;
 
-import ch.admin.seco.service.reference.domain.Canton;
+import java.util.Set;
 
-@Document(indexName = "localities", type = "canton")
+// TODO CHECK ME -> currently the lcoalities AND the cantons are saved to the same index
+@Document(indexName = "cantons", type = "canton")
 @Mapping(mappingPath = "config/elasticsearch/mappings/canton.json")
 @Setting(settingPath = "config/elasticsearch/settings/folding-analyzer.json")
 public class CantonSuggestion extends Canton<CantonSuggestion> {

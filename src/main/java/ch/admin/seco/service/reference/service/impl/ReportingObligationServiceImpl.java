@@ -1,20 +1,19 @@
 package ch.admin.seco.service.reference.service.impl;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import ch.admin.seco.service.reference.domain.ReportingObligation;
+import ch.admin.seco.service.reference.domain.ReportingObligationRepository;
 import ch.admin.seco.service.reference.domain.enums.Language;
 import ch.admin.seco.service.reference.domain.enums.ProfessionCodeType;
-import ch.admin.seco.service.reference.repository.ReportingObligationRepository;
 import ch.admin.seco.service.reference.service.OccupationLabelService;
 import ch.admin.seco.service.reference.service.ReportingObligationService;
 import ch.admin.seco.service.reference.service.dto.ProfessionCodeDTO;
 import ch.admin.seco.service.reference.service.dto.ReportingObligationDTO;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class ReportingObligationServiceImpl implements ReportingObligationService {

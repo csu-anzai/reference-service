@@ -1,14 +1,10 @@
 package ch.admin.seco.service.reference.config;
 
-import static springfox.documentation.builders.PathSelectors.regex;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
 import io.github.jhipster.config.JHipsterConstants;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import springfox.documentation.service.ApiKey;
 import springfox.documentation.service.AuthorizationScope;
 import springfox.documentation.service.SecurityReference;
@@ -17,10 +13,13 @@ import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
+import static springfox.documentation.builders.PathSelectors.regex;
 
 @Configuration
 @EnableSwagger2
@@ -39,7 +38,9 @@ class SwaggerConfig {
             .paths(regex("/api/.*"))
             .build()
             .directModelSubstitute(LocalDate.class, java.sql.Date.class)
-            .directModelSubstitute(LocalDateTime.class, java.util.Date.class);
+            .directModelSubstitute(LocalDateTime.class, java.util.Date.class)
+            .securityContexts(Collections.singletonList(securityContext()))
+            .securitySchemes(Collections.singletonList(apiKey()));
     }
 
     @Bean

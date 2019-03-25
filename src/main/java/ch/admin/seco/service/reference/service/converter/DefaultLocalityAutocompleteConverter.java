@@ -1,24 +1,19 @@
 package ch.admin.seco.service.reference.service.converter;
 
-import static java.util.Objects.isNull;
-import static java.util.stream.Collectors.toList;
-
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.function.BiConsumer;
-import java.util.function.Supplier;
-import java.util.stream.Stream;
-
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
-
 import ch.admin.seco.service.reference.service.dto.CantonSuggestionDto;
 import ch.admin.seco.service.reference.service.dto.GeoPointDto;
 import ch.admin.seco.service.reference.service.dto.LocalityAutocompleteDto;
 import ch.admin.seco.service.reference.service.dto.LocalitySuggestionDto;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
+
+import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
+
+import static java.util.Objects.isNull;
+import static java.util.stream.Collectors.toList;
 
 public class DefaultLocalityAutocompleteConverter implements LocalityAutocompleteConverter {
 
@@ -36,10 +31,9 @@ public class DefaultLocalityAutocompleteConverter implements LocalityAutocomplet
         (destination, source) -> source.forEach(destination::put);
 
     @Override
-    public LocalityAutocompleteDto convert(SearchResponse searchResponse, int resultSize) {
-        List<LocalitySuggestionDto> localities = convertLocalitiesSuggestions(searchResponse, resultSize);
-        List<CantonSuggestionDto> cantons = convertCantonsSuggestions(searchResponse, resultSize);
-
+    public LocalityAutocompleteDto convert(SearchResponse localitiesSearchResponse, SearchResponse cantonSearchResponse, int resultSize) {
+        List<LocalitySuggestionDto> localities = convertLocalitiesSuggestions(localitiesSearchResponse, resultSize);
+        List<CantonSuggestionDto> cantons = convertCantonsSuggestions(cantonSearchResponse, resultSize);
         return new LocalityAutocompleteDto(localities, cantons);
     }
 

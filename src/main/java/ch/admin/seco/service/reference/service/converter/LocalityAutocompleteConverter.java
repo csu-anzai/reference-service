@@ -1,10 +1,9 @@
 package ch.admin.seco.service.reference.service.converter;
 
-import org.elasticsearch.action.search.SearchResponse;
-
 import ch.admin.seco.service.reference.service.dto.LocalityAutocompleteDto;
+import org.elasticsearch.action.search.SearchResponse;
 
 public interface LocalityAutocompleteConverter {
 
-    LocalityAutocompleteDto convert(SearchResponse searchResponse, int resultSize);
+    LocalityAutocompleteDto convert(SearchResponse localitiesSearchResponse, SearchResponse cantonSearchResponse, int resultSize);
 }

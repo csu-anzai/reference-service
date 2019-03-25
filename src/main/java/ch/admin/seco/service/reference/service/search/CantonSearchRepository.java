@@ -1,10 +1,8 @@
-package ch.admin.seco.service.reference.repository.search;
-
-import java.util.UUID;
+package ch.admin.seco.service.reference.service.search;
 
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 
-import ch.admin.seco.service.reference.domain.search.CantonSuggestion;
+import java.util.UUID;
 
 /**
  * Spring Data Elasticsearch repository for the Canton entity.

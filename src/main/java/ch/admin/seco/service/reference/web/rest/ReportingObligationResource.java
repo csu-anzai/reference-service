@@ -1,13 +1,13 @@
 package ch.admin.seco.service.reference.web.rest;
 
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import com.codahale.metrics.annotation.Timed;
+import ch.admin.seco.service.reference.domain.ReportingObligation;
+import ch.admin.seco.service.reference.service.ReportingObligationService;
+import ch.admin.seco.service.reference.service.dto.ProfessionCodeDTO;
+import ch.admin.seco.service.reference.service.dto.ReportingObligationDTO;
 import io.github.jhipster.web.util.ResponseUtil;
+import io.micrometer.core.annotation.Timed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import ch.admin.seco.service.reference.domain.ReportingObligation;
-import ch.admin.seco.service.reference.service.ReportingObligationService;
-import ch.admin.seco.service.reference.service.dto.ProfessionCodeDTO;
-import ch.admin.seco.service.reference.service.dto.ReportingObligationDTO;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/api")

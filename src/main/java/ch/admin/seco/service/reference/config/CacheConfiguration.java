@@ -1,36 +1,27 @@
 package ch.admin.seco.service.reference.config;
 
-import javax.annotation.PreDestroy;
-
-import com.hazelcast.config.Config;
-import com.hazelcast.config.EvictionPolicy;
-import com.hazelcast.config.ManagementCenterConfig;
-import com.hazelcast.config.MapConfig;
-import com.hazelcast.config.MaxSizeConfig;
+import com.hazelcast.config.*;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.spring.cache.HazelcastCacheManager;
 import io.github.jhipster.config.JHipsterConstants;
 import io.github.jhipster.config.JHipsterProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.client.serviceregistry.Registration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.core.env.Profiles;
+
+import javax.annotation.PreDestroy;
 
 @Configuration
-@EnableCaching
-@AutoConfigureAfter(MetricsConfiguration.class)
-@AutoConfigureBefore({WebConfigurer.class, DatabaseConfiguration.class})
 public class CacheConfiguration {
 
     private final Logger log = LoggerFactory.getLogger(CacheConfiguration.class);
@@ -41,12 +32,18 @@ public class CacheConfiguration {
 
     private final DiscoveryClient discoveryClient;
 
+    private final JHipsterProperties jHipsterProperties;
+
     private Registration registration;
 
-    public CacheConfiguration(Environment env, ServerProperties serverProperties, DiscoveryClient discoveryClient) {
-        this.env = env;
+    public CacheConfiguration(Environment environment,
+                              ServerProperties serverProperties,
+                              DiscoveryClient discoveryClient,
+                              JHipsterProperties jHipsterProperties) {
+        this.env = environment;
         this.serverProperties = serverProperties;
         this.discoveryClient = discoveryClient;
+        this.jHipsterProperties = jHipsterProperties;
     }
 
     @Autowired(required = false)
@@ -61,14 +58,13 @@ public class CacheConfiguration {
     }
 
     @Bean
-    public CacheManager cacheManager(HazelcastInstance hazelcastInstance) {
+    public CacheManager cacheManager() {
         log.debug("Starting HazelcastCacheManager");
-        CacheManager cacheManager = new com.hazelcast.spring.cache.HazelcastCacheManager(hazelcastInstance);
-        return cacheManager;
+        return new HazelcastCacheManager(this.hazelcastInstance());
     }
 
     @Bean
-    public HazelcastInstance hazelcastInstance(JHipsterProperties jHipsterProperties) {
+    public HazelcastInstance hazelcastInstance() {
         log.debug("Configuring Hazelcast");
         HazelcastInstance hazelCastInstance = Hazelcast.getHazelcastInstanceByName("referenceservice");
         if (hazelCastInstance != null) {
@@ -85,10 +81,9 @@ public class CacheConfiguration {
             String serviceId = registration.getServiceId();
             log.debug("Configuring Hazelcast clustering for instanceId: {}", serviceId);
             // In development, everything goes through 127.0.0.1, with a different port
-            if (env.acceptsProfiles(JHipsterConstants.SPRING_PROFILE_DEVELOPMENT)) {
+            if (env.acceptsProfiles(Profiles.of(JHipsterConstants.SPRING_PROFILE_DEVELOPMENT))) {
                 log.debug("Application is running with the \"dev\" profile, Hazelcast " +
                     "cluster will only work with localhost instances");
-
                 System.setProperty("hazelcast.local.localAddress", "127.0.0.1");
                 config.getNetworkConfig().setPort(serverProperties.getPort() + 5701);
                 config.getNetworkConfig().getJoin().getTcpIpConfig().setEnabled(true);

@@ -1,27 +1,21 @@
 package ch.admin.seco.service.reference.service.impl;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import ch.admin.seco.service.reference.domain.JobCenter;
+import ch.admin.seco.service.reference.domain.JobCenterRepository;
 import ch.admin.seco.service.reference.domain.enums.Language;
-import ch.admin.seco.service.reference.repository.JobCenterRepository;
 import ch.admin.seco.service.reference.service.IsAdmin;
 import ch.admin.seco.service.reference.service.JobCenterService;
 import ch.admin.seco.service.reference.service.dto.JobCenterDto;
 import ch.admin.seco.service.reference.service.dto.mapper.JobCenterDtoMapper;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(rollbackFor = Exception.class)

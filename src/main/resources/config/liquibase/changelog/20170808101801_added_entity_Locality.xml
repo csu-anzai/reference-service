@@ -55,7 +55,14 @@
         <validCheckSum>ANY</validCheckSum>
         <loadData tableName="locality"
                   file="config/liquibase/changelog/data/locality.csv">
-            <column header="language" type="skip"/>
+            <column header="id" type="uuid"/>
+            <column header="city" type="string"/>
+            <column header="zip_code" type="string"/>
+            <column header="communal_code" type="numeric"/>
+            <column header="canton_code" type="string"/>
+            <column header="latitude" type="numeric"/>
+            <column header="longitude" type="numeric"/>
+            <column header="region_code" type="string"/>
         </loadData>
     </changeSet>
 

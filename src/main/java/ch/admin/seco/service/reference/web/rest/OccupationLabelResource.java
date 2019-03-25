@@ -1,38 +1,28 @@
 package ch.admin.seco.service.reference.web.rest;
 
-import static org.springframework.context.i18n.LocaleContextHolder.getLocale;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-
-import com.codahale.metrics.annotation.Timed;
+import ch.admin.seco.service.reference.domain.OccupationLabel;
+import ch.admin.seco.service.reference.domain.enums.Language;
+import ch.admin.seco.service.reference.domain.enums.ProfessionCodeType;
+import ch.admin.seco.service.reference.service.OccupationLabelService;
+import ch.admin.seco.service.reference.service.dto.*;
 import io.github.jhipster.web.util.ResponseUtil;
+import io.micrometer.core.annotation.Timed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import ch.admin.seco.service.reference.domain.OccupationLabel;
-import ch.admin.seco.service.reference.domain.enums.Language;
-import ch.admin.seco.service.reference.domain.enums.ProfessionCodeType;
-import ch.admin.seco.service.reference.service.OccupationLabelService;
-import ch.admin.seco.service.reference.service.dto.OccupationLabelAutocompleteDto;
-import ch.admin.seco.service.reference.service.dto.OccupationLabelDto;
-import ch.admin.seco.service.reference.service.dto.OccupationLabelMappingDto;
-import ch.admin.seco.service.reference.service.dto.OccupationLabelSearchRequestDto;
-import ch.admin.seco.service.reference.service.dto.ProfessionCodeDTO;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+import static org.springframework.context.i18n.LocaleContextHolder.getLocale;
 
 /**
  * REST controller for managing OccupationSynonym.

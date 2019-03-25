@@ -1,19 +1,16 @@
 package ch.admin.seco.service.reference.service.impl;
 
-import java.io.Serializable;
-import java.lang.reflect.Method;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
-import java.util.stream.Stream;
-
-import javax.persistence.EntityManager;
-
+import ch.admin.seco.service.reference.domain.Canton;
+import ch.admin.seco.service.reference.domain.CantonRepository;
+import ch.admin.seco.service.reference.domain.LocalityRepository;
+import ch.admin.seco.service.reference.service.search.CantonSearchRepository;
+import ch.admin.seco.service.reference.service.search.CantonSuggestion;
+import ch.admin.seco.service.reference.service.search.LocalitySearchRepository;
+import ch.admin.seco.service.reference.service.search.LocalitySuggestion;
 import org.hibernate.CacheMode;
 import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import reactor.core.publisher.Flux;
-
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,14 +18,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StopWatch;
+import reactor.core.publisher.Flux;
 
-import ch.admin.seco.service.reference.domain.Canton;
-import ch.admin.seco.service.reference.domain.search.CantonSuggestion;
-import ch.admin.seco.service.reference.domain.search.LocalitySuggestion;
-import ch.admin.seco.service.reference.repository.CantonRepository;
-import ch.admin.seco.service.reference.repository.LocalityRepository;
-import ch.admin.seco.service.reference.repository.search.CantonSearchRepository;
-import ch.admin.seco.service.reference.repository.search.LocalitySearchRepository;
+import javax.persistence.EntityManager;
+import java.io.Serializable;
+import java.lang.reflect.Method;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 @Component
 class ElasticsearchLocalityIndexer {

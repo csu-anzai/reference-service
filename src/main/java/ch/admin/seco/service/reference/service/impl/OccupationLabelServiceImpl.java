@@ -1,42 +1,25 @@
 package ch.admin.seco.service.reference.service.impl;
 
-import static java.util.Objects.isNull;
-import static java.util.Optional.ofNullable;
-import static java.util.stream.Collectors.toMap;
-import static org.springframework.util.StringUtils.hasText;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
+import ch.admin.seco.service.reference.domain.*;
+import ch.admin.seco.service.reference.domain.enums.Language;
+import ch.admin.seco.service.reference.domain.enums.ProfessionCodeType;
+import ch.admin.seco.service.reference.service.IsAdmin;
+import ch.admin.seco.service.reference.service.OccupationLabelService;
+import ch.admin.seco.service.reference.service.dto.*;
 import com.google.common.collect.ImmutableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ch.admin.seco.service.reference.domain.OccupationLabel;
-import ch.admin.seco.service.reference.domain.OccupationLabelMapping;
-import ch.admin.seco.service.reference.domain.OccupationLabelMappingISCO;
-import ch.admin.seco.service.reference.domain.enums.Language;
-import ch.admin.seco.service.reference.domain.enums.ProfessionCodeType;
-import ch.admin.seco.service.reference.repository.OccupationLabelMappingISCORepository;
-import ch.admin.seco.service.reference.repository.OccupationLabelMappingRepository;
-import ch.admin.seco.service.reference.repository.OccupationLabelRepository;
-import ch.admin.seco.service.reference.service.IsAdmin;
-import ch.admin.seco.service.reference.service.OccupationLabelService;
-import ch.admin.seco.service.reference.service.dto.OccupationLabelAutocompleteDto;
-import ch.admin.seco.service.reference.service.dto.OccupationLabelDto;
-import ch.admin.seco.service.reference.service.dto.OccupationLabelMappingDto;
-import ch.admin.seco.service.reference.service.dto.OccupationLabelSearchRequestDto;
-import ch.admin.seco.service.reference.service.dto.ProfessionCodeDTO;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static java.util.Objects.isNull;
+import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toMap;
+import static org.springframework.util.StringUtils.hasText;
 
 /**
  * Service Implementation for managing Occupation.

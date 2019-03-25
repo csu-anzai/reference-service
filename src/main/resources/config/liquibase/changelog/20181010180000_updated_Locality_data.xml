@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <databaseChangeLog
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
     <changeSet id="20181010180000-1" author="men" context="!test" runOnChange="true">
         <validCheckSum>ANY</validCheckSum>
         <delete tableName="locality"/>
         <loadData tableName="locality"
-            file="config/liquibase/changelog/data/locality.csv">
+                  file="config/liquibase/changelog/data/locality.csv">
+            <column header="id" type="uuid"/>
+            <column header="city" type="string"/>
+            <column header="zip_code" type="string"/>
+            <column header="communal_code" type="numeric"/>
+            <column header="canton_code" type="string"/>
+            <column header="latitude" type="numeric"/>
+            <column header="longitude" type="numeric"/>
+            <column header="region_code" type="string"/>
         </loadData>
     </changeSet>
 </databaseChangeLog>

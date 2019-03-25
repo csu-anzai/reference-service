@@ -12,8 +12,7 @@
             "city_analyzer": {
                 "tokenizer": "standard",
                 "filter": [
-                    "city_synonyms",
-                    "canton_synonyms",
+                    "place_synonyms",
                     "lowercase",
                     "german_normalization",
                     "asciifolding"
@@ -38,51 +37,46 @@
             }
         },
         "filter": {
-            "canton_synonyms": {
+            "place_synonyms": {
                 "type": "synonym",
                 "synonyms": [
-                    "Aargau, Aargau, Argovie, Argovia",
-                    "Basel-Landschaft, Basel-Landschaft, Bâle-Campagne, Basilea-Campagna, Baselland",
-                    "Basel-Stadt, Basel-Stadt, Bâle-Ville, Basilea-Città",
-                    "Graubünden, Graubünden, Grisons, Grigioni",
-                    "Jura, Jura, Giura",
-                    "Thurgau, Thurgau, Thurgovie, Turgovia",
-                    "Ticino, Tessin, Ticino",
-                    "Vaud, Waadt, Vaud,",
-                    "Valais / Wallis, Wallis, Valais, Vallese"
-                ]
-            },
-            "city_synonyms": {
-                "type": "synonym",
-                "synonyms": [
-                    "Basel, Basel, Bâle, Basilea",
-                    "Bern, Bern, Berna, Berne",
+                    "Aargau, Argovie, Argovia",
+                    "Land, Campagne, Campagna",
+                    "Stadt, Ville, Città",
+                    "Graubünden, Grisons, Grigioni",
+                    "Jura, Giura",
+                    "Thurgau, Thurgovie, Turgovia",
+                    "Ticino, Tessin",
+                    "Vaud, Waadt,",
+                    "Wallis, Valais, Vallese",
+                    "Basel, Bâle, Basilea",
+                    "Bern, Berna, Berne",
                     "Biel / Bienne, Biel, Bienne, Bienna, Biel/Bienne",
-                    "Chur, Chur, Coire, Coira",
-                    "Delémont, Delsberg, Delémont,",
-                    "Fribourg, Freiburg, Fribourg, Friburgo",
-                    "Genève, Genf, Genève, Ginevra, Geneva",
-                    "Grenchen, Grenchen, Granges,",
-                    "Lausanne, Lausanne, Losanna,",
-                    "Leukerbad, Leukerbad, Loèche-les-Bains",
-                    "Luzern, Luzern, Lucerne, Lucerna",
-                    "Meyriez, Merlach, Meyriez,",
-                    "Muntelier, Muntelier, Montilier",
-                    "Murten, Murten, Morat",
-                    "Moutier, Münster, Moutier",
-                    "Neuchâtel, Neuenburg, Neuchâtel",
+                    "Chur, Coire, Coira",
+                    "Delémont, Delsberg,",
+                    "Fribourg, Freibur, Friburgo",
+                    "Genève, Genf, Ginevra, Geneva",
+                    "Grenchen, Granges,",
+                    "Lausanne, Losanna,",
+                    "Leukerbad, Loèche-les-Bains",
+                    "Luzern, Lucerne, Lucerna",
+                    "Meyriez, Merlach,",
+                    "Muntelier, Montilier",
+                    "Murten, Morat",
+                    "Moutier, Münster",
+                    "Neuchâtel, Neuenburg",
                     "La Neuveville, Neuenstadt, La Neuveville",
                     "Porrentruy, Pruntrut, Porrentruy",
-                    "Schaffhausen, Schaffhausen, Schaffhouse, Sciaffusa",
-                    "Schwyz, Schwyz, Svitto",
+                    "Schaffhausen, Schaffhouse, Sciaffusa",
+                    "Schwyz, Svitto",
                     "Sierre, Siders, Sierre",
                     "Sion, Sitten, Sion",
                     "Solothurn, Solothurn, Soleure, Soletta",
-                    "St. Gallen, St.Gallen, Saint-Gall, S. Gallo, S.Gallo, San Gallo, Sankt Gallen",
-                    "Thun, Thun, Thoune",
+                    "St. Gallen, Saint-Gall, S. Gallo, S.Gallo, San Gallo, Sankt Gallen",
+                    "Thun, Thoune",
                     "Visp, Visp, Viège",
-                    "Zug, Zug, Zoug, Zugo",
-                    "Zürich, Zürich, Zurich, Zurigo, Zurich"
+                    "Zug, Zoug, Zugo",
+                    "Zürich, Zurich, Zurigo, Zurich"
                 ]
             }
         }

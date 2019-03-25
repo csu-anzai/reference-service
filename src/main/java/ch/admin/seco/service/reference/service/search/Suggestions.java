@@ -1,4 +1,4 @@
-package ch.admin.seco.service.reference.domain.search;
+package ch.admin.seco.service.reference.service.search;
 
 import java.util.Set;
 

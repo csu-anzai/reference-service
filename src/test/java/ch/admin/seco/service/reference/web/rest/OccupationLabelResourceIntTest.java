@@ -1,27 +1,18 @@
 package ch.admin.seco.service.reference.web.rest;
 
-import static ch.admin.seco.service.reference.domain.enums.ProfessionCodeType.AVAM;
-import static ch.admin.seco.service.reference.domain.enums.ProfessionCodeType.BFS;
-import static ch.admin.seco.service.reference.domain.enums.ProfessionCodeType.SBN3;
-import static ch.admin.seco.service.reference.domain.enums.ProfessionCodeType.SBN5;
-import static ch.admin.seco.service.reference.domain.enums.ProfessionCodeType.X28;
-import static ch.admin.seco.service.reference.web.rest.TestUtil.doAsAdmin;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.hasSize;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.Locale;
-import java.util.UUID;
-
+import ch.admin.seco.service.reference.ReferenceserviceApp;
+import ch.admin.seco.service.reference.domain.*;
+import ch.admin.seco.service.reference.domain.enums.Language;
+import ch.admin.seco.service.reference.domain.enums.ProfessionCodeType;
+import ch.admin.seco.service.reference.service.OccupationLabelService;
+import ch.admin.seco.service.reference.service.impl.ElasticsearchOccupationLabelIndexer;
+import ch.admin.seco.service.reference.service.search.OccupationLabelSearchRepository;
+import ch.admin.seco.service.reference.web.rest.errors.ExceptionTranslator;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
@@ -32,21 +23,15 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import ch.admin.seco.service.reference.ReferenceserviceApp;
-import ch.admin.seco.service.reference.domain.OccupationLabel;
-import ch.admin.seco.service.reference.domain.OccupationLabelMapping;
-import ch.admin.seco.service.reference.domain.OccupationLabelMappingISCO;
-import ch.admin.seco.service.reference.domain.OccupationLabelMappingX28;
-import ch.admin.seco.service.reference.domain.enums.Language;
-import ch.admin.seco.service.reference.domain.enums.ProfessionCodeType;
-import ch.admin.seco.service.reference.repository.OccupationLabelMappingISCORepository;
-import ch.admin.seco.service.reference.repository.OccupationLabelMappingRepository;
-import ch.admin.seco.service.reference.repository.OccupationLabelMappingX28Repository;
-import ch.admin.seco.service.reference.repository.OccupationLabelRepository;
-import ch.admin.seco.service.reference.repository.search.OccupationLabelSearchRepository;
-import ch.admin.seco.service.reference.service.OccupationLabelService;
-import ch.admin.seco.service.reference.service.impl.ElasticsearchOccupationLabelIndexer;
-import ch.admin.seco.service.reference.web.rest.errors.ExceptionTranslator;
+import java.util.Locale;
+import java.util.UUID;
+
+import static ch.admin.seco.service.reference.domain.enums.ProfessionCodeType.*;
+import static ch.admin.seco.service.reference.web.rest.TestUtil.doAsAdmin;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ReferenceserviceApp.class)

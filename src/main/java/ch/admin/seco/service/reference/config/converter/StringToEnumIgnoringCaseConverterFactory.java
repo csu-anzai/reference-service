@@ -1,14 +1,14 @@
 package ch.admin.seco.service.reference.config.converter;
 
-import java.util.EnumSet;
-import java.util.Set;
-
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.convert.converter.ConverterFactory;
 import org.springframework.util.Assert;
+
+import java.util.EnumSet;
+import java.util.Set;
+
 /*
  * Copy of org.springframework.boot.convert.StringToEnumIgnoringCaseConverterFactory.
- * Impl should be available in Spring Boot 2.1.0
  * see https://github.com/spring-projects/spring-boot/issues/12148
  */
 final public class StringToEnumIgnoringCaseConverterFactory

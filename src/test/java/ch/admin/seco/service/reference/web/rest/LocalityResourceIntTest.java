@@ -1,37 +1,25 @@
 package ch.admin.seco.service.reference.web.rest;
 
-import static ch.admin.seco.service.reference.web.rest.TestUtil.doAsAdmin;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
+import ch.admin.seco.service.reference.ReferenceserviceApp;
+import ch.admin.seco.service.reference.domain.CantonRepository;
+import ch.admin.seco.service.reference.domain.Locality;
+import ch.admin.seco.service.reference.domain.LocalityRepository;
+import ch.admin.seco.service.reference.domain.valueobject.GeoPoint;
+import ch.admin.seco.service.reference.service.LocalityService;
+import ch.admin.seco.service.reference.service.search.CantonSearchRepository;
+import ch.admin.seco.service.reference.service.search.CantonSuggestion;
+import ch.admin.seco.service.reference.service.search.LocalitySearchRepository;
+import ch.admin.seco.service.reference.service.search.LocalitySuggestion;
+import ch.admin.seco.service.reference.web.rest.errors.ExceptionTranslator;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -39,17 +27,13 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import ch.admin.seco.service.reference.ReferenceserviceApp;
-import ch.admin.seco.service.reference.domain.Locality;
-import ch.admin.seco.service.reference.domain.search.CantonSuggestion;
-import ch.admin.seco.service.reference.domain.search.LocalitySuggestion;
-import ch.admin.seco.service.reference.domain.valueobject.GeoPoint;
-import ch.admin.seco.service.reference.repository.CantonRepository;
-import ch.admin.seco.service.reference.repository.LocalityRepository;
-import ch.admin.seco.service.reference.repository.search.CantonSearchRepository;
-import ch.admin.seco.service.reference.repository.search.LocalitySearchRepository;
-import ch.admin.seco.service.reference.service.LocalityService;
-import ch.admin.seco.service.reference.web.rest.errors.ExceptionTranslator;
+import java.util.*;
+
+import static ch.admin.seco.service.reference.web.rest.TestUtil.doAsAdmin;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Test class for the LocalityResource REST controller.

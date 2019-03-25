@@ -1,19 +1,18 @@
 package ch.admin.seco.service.reference.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
 
 import ch.admin.seco.service.reference.security.SecurityUtils;
 import ch.admin.seco.service.reference.service.ElasticsearchIndexService;
 import ch.admin.seco.service.reference.service.IsAdmin;
 import ch.admin.seco.service.reference.web.rest.util.HeaderUtil;
+import io.micrometer.core.annotation.Timed;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * REST controller for managing Elasticsearch index.

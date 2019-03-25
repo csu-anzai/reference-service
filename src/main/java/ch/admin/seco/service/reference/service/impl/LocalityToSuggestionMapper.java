@@ -1,6 +1,10 @@
 package ch.admin.seco.service.reference.service.impl;
 
-import static java.util.Objects.isNull;
+import ch.admin.seco.service.reference.domain.Canton;
+import ch.admin.seco.service.reference.domain.Locality;
+import ch.admin.seco.service.reference.service.search.CantonSuggestion;
+import ch.admin.seco.service.reference.service.search.LocalitySuggestion;
+import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -8,12 +12,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.springframework.stereotype.Component;
-
-import ch.admin.seco.service.reference.domain.Canton;
-import ch.admin.seco.service.reference.domain.Locality;
-import ch.admin.seco.service.reference.domain.search.CantonSuggestion;
-import ch.admin.seco.service.reference.domain.search.LocalitySuggestion;
+import static java.util.Objects.isNull;
 
 @Component
 class LocalityToSuggestionMapper {

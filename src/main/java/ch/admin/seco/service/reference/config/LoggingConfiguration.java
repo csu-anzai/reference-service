@@ -1,8 +1,5 @@
 package ch.admin.seco.service.reference.config;
 
-import java.net.InetSocketAddress;
-import java.util.Iterator;
-
 import ch.qos.logback.classic.AsyncAppender;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.LoggerContext;
@@ -19,10 +16,12 @@ import net.logstash.logback.encoder.LogstashEncoder;
 import net.logstash.logback.stacktrace.ShortenedThrowableConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Configuration;
+
+import java.net.InetSocketAddress;
+import java.util.Iterator;
 
 @Configuration
 @RefreshScope
@@ -33,14 +32,22 @@ public class LoggingConfiguration {
     private static final String ASYNC_LOGSTASH_APPENDER_NAME = "ASYNC_LOGSTASH";
 
     private final Logger log = LoggerFactory.getLogger(LoggingConfiguration.class);
+
     private final String appName;
+
     private final String serverPort;
+
     private final String version;
+
     private final JHipsterProperties jHipsterProperties;
+
     private LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
 
-    public LoggingConfiguration(@Value("${spring.application.name}") String appName, @Value("${server.port:8080}") String serverPort,
-        @Value("${info.project.version}") String version, JHipsterProperties jHipsterProperties) {
+    public LoggingConfiguration(
+        @Value("${spring.application.name}") String appName,
+        @Value("${server.port:8080}") String serverPort,
+        @Value("${info.project.version}") String version,
+        JHipsterProperties jHipsterProperties) {
         this.appName = appName;
         this.serverPort = serverPort;
         this.version = version;
