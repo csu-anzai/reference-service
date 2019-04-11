@@ -1,0 +1,28 @@
+# ===================================================================
+# Spring Boot
+# ===================================================================
+spring:
+    jpa:
+        hibernate:
+            ddl-auto: create
+    batch:
+        initialize-schema: embedded
+        job:
+            enabled: false
+    datasource:
+        type: com.zaxxer.hikari.HikariDataSource
+        url: jdbc:h2:mem:referenceservice
+        username: referenceservice
+        password: secret
+
+# ===================================================================
+# App Configs
+# ===================================================================
+reference-jobcenter-importer:
+    datasource:
+        jobcenter:
+            type: com.zaxxer.hikari.HikariDataSource
+            url: jdbc:oracle:thin:@localhost:11521:XE
+            username: referenceservice
+            password: secret
+            initialization-mode: always

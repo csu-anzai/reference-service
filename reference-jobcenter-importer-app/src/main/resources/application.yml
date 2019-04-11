@@ -1,0 +1,35 @@
+# ===================================================================
+# Spring Boot
+# ===================================================================
+spring:
+    liquibase:
+        enabled: false
+    batch:
+        initialize-schema: never
+    jpa:
+        open-in-view: false
+        hibernate:
+            ddl-auto: validate
+            naming:
+                physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+                implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+feign:
+    hystrix:
+        enabled: false
+    client:
+        config:
+            jobcenter-api: # Needs to be named after the context-ID
+                connectTimeout: 10000
+                readTimeout: 60000 # higher read-timeout since the housekeeping might take a while
+
+# ===================================================================
+# App Configs
+# ===================================================================
+reference-jobcenter-importer:
+    chunk-size: 10
+    datasource:
+        batch:
+            type: ${spring.datasource.type}
+            url: ${spring.datasource.url}
+            username: ${spring.datasource.username}
+            password: ${spring.datasource.password}

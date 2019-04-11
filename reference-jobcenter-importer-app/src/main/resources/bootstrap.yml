@@ -1,0 +1,17 @@
+# ===================================================================
+# Spring Cloud Config bootstrap configuration for the "dev" profile
+# In prod profile, properties will be overwriten by the ones defined in bootstrap-prod.yml
+# ===================================================================
+
+jhipster:
+    registry:
+        password: admin
+
+spring:
+    application:
+        name: reference-jobcenter-importer
+    cloud:
+        config:
+            name: reference-jobcenter-importer
+            fail-fast: true
+            uri: http://admin:${jhipster.registry.password}@localhost:8761/config

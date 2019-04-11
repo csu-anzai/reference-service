@@ -1,9 +1,9 @@
 apply plugin: 'docker-compose'
 
 dockerCompose {
-    dockerComposeWorkingDirectory = "${project.rootProject.rootDir}/src/main/docker"
-    useComposeFiles = ["${project.rootProject.rootDir}/src/main/docker/elasticsearch.yml"]
+    dockerComposeWorkingDirectory = "${project.rootProject.rootDir}/docker/reference"
     stopContainers = System.getenv().hasProperty('TRAVIS_JOB_ID') ? true: false
+    startedServices = ['elasticsearch','jhipster-registry','postgresql','oracle-xe']
 }
 
 dockerCompose.isRequiredBy(test)

@@ -1,0 +1,47 @@
+# ===================================================================
+# Spring Boot
+# ===================================================================
+spring:
+    jpa:
+        hibernate:
+            ddl-auto: create
+    batch:
+        initialize-schema: always
+    datasource:
+        type: com.zaxxer.hikari.HikariDataSource
+        url: jdbc:postgresql://localhost:5434/referenceservice
+        username: referenceservice
+        password: secret
+    cloud:
+        task:
+            initialize:
+                enabled: true
+
+# ===================================================================
+# JHipster specific properties
+#
+# Full reference is available at: http://www.jhipster.tech/common-application-properties/
+# ===================================================================
+jhipster:
+    security:
+        client-authorization:
+            access-token-uri: http://localhost:8080/api/authenticate
+            client-id: 'admin'
+            client-secret: 'admin'
+
+# ===================================================================
+# App Configs
+# ===================================================================
+reference-jobcenter-importer:
+    datasource:
+        jobcenter:
+            type: com.zaxxer.hikari.HikariDataSource
+            url: jdbc:oracle:thin:@localhost:11521:XE
+            username: referenceservice
+            password: secret
+            initialization-mode: always
+
+logging:
+    level:
+        ROOT: INFO
+        org.springframework.batch: DEBUG
