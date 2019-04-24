@@ -25,4 +25,3 @@ reference-jobcenter-importer:
             url: jdbc:oracle:thin:@localhost:11521:XE
             username: referenceservice
             password: secret
-            initialization-mode: always
