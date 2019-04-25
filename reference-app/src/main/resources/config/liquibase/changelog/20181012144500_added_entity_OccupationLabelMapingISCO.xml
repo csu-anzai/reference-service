@@ -21,7 +21,10 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="20181012144500-2" author="varu" context="!test">
+    <changeSet id="20181012144500-2" author="varu" context="!test" runOnChange="true">
+        <validCheckSum>ANY</validCheckSum>
+        <delete tableName="occupation_label_mapping_isco">
+        </delete>
         <loadData
             file="config/liquibase/changelog/data/occupation-label-mapping-isco08.csv"
             tableName="occupation_label_mapping_isco">
