@@ -11,6 +11,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.core.env.Environment;
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 
 import javax.annotation.PostConstruct;
@@ -25,6 +26,7 @@ import java.util.Collection;
 @EnableJpaRepositories("ch.admin.seco.service.reference.domain")
 @EnableElasticsearchRepositories("ch.admin.seco.service.reference.service.search")
 @EnableCaching
+@EnableAsync
 public class ReferenceserviceApp {
 
     private static final Logger log = LoggerFactory.getLogger(ReferenceserviceApp.class);

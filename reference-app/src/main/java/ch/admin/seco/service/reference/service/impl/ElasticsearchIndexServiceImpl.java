@@ -8,7 +8,6 @@ import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
 
 @Service
 public class ElasticsearchIndexServiceImpl implements ElasticsearchIndexService {
@@ -28,14 +27,12 @@ public class ElasticsearchIndexServiceImpl implements ElasticsearchIndexService 
 
     public void reindexAll() {
 
-        CompletableFuture.allOf(
-                CompletableFuture.runAsync(elasticsearchLocalityIndexer::reindexLocalities),
-                CompletableFuture.runAsync(elasticsearchOccupationLabelIndexer::reindexOccupationLabel)
-        ).join();
+        elasticsearchLocalityIndexer.reindexLocalities();
+        elasticsearchOccupationLabelIndexer.reindexOccupationLabel();
 
         evictAllCaches();
 
-        log.info("ReindexAll finished");
+        log.info("Elasticsearch: Successfully performed reindexing of reference data.");
     }
 
     private void evictAllCaches() {
