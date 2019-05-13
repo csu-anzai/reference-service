@@ -9,10 +9,7 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-logging'
 
     // Feign dependencies
-    compile "org.springframework.cloud:spring-cloud-starter-openfeign"
-    compile 'io.github.openfeign:feign-httpclient'
-    compile 'org.springframework.cloud:spring-cloud-security'
-    compile 'org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure'
+    compile 'ch.admin.seco.alv:alv-feign-starter'
 
     // spring cloud dependencies
     compile "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client"

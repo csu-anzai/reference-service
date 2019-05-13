@@ -1,9 +1,9 @@
 package ch.admin.seco.service.reference.infrastructure.batch.importer.domain.dto;
 
-import org.springframework.cloud.openfeign.FeignClient;
+import ch.admin.seco.alv.shared.feign.AlvAuthorizedFeignClient;
 import org.springframework.web.bind.annotation.PatchMapping;
 
-@FeignClient(name = "referenceservice", contextId = "jobcenter-api", decode404 = true)
+@AlvAuthorizedFeignClient(name = "referenceservice", contextId = "jobcenter-api")
 public interface ReferenceService {
 
     @PatchMapping("/api/job-centers")

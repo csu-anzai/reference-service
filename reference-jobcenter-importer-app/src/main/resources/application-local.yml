@@ -30,6 +30,15 @@ jhipster:
             client-secret: 'admin'
 
 # ===================================================================
+# Feign Authorization
+# ===================================================================
+alv:
+    feign:
+        access-token-uri: http://localhost:8080/api/authenticate
+        client-id: 'admin'
+        client-secret: 'admin'
+
+# ===================================================================
 # App Configs
 # ===================================================================
 reference-jobcenter-importer:
