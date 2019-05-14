@@ -1,19 +1,24 @@
 package ch.admin.seco.service.reference.service.converter;
 
-import ch.admin.seco.service.reference.service.dto.CantonSuggestionDto;
-import ch.admin.seco.service.reference.service.dto.GeoPointDto;
-import ch.admin.seco.service.reference.service.dto.LocalityAutocompleteDto;
-import ch.admin.seco.service.reference.service.dto.LocalitySuggestionDto;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
+import static java.util.Objects.isNull;
+import static java.util.stream.Collectors.toList;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-import static java.util.Objects.isNull;
-import static java.util.stream.Collectors.toList;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
+
+import ch.admin.seco.service.reference.service.dto.CantonSuggestionDto;
+import ch.admin.seco.service.reference.service.dto.GeoPointDto;
+import ch.admin.seco.service.reference.service.dto.LocalityAutocompleteDto;
+import ch.admin.seco.service.reference.service.dto.LocalitySuggestionDto;
 
 public class DefaultLocalityAutocompleteConverter implements LocalityAutocompleteConverter {
 
@@ -63,12 +68,13 @@ public class DefaultLocalityAutocompleteConverter implements LocalityAutocomplet
 
     protected LocalitySuggestionDto toLocalitySuggestionDto(Map<String, Object> source) {
         return new LocalitySuggestionDto()
-            .city((String) source.get("city"))
-            .communalCode((Integer) source.get("communalCode"))
-            .cantonCode((String) source.get("cantonCode"))
-            .regionCode((String) source.get("regionCode"))
-            .zipCode((String) source.get("zipCode"))
-            .geoPoint(toGeoPointDto((Map<String, Object>) source.get("geoPoint")));
+            .setId((String) source.get("id"))
+            .setCity((String) source.get("city"))
+            .setCommunalCode((Integer) source.get("communalCode"))
+            .setCantonCode((String) source.get("cantonCode"))
+            .setRegionCode((String) source.get("regionCode"))
+            .setZipCode((String) source.get("zipCode"))
+            .setGeoPoint(toGeoPointDto((Map<String, Object>) source.get("geoPoint")));
     }
 
     protected GeoPointDto toGeoPointDto(Map<String, Object> source) {

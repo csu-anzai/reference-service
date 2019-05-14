@@ -15,11 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import ch.admin.seco.service.reference.ReferenceserviceApp;
 
 /**
  * Test class for the ExceptionTranslator controller advice.
@@ -27,7 +26,8 @@ import ch.admin.seco.service.reference.ReferenceserviceApp;
  * @see ExceptionTranslator
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = ReferenceserviceApp.class)
+@SpringBootTest
+@ActiveProfiles("test")
 public class ExceptionTranslatorIntTest {
 
     @Autowired

@@ -1,38 +1,41 @@
 package ch.admin.seco.service.reference.web.rest;
 
-import ch.admin.seco.service.reference.ReferenceserviceApp;
 import ch.admin.seco.service.reference.domain.CantonRepository;
 import ch.admin.seco.service.reference.domain.Locality;
 import ch.admin.seco.service.reference.domain.LocalityRepository;
 import ch.admin.seco.service.reference.domain.valueobject.GeoPoint;
 import ch.admin.seco.service.reference.service.LocalityService;
+import ch.admin.seco.service.reference.service.impl.ElasticsearchLocalityIndexer;
 import ch.admin.seco.service.reference.service.search.CantonSearchRepository;
 import ch.admin.seco.service.reference.service.search.CantonSuggestion;
 import ch.admin.seco.service.reference.service.search.LocalitySearchRepository;
-import ch.admin.seco.service.reference.service.search.LocalitySuggestion;
-import ch.admin.seco.service.reference.web.rest.errors.ExceptionTranslator;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 
 import static ch.admin.seco.service.reference.web.rest.TestUtil.doAsAdmin;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
@@ -41,8 +44,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @see LocalityResource
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = ReferenceserviceApp.class)
+@SpringBootTest
+@AutoConfigureMockMvc
+@ActiveProfiles("test")
+@Transactional
 public class LocalityResourceIntTest {
+
+    private static final String URL = "/api/localities";
+
+    private static final String URL_SEARCH = "/api/_search/localities";
 
     private static final String DEFAULT_CITY = "Bern";
     private static final String UPDATED_CITY = "Embrach";
@@ -78,63 +88,51 @@ public class LocalityResourceIntTest {
     private LocalityService localityService;
 
     @Autowired
-    private LocalitySearchRepository localitySynonymSearchRepository;
+    private LocalitySearchRepository localitySearchRepository;
 
     @Autowired
-    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
+    private ElasticsearchLocalityIndexer elasticsearchLocalityIndexer;
 
     @Autowired
-    private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
-
-    @Autowired
-    private ExceptionTranslator exceptionTranslator;
-
-    private MockMvc restLocalityMockMvc;
+    private MockMvc mockMvc;
 
     private Locality locality;
 
     private static Locality createLocalityEntity() {
         return new Locality()
-                .city(DEFAULT_CITY)
-                .zipCode(DEFAULT_ZIP_CODE)
-                .communalCode(DEFAULT_COMMUNAL_CODE)
-                .cantonCode(DEFAULT_CANTON_CODE)
-                .regionCode(DEFAULT_REGION_CODE)
-                .geoPoint(new GeoPoint(DEFAULT_LAT, DEFAULT_LON));
+            .city(DEFAULT_CITY)
+            .zipCode(DEFAULT_ZIP_CODE)
+            .communalCode(DEFAULT_COMMUNAL_CODE)
+            .cantonCode(DEFAULT_CANTON_CODE)
+            .regionCode(DEFAULT_REGION_CODE)
+            .geoPoint(new GeoPoint(DEFAULT_LAT, DEFAULT_LON));
     }
 
     @Before
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-        LocalityResource localityResource = new LocalityResource(localityService);
-        this.restLocalityMockMvc = MockMvcBuilders.standaloneSetup(localityResource)
-                .setCustomArgumentResolvers(pageableArgumentResolver)
-                .setControllerAdvice(exceptionTranslator)
-                .setMessageConverters(jacksonMessageConverter).build();
-    }
+    public void setUp() {
+        this.localityRepository.deleteAll();
+        this.cantonRepository.deleteAll();
+        this.localitySearchRepository.deleteAll();
+        this.cantonSearchRepository.deleteAll();
 
-    @Before
-    public void initTest() {
-        localitySynonymSearchRepository.deleteAll();
+        this.elasticsearchLocalityIndexer.reindexLocalities();
+
         locality = createLocalityEntity();
     }
 
     @Test
-    @Transactional
     @WithMockUser(roles = "ADMIN")
     public void createLocality() throws Exception {
-        int databaseSizeBeforeCreate = localityRepository.findAll().size();
+        // given
+        ResultActions post = post(locality, URL);
+        post.andExpect(status().isCreated());
 
-        // Create the Locality
-        restLocalityMockMvc.perform(post("/api/localities")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(locality)))
-                .andExpect(status().isCreated());
+        // when
+        List<Locality> localityList = this.localityRepository.findAll();
 
-        // Validate the Locality in the database
-        List<Locality> localityList = localityRepository.findAll();
-        assertThat(localityList).hasSize(databaseSizeBeforeCreate + 1);
-        Locality testLocality = localityList.get(localityList.size() - 1);
+        // then
+        assertThat(localityList).hasSize(1);
+        Locality testLocality = localityList.get(0);
         assertThat(testLocality.getCity()).isEqualTo(DEFAULT_CITY);
         assertThat(testLocality.getZipCode()).isEqualTo(DEFAULT_ZIP_CODE);
         assertThat(testLocality.getCommunalCode()).isEqualTo(DEFAULT_COMMUNAL_CODE);
@@ -142,125 +140,109 @@ public class LocalityResourceIntTest {
         assertThat(testLocality.getRegionCode()).isEqualTo(DEFAULT_REGION_CODE);
         assertThat(testLocality.getGeoPoint().getLatitude()).isEqualTo(DEFAULT_LAT);
         assertThat(testLocality.getGeoPoint().getLongitude()).isEqualTo(DEFAULT_LON);
-        // Validate the Locality in Elasticsearch
-        Optional<LocalitySuggestion> localitySynonym = localitySynonymSearchRepository.findById(testLocality.getId());
-        assertThat(localitySynonym).isPresent();
+
+        await().until(() -> this.localitySearchRepository.findById(testLocality.getId()).isPresent());
     }
 
     @Test
-    @Transactional
     @WithMockUser(roles = "ADMIN")
-    public void createLocalityWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = localityRepository.findAll().size();
-
-        // Create the Locality with an existing ID
-        locality.setId(UUID.randomUUID());
-
-        // An entity with an existing ID cannot be created, so this API call must fail
-        restLocalityMockMvc.perform(post("/api/localities")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(locality)))
-                .andExpect(status().isBadRequest());
-
-        // Validate the Alice in the database
-        List<Locality> localityList = localityRepository.findAll();
-        assertThat(localityList).hasSize(databaseSizeBeforeCreate);
-    }
-
-    @Test
-    @Transactional
     public void checkCityIsRequired() throws Exception {
-        int databaseSizeBeforeTest = localityRepository.findAll().size();
-        // set the field null
+        // given
         locality.setCity(null);
 
-        // Create the Locality, which fails.
+        // when
+        ResultActions post = post(locality, URL);
+        List<Locality> localityList = this.localityRepository.findAll();
 
-        restLocalityMockMvc.perform(post("/api/localities")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(locality)))
-                .andExpect(status().isBadRequest());
-
-        List<Locality> localityList = localityRepository.findAll();
-        assertThat(localityList).hasSize(databaseSizeBeforeTest);
+        // then
+        post.andExpect(status().isBadRequest());
+        assertThat(localityList).hasSize(0);
     }
 
     @Test
-    @Transactional
+    @WithMockUser(roles = "ADMIN")
     public void checkZipCodeIsRequired() throws Exception {
-        int databaseSizeBeforeTest = localityRepository.findAll().size();
-        // set the field null
+        // given
         locality.setZipCode(null);
 
-        // Create the Locality, which fails.
+        // when
+        ResultActions post = post(locality, URL);
+        List<Locality> localityList = this.localityRepository.findAll();
 
-        restLocalityMockMvc.perform(post("/api/localities")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(locality)))
-                .andExpect(status().isBadRequest());
-
-        List<Locality> localityList = localityRepository.findAll();
-        assertThat(localityList).hasSize(databaseSizeBeforeTest);
+        // then
+        post.andExpect(status().isBadRequest());
+        assertThat(localityList).hasSize(0);
     }
 
     @Test
-    @Transactional
+    @WithMockUser(roles = "ADMIN")
     public void checkCommunalCodeShouldBeGreaterThanZero() throws Exception {
-        int databaseSizeBeforeTest = localityRepository.findAll().size();
-        // set the field to 0
+        // given
         locality.setCommunalCode(0);
 
-        // Create the Locality, which fails.
+        // when
+        ResultActions post = post(locality, URL);
+        List<Locality> localityList = this.localityRepository.findAll();
 
-        restLocalityMockMvc.perform(post("/api/localities")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(locality)))
-                .andExpect(status().isBadRequest());
-
-        List<Locality> localityList = localityRepository.findAll();
-        assertThat(localityList).hasSize(databaseSizeBeforeTest);
+        // then
+        post.andExpect(status().isBadRequest());
+        assertThat(localityList).hasSize(0);
     }
 
     @Test
-    @Transactional
+    @WithMockUser(roles = "ADMIN")
     public void checkLatitudeIsRequired() throws Exception {
-        checkLocalityGeoPoint(new GeoPoint(null, DEFAULT_LON));
+        // given
+        locality.setGeoPoint(new GeoPoint(null, DEFAULT_LON));
+
+        // when
+        ResultActions post = post(locality, URL);
+        List<Locality> localityList = localityRepository.findAll();
+
+        // then
+        post.andExpect(status().isBadRequest());
+        assertThat(localityList).hasSize(0);
     }
 
     @Test
-    @Transactional
+    @WithMockUser(roles = "ADMIN")
     public void checkLongitudeIsRequired() throws Exception {
-        checkLocalityGeoPoint(new GeoPoint(DEFAULT_LAT, null));
+        // given
+        locality.setGeoPoint(new GeoPoint(DEFAULT_LAT, null));
+
+        // when
+        ResultActions post = post(locality, URL);
+        List<Locality> localityList = localityRepository.findAll();
+
+        // then
+        post.andExpect(status().isBadRequest());
+        assertThat(localityList).hasSize(0);
     }
 
     @Test
-    @Transactional
     @WithMockUser(roles = "ADMIN")
     public void updateLocality() throws Exception {
-        // Initialize the database
-        localityService.save(locality);
+        // given
+        this.localityRepository.save(locality);
 
-        int databaseSizeBeforeUpdate = localityRepository.findAll().size();
-
-        // Update the locality
-        Locality updatedLocality = localityRepository.getOne(locality.getId());
+        Locality updatedLocality = this.localityRepository.getOne(locality.getId());
         updatedLocality
-                .city(UPDATED_CITY)
-                .zipCode(UPDATED_ZIP_CODE)
-                .communalCode(UPDATED_COMMUNAL_CODE)
-                .cantonCode(UPDATED_CANTON_CODE)
-                .regionCode(UPDATED_REGION_CODE)
-                .geoPoint(new GeoPoint(UPDATED_LAT, UPDATED_LON));
+            .city(UPDATED_CITY)
+            .zipCode(UPDATED_ZIP_CODE)
+            .communalCode(UPDATED_COMMUNAL_CODE)
+            .cantonCode(UPDATED_CANTON_CODE)
+            .regionCode(UPDATED_REGION_CODE)
+            .geoPoint(new GeoPoint(UPDATED_LAT, UPDATED_LON));
 
-        restLocalityMockMvc.perform(put("/api/localities")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(updatedLocality)))
-                .andExpect(status().isOk());
+        // when
+        ResultActions put = put(updatedLocality, URL);
+        List<Locality> localityList = this.localityRepository.findAll();
 
-        // Validate the Locality in the database
-        List<Locality> localityList = localityRepository.findAll();
-        assertThat(localityList).hasSize(databaseSizeBeforeUpdate);
-        Locality testLocality = localityList.get(localityList.size() - 1);
+        // then
+        put.andExpect(status().isOk());
+
+        assertThat(localityList).hasSize(1);
+        Locality testLocality = localityList.get(0);
         assertThat(testLocality.getCity()).isEqualTo(UPDATED_CITY);
         assertThat(testLocality.getZipCode()).isEqualTo(UPDATED_ZIP_CODE);
         assertThat(testLocality.getCommunalCode()).isEqualTo(UPDATED_COMMUNAL_CODE);
@@ -269,109 +251,151 @@ public class LocalityResourceIntTest {
         assertThat(testLocality.getGeoPoint().getLatitude()).isEqualTo(UPDATED_LAT);
         assertThat(testLocality.getGeoPoint().getLongitude()).isEqualTo(UPDATED_LON);
 
-        // Validate the Locality in Elasticsearch
-        Optional<LocalitySuggestion> localitySynonym = localitySynonymSearchRepository.findById(testLocality.getId());
-        assertThat(localitySynonym).isPresent();
+        await().until(() -> this.localitySearchRepository.findById(testLocality.getId()).isPresent());
     }
 
     @Test
-    @Transactional
     public void searchLocality() throws Exception {
-        // Initialize the database
-        doAsAdmin(()-> localityService.save(locality));
-        cantonSearchRepository.save(new CantonSuggestion()
-                .id(UUID.randomUUID())
-                .code("BE")
-                .name("Canton Bern")
-                .cantonSuggestions(Collections.emptySet())
+        // given
+        doAsAdmin(() -> this.localityService.save(locality));
+        this.cantonSearchRepository.save(new CantonSuggestion()
+            .id(UUID.randomUUID())
+            .code("BE")
+            .name("Canton Bern")
+            .cantonSuggestions(Collections.emptySet())
         );
 
-        // Search the locality
-        restLocalityMockMvc.perform(get("/api/_search/localities?prefix={prefix}&resultSize={resultSize}", "be", 5))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$.localities[*].city").value(hasItem(DEFAULT_CITY)))
-                .andExpect(jsonPath("$.localities[*].communalCode").value(hasItem(DEFAULT_COMMUNAL_CODE)))
-                .andExpect(jsonPath("$.localities[*].cantonCode").value(hasItem(DEFAULT_CANTON_CODE)))
-                .andExpect(jsonPath("$.localities[*].regionCode").value(hasItem(DEFAULT_REGION_CODE)))
-                .andExpect(jsonPath("$.localities[*].zipCode").value(hasItem(DEFAULT_ZIP_CODE)))
-                .andExpect(jsonPath("$.cantons[*].code").value(hasItem(DEFAULT_CANTON_CODE)));
+        // when
+        ResultActions resultActions = this.mockMvc.perform(
+            get(URL_SEARCH + "?prefix={prefix}&resultSize={resultSize}", "be", 5)
+        );
+
+        // then
+        resultActions
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.localities[*].city").value(hasItem(DEFAULT_CITY)))
+            .andExpect(jsonPath("$.localities[*].communalCode").value(hasItem(DEFAULT_COMMUNAL_CODE)))
+            .andExpect(jsonPath("$.localities[*].cantonCode").value(hasItem(DEFAULT_CANTON_CODE)))
+            .andExpect(jsonPath("$.localities[*].regionCode").value(hasItem(DEFAULT_REGION_CODE)))
+            .andExpect(jsonPath("$.localities[*].zipCode").value(hasItem(DEFAULT_ZIP_CODE)))
+            .andExpect(jsonPath("$.cantons[*].code").value(hasItem(DEFAULT_CANTON_CODE)));
     }
 
     @Test
-    @Transactional
     public void searchLocalityByZipCode() throws Exception {
+        // given
         saveLocalitiesAsAdmin(
-                createLocalityEntity().zipCode("3001"),
-                createLocalityEntity().city("Ebersecken").zipCode("3002"),
-                createLocalityEntity().city("Dachsen").zipCode("4001")
+            createLocalityEntity().zipCode("3001"),
+            createLocalityEntity().city("Ebersecken").zipCode("3002"),
+            createLocalityEntity().city("Dachsen").zipCode("4001")
         );
 
-        restLocalityMockMvc.perform(
-                get("/api/_search/localities")
-                        .param("prefix", "30")
-                        .param("resultSize", "10")
-        )
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$.localities[0].zipCode").value("3001"))
-                .andExpect(jsonPath("$.localities[1].zipCode").value("3002"));
+        // when
+        ResultActions resultActions = this.mockMvc.perform(
+            get(URL_SEARCH)
+                .param("prefix", "30")
+                .param("resultSize", "10")
+        );
+
+        // then
+        resultActions
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.localities[0].zipCode").value("3001"))
+            .andExpect(jsonPath("$.localities[1].zipCode").value("3002"));
     }
 
     @Test
-    @Transactional
     public void searchLocalityByZipCodeWithDistinctResult() throws Exception {
+        // given
         saveLocalitiesAsAdmin(
-                createLocalityEntity().zipCode("3001").geoPoint(null),
-                createLocalityEntity().zipCode("3002").geoPoint(null),
-                createLocalityEntity().zipCode("3003").geoPoint(new GeoPoint(DEFAULT_LAT, DEFAULT_LON)),
-                createLocalityEntity().zipCode("3004").geoPoint(null),
-                createLocalityEntity().city("Zurich").zipCode("3005"),
-                createLocalityEntity().city("Lucern").zipCode("3006")
+            createLocalityEntity().zipCode("3001").geoPoint(null),
+            createLocalityEntity().zipCode("3002").geoPoint(null),
+            createLocalityEntity().zipCode("3003").geoPoint(new GeoPoint(DEFAULT_LAT, DEFAULT_LON)),
+            createLocalityEntity().zipCode("3004").geoPoint(null),
+            createLocalityEntity().city("Zurich").zipCode("3005"),
+            createLocalityEntity().city("Lucern").zipCode("3006")
         );
 
-        restLocalityMockMvc.perform(
-                get("/api/_search/localities")
-                        .param("prefix", "30")
-                        .param("resultSize", "10")
-                    .param("distinctByLocalityCity", "true")
-        )
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.localities.length()").value("3"))
-                .andExpect(jsonPath("$.localities[0].city").value(DEFAULT_CITY))
-                .andExpect(jsonPath("$.localities[0].zipCode").value("3003"))
-                .andExpect(jsonPath("$.localities[0].geoPoint.lat").value(DEFAULT_LAT))
-                .andExpect(jsonPath("$.localities[0].geoPoint.lon").value(DEFAULT_LON))
-                .andExpect(jsonPath("$.localities[1].city").value("Zurich"))
-                .andExpect(jsonPath("$.localities[1].zipCode").value("3005"))
-                .andExpect(jsonPath("$.localities[2].city").value("Lucern"))
-                .andExpect(jsonPath("$.localities[2].zipCode").value("3006"));
+        // when
+        ResultActions resultActions = this.mockMvc.perform(
+            get(URL_SEARCH)
+                .param("prefix", "30")
+                .param("resultSize", "10")
+                .param("distinctByLocalityCity", "true")
+        );
+
+        // then
+        resultActions
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.localities.length()").value("3"))
+            .andExpect(jsonPath("$.localities[0].city").value(DEFAULT_CITY))
+            .andExpect(jsonPath("$.localities[0].zipCode").value("3003"))
+            .andExpect(jsonPath("$.localities[0].geoPoint.lat").value(DEFAULT_LAT))
+            .andExpect(jsonPath("$.localities[0].geoPoint.lon").value(DEFAULT_LON))
+            .andExpect(jsonPath("$.localities[1].city").value("Zurich"))
+            .andExpect(jsonPath("$.localities[1].zipCode").value("3005"))
+            .andExpect(jsonPath("$.localities[2].city").value("Lucern"))
+            .andExpect(jsonPath("$.localities[2].zipCode").value("3006"));
     }
 
     @Test
-    @Transactional
+    public void getExistingLocalityById() throws Exception {
+        // given
+        Locality savedLocality = this.localityRepository.save(locality);
+
+        // when
+        ResultActions resultActions = this.mockMvc.perform(
+            get(URL + "/{id}", savedLocality.getId())
+        );
+
+        // then
+        resultActions
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.id").value(savedLocality.getId().toString()))
+            .andExpect(jsonPath("$.city").value(DEFAULT_CITY))
+            .andExpect(jsonPath("$.zipCode").value(DEFAULT_ZIP_CODE))
+            .andExpect(jsonPath("$.communalCode").value(DEFAULT_COMMUNAL_CODE))
+            .andExpect(jsonPath("$.cantonCode").value(DEFAULT_CANTON_CODE))
+            .andExpect(jsonPath("$.regionCode").value(DEFAULT_REGION_CODE))
+            .andExpect(jsonPath("$.geoPoint.lat").value(DEFAULT_LAT))
+            .andExpect(jsonPath("$.geoPoint.lon").value(DEFAULT_LON));
+    }
+
+    @Test
     public void getNonExistingLocality() throws Exception {
-        // Get the locality
-        restLocalityMockMvc.perform(get("/api/localities/{id}", UUID.randomUUID()))
-                .andExpect(status().isNotFound());
+        // when
+        ResultActions resultActions = this.mockMvc.perform(
+            get(URL + "/{id}", UUID.randomUUID())
+        );
+
+        // then
+        resultActions
+            .andExpect(status().isNotFound());
     }
 
     @Test
-    @Transactional
     public void searchNearestLocality() throws Exception {
-        doAsAdmin(() -> localityService.save(locality));
+        // given
+        doAsAdmin(() -> this.localityService.save(locality));
         Locality locality2 = new Locality().city(UPDATED_CITY)
                 .zipCode(UPDATED_ZIP_CODE)
                 .communalCode(UPDATED_COMMUNAL_CODE)
                 .cantonCode(UPDATED_CANTON_CODE)
                 .regionCode(UPDATED_REGION_CODE)
                 .geoPoint(new GeoPoint(UPDATED_LAT, UPDATED_LON));
-        doAsAdmin(() -> localityService.save(locality2));
+        doAsAdmin(() -> this.localityService.save(locality2));
 
-        MockHttpServletRequestBuilder requestBuilder = get("/api/_search/localities/nearest")
-                .param("latitude", UPDATED_LAT.toString())
-                .param("longitude", Double.toString(UPDATED_LON - 0.52D));
-        restLocalityMockMvc.perform(requestBuilder)
+        // when
+        ResultActions resultActions = this.mockMvc.perform(get(URL_SEARCH + "/nearest")
+            .param("latitude", UPDATED_LAT.toString())
+            .param("longitude", Double.toString(UPDATED_LON - 0.52D))
+        );
+
+        // then
+        resultActions
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.id").value(locality2.getId().toString()))
@@ -385,49 +409,25 @@ public class LocalityResourceIntTest {
     }
 
     @Test
-    @Transactional
-    @WithMockUser(roles = "ADMIN")
-    public void updateNonExistingLocality() throws Exception {
-        int databaseSizeBeforeUpdate = localityRepository.findAll().size();
-
-        // Create the Locality
-
-        // If the entity doesn't have an ID, it will be created instead of just being updated
-        restLocalityMockMvc.perform(put("/api/localities")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(locality)))
-                .andExpect(status().isCreated());
-
-        // Validate the Locality in the database
-        List<Locality> localityList = localityRepository.findAll();
-        assertThat(localityList).hasSize(databaseSizeBeforeUpdate + 1);
-    }
-
-    @Test
-    @Transactional
     @WithMockUser(roles = "ADMIN")
     public void deleteLocality() throws Exception {
-        // Initialize the database
-        localityService.save(locality);
+        // given
+        doAsAdmin(() -> this.localityService.save(locality));
 
-        int databaseSizeBeforeDelete = localityRepository.findAll().size();
+        // when
+        ResultActions resultActions = this.mockMvc.perform(
+            delete(URL + "/{id}", locality.getId())
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+        );
 
-        // Get the locality
-        restLocalityMockMvc.perform(delete("/api/localities/{id}", locality.getId())
-                .accept(TestUtil.APPLICATION_JSON_UTF8))
-                .andExpect(status().isOk());
-
-        // Validate Elasticsearch is empty
-        boolean localityExistsInEs = localitySynonymSearchRepository.findById(locality.getId()).isPresent();
-        assertThat(localityExistsInEs).isFalse();
-
-        // Validate the database is empty
-        List<Locality> localityList = localityRepository.findAll();
-        assertThat(localityList).hasSize(databaseSizeBeforeDelete - 1);
+        // then
+        resultActions
+            .andExpect(status().isOk());
+        assertThat(this.localityRepository.findById(locality.getId())).isNotPresent();
+        await().until(() -> !this.localitySearchRepository.findById(locality.getId()).isPresent());
     }
 
     @Test
-    @Transactional
     public void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(Locality.class);
         Locality locality1 = new Locality();
@@ -442,69 +442,49 @@ public class LocalityResourceIntTest {
     }
 
     @Test
-    @Transactional
     public void searchNonExistingNearestLocality() throws Exception {
-        MockHttpServletRequestBuilder requestBuilder = get("/api/_search/localities/nearest")
-                .param("latitude", DEFAULT_LAT.toString())
-                .param("longitude", DEFAULT_LON.toString());
-        restLocalityMockMvc.perform(requestBuilder)
+        // when
+        ResultActions resultActions = this.mockMvc.perform(get(URL_SEARCH + "/nearest")
+            .param("latitude", DEFAULT_LAT.toString())
+            .param("longitude", DEFAULT_LON.toString())
+        );
+
+        // then
+        resultActions
                 .andExpect(status().isNotFound());
     }
 
     @Test
-    @Transactional
     public void countCantons() {
-        assertThat(cantonRepository.count()).isEqualTo(26);
-    }
-
-    private void saveLocalitiesAsAdmin(Locality... localities) {
-        doAsAdmin(() -> Arrays.asList(localities).forEach(localityService::save));
-    }
-
-    private void checkLocalityGeoPoint(GeoPoint geoPoint) throws Exception {
-        int databaseSizeBeforeTest = localityRepository.findAll().size();
-        // set the field null
-        locality.setGeoPoint(geoPoint);
-
-        // Create the Locality, which fails.
-
-        restLocalityMockMvc.perform(post("/api/localities")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(locality)))
-                .andExpect(status().isBadRequest());
-
-        List<Locality> localityList = localityRepository.findAll();
-        assertThat(localityList).hasSize(databaseSizeBeforeTest);
+        await().until(() -> this.cantonSearchRepository.count() >= 26);
     }
 
     @Test
-    @Transactional
-    public void searchByZiCode() throws Exception {
+    public void searchByZipCode() throws Exception {
         saveLocalitiesAsAdmin(
             createLocalityEntity().zipCode("3001"),
             createLocalityEntity().zipCode("3002"),
             createLocalityEntity().zipCode("3002")
         );
 
-        final MockHttpServletRequestBuilder requestBuilder = get("/api/localities")
+        final MockHttpServletRequestBuilder requestBuilder = get(URL)
             .param("zipCode", "3002");
-        restLocalityMockMvc.perform(requestBuilder)
+        mockMvc.perform(requestBuilder)
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.length()").value(2));
     }
 
     @Test
-    @Transactional
     public void searchByZipCodeAndCitySynonym() throws Exception {
         saveLocalitiesAsAdmin(
             createLocalityEntity().zipCode("7000").city("Chur"),
             createLocalityEntity().zipCode("7001").city("Chur")
         );
 
-        final MockHttpServletRequestBuilder requestBuilder = get("/api/localities")
+        final MockHttpServletRequestBuilder requestBuilder = get(URL)
             .param("zipCode", "7000")
             .param("city", "Coira");
-        restLocalityMockMvc.perform(requestBuilder)
+        mockMvc.perform(requestBuilder)
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.zipCode").value("7000"))
             .andExpect(jsonPath("$.city").value("Chur"));
@@ -512,10 +492,30 @@ public class LocalityResourceIntTest {
 
     @Test
     public void searchNotExistingLocalityByZipCodeAndCity() throws Exception {
-        final MockHttpServletRequestBuilder requestBuilder = get("/api/localities")
+        final MockHttpServletRequestBuilder requestBuilder = get(URL)
             .param("zipCode", "7000")
             .param("city", "Chur");
-        restLocalityMockMvc.perform(requestBuilder)
+        mockMvc.perform(requestBuilder)
             .andExpect(status().isNotFound());
+    }
+
+    private void saveLocalitiesAsAdmin(Locality... localities) {
+        doAsAdmin(() -> Arrays.asList(localities).forEach(this.localityService::save));
+    }
+
+    private ResultActions post(Object request, String urlTemplate) throws Exception {
+        return this.mockMvc.perform(
+            MockMvcRequestBuilders.post(urlTemplate)
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(request))
+        );
+    }
+
+    private ResultActions put(Object request, String urlTemplate) throws Exception {
+        return this.mockMvc.perform(
+            MockMvcRequestBuilders.put(urlTemplate)
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(request))
+        );
     }
 }

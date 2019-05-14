@@ -1,28 +1,40 @@
 package ch.admin.seco.service.reference.web.rest;
 
-import ch.admin.seco.service.reference.domain.OccupationLabel;
-import ch.admin.seco.service.reference.domain.enums.Language;
-import ch.admin.seco.service.reference.domain.enums.ProfessionCodeType;
-import ch.admin.seco.service.reference.service.OccupationLabelService;
-import ch.admin.seco.service.reference.service.dto.*;
+import static org.springframework.context.i18n.LocaleContextHolder.getLocale;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+
 import io.github.jhipster.web.util.ResponseUtil;
 import io.micrometer.core.annotation.Timed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-
-import static org.springframework.context.i18n.LocaleContextHolder.getLocale;
+import ch.admin.seco.service.reference.domain.OccupationLabel;
+import ch.admin.seco.service.reference.domain.enums.Language;
+import ch.admin.seco.service.reference.domain.enums.ProfessionCodeType;
+import ch.admin.seco.service.reference.service.OccupationLabelService;
+import ch.admin.seco.service.reference.service.dto.OccupationLabelAutocompleteDto;
+import ch.admin.seco.service.reference.service.dto.OccupationLabelDto;
+import ch.admin.seco.service.reference.service.dto.OccupationLabelMappingDto;
+import ch.admin.seco.service.reference.service.dto.OccupationLabelSearchRequestDto;
+import ch.admin.seco.service.reference.service.dto.OccupationLabelSuggestionDto;
+import ch.admin.seco.service.reference.service.dto.ProfessionCodeDTO;
 
 /**
  * REST controller for managing OccupationSynonym.
@@ -56,12 +68,19 @@ public class OccupationLabelResource {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+
     @GetMapping("/_search/occupations/label/{codeType}")
     @Timed
     public Page<OccupationLabel> searchOccupation(@PathVariable ProfessionCodeType codeType,
         @RequestParam(required = false) String prefix, Pageable pageable) {
         log.debug("REST request to search {} occupations labels with prefix `{}` and page `{}`", codeType, prefix, pageable);
         return occupationService.search(new OccupationLabelSearchRequestDto(codeType, prefix, pageable), getLanguage());
+    }
+
+    @GetMapping("/occupations/label/{id}")
+    @Timed
+    public ResponseEntity<OccupationLabelSuggestionDto> getOccupationInfoById(@PathVariable String id) {
+        return ResponseUtil.wrapOrNotFound(occupationService.getOccupationInfoById(UUID.fromString(id)), createCacheHeader());
     }
 
     @GetMapping("/occupations/label/mapped-by/{codeType}/{code}")

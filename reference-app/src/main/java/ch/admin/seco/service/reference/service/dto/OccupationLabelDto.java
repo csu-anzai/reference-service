@@ -6,6 +6,7 @@ import ch.admin.seco.service.reference.domain.enums.Language;
 import ch.admin.seco.service.reference.domain.enums.ProfessionCodeType;
 
 public class OccupationLabelDto {
+
     private String code;
 
     private ProfessionCodeType type;

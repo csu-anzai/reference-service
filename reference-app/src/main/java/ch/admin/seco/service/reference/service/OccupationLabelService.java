@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 
@@ -14,6 +15,7 @@ import ch.admin.seco.service.reference.service.dto.OccupationLabelAutocompleteDt
 import ch.admin.seco.service.reference.service.dto.OccupationLabelDto;
 import ch.admin.seco.service.reference.service.dto.OccupationLabelMappingDto;
 import ch.admin.seco.service.reference.service.dto.OccupationLabelSearchRequestDto;
+import ch.admin.seco.service.reference.service.dto.OccupationLabelSuggestionDto;
 import ch.admin.seco.service.reference.service.dto.ProfessionCodeDTO;
 
 /**
@@ -44,4 +46,6 @@ public interface OccupationLabelService {
     Page<OccupationLabel> search(OccupationLabelSearchRequestDto searchRequest, Language language);
 
     List<OccupationLabelDto> getOccupationLabelsByClassification(ProfessionCodeDTO professionCodeDTO, Language language);
+
+    Optional<OccupationLabelSuggestionDto> getOccupationInfoById(UUID id);
 }

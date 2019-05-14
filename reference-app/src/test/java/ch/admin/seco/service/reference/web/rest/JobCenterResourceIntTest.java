@@ -1,17 +1,24 @@
 package ch.admin.seco.service.reference.web.rest;
 
-import ch.admin.seco.service.reference.ReferenceserviceApp;
-import ch.admin.seco.service.reference.domain.JobCenter;
-import ch.admin.seco.service.reference.domain.JobCenterRepository;
-import ch.admin.seco.service.reference.domain.enums.Language;
-import ch.admin.seco.service.reference.domain.valueobject.Address;
-import ch.admin.seco.service.reference.service.JobCenterService;
-import ch.admin.seco.service.reference.web.rest.errors.ExceptionTranslator;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import com.google.common.collect.Sets;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
@@ -19,25 +26,23 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import ch.admin.seco.service.reference.domain.JobCenter;
+import ch.admin.seco.service.reference.domain.JobCenterRepository;
+import ch.admin.seco.service.reference.domain.enums.Language;
+import ch.admin.seco.service.reference.domain.valueobject.Address;
+import ch.admin.seco.service.reference.service.JobCenterService;
+import ch.admin.seco.service.reference.web.rest.errors.ExceptionTranslator;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = ReferenceserviceApp.class)
+@SpringBootTest
+@ActiveProfiles("test")
 public class JobCenterResourceIntTest {
 
     private static final String CODE_ONE = "SGGG1";

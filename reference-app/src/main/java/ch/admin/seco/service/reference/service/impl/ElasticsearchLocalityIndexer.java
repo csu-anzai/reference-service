@@ -28,7 +28,7 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 @Component
-class ElasticsearchLocalityIndexer {
+public class ElasticsearchLocalityIndexer {
 
     private final Logger log = LoggerFactory.getLogger(ElasticsearchLocalityIndexer.class);
     private final EntityManager entityManager;

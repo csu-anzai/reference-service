@@ -1,25 +1,48 @@
 package ch.admin.seco.service.reference.service.impl;
 
-import ch.admin.seco.service.reference.domain.*;
-import ch.admin.seco.service.reference.domain.enums.Language;
-import ch.admin.seco.service.reference.domain.enums.ProfessionCodeType;
-import ch.admin.seco.service.reference.service.IsAdmin;
-import ch.admin.seco.service.reference.service.OccupationLabelService;
-import ch.admin.seco.service.reference.service.dto.*;
-import com.google.common.collect.ImmutableMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.*;
-import java.util.stream.Collectors;
-
+import static ch.admin.seco.service.reference.domain.enums.ProfessionCodeType.AVAM;
+import static ch.admin.seco.service.reference.domain.enums.ProfessionCodeType.BFS;
+import static ch.admin.seco.service.reference.domain.enums.ProfessionCodeType.SBN3;
+import static ch.admin.seco.service.reference.domain.enums.ProfessionCodeType.SBN5;
 import static java.util.Objects.isNull;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toMap;
 import static org.springframework.util.StringUtils.hasText;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import com.google.common.collect.ImmutableMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import ch.admin.seco.service.reference.domain.OccupationLabel;
+import ch.admin.seco.service.reference.domain.OccupationLabelMapping;
+import ch.admin.seco.service.reference.domain.OccupationLabelMappingISCO;
+import ch.admin.seco.service.reference.domain.OccupationLabelMappingISCORepository;
+import ch.admin.seco.service.reference.domain.OccupationLabelMappingRepository;
+import ch.admin.seco.service.reference.domain.OccupationLabelRepository;
+import ch.admin.seco.service.reference.domain.enums.Language;
+import ch.admin.seco.service.reference.domain.enums.ProfessionCodeType;
+import ch.admin.seco.service.reference.service.IsAdmin;
+import ch.admin.seco.service.reference.service.OccupationLabelService;
+import ch.admin.seco.service.reference.service.dto.OccupationLabelAutocompleteDto;
+import ch.admin.seco.service.reference.service.dto.OccupationLabelDto;
+import ch.admin.seco.service.reference.service.dto.OccupationLabelMappingDto;
+import ch.admin.seco.service.reference.service.dto.OccupationLabelSearchRequestDto;
+import ch.admin.seco.service.reference.service.dto.OccupationLabelSuggestionDto;
+import ch.admin.seco.service.reference.service.dto.ProfessionCodeDTO;
 
 /**
  * Service Implementation for managing Occupation.
@@ -165,6 +188,35 @@ public class OccupationLabelServiceImpl implements OccupationLabelService {
             .filter(Objects::nonNull)
             .sorted(Comparator.comparing(occupationLabel -> occupationLabel.getLabels().get("default")))
             .collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<OccupationLabelSuggestionDto> getOccupationInfoById(UUID id) {
+        Optional<OccupationLabel> label = this.occupationLabelRepository.findById(id);
+        if (!label.isPresent()) {
+            return Optional.empty();
+        }
+        OccupationLabel occupationLabel = label.get();
+        OccupationLabelSuggestionDto occupationLabelSuggestion = new OccupationLabelSuggestionDto();
+        occupationLabelSuggestion.setClassifier(occupationLabel.getClassifier());
+        occupationLabelSuggestion.setType(occupationLabel.getType());
+        occupationLabelSuggestion.setCode(occupationLabel.getCode());
+        occupationLabelSuggestion.setId(occupationLabel.getId());
+        occupationLabelSuggestion.setLabel(occupationLabel.getLabel());
+        occupationLabelSuggestion.setLanguage(occupationLabel.getLanguage());
+
+        ProfessionCodeDTO professionCode = new ProfessionCodeDTO();
+        professionCode.setCode(occupationLabel.getCode());
+        professionCode.setCodeType(occupationLabel.getType());
+        this.findOccupationMapping(professionCode)
+            .map(mapping -> ImmutableMap.of(
+                AVAM, mapping.getAvamCode(),
+                BFS, mapping.getBfsCode(),
+                SBN3, mapping.getSbn3Code(),
+                SBN5, mapping.getSbn5Code()
+            ))
+            .ifPresent(occupationLabelSuggestion::setMappings);
+        return Optional.of(occupationLabelSuggestion);
     }
 
     private List<OccupationLabelMapping> getOccupationLabelMappingsForSbnClassification(ProfessionCodeDTO professionCodeDTO) {

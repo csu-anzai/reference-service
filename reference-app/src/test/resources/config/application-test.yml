@@ -21,7 +21,7 @@ spring:
         password:
     data:
         elasticsearch:
-            cluster-name:
+            cluster-name: elasticsearch
             cluster-nodes: localhost:9300
     liquibase:
         change-log: classpath:/config/liquibase/master.xml
@@ -36,6 +36,11 @@ spring:
         enabled: false
         annotation:
             enabled: false
+
+alv:
+    referenceservice:
+        indexing:
+            reindexOnStart: false
 
 info:
     project:

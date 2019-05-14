@@ -1,58 +1,50 @@
 package ch.admin.seco.service.reference.web.rest;
 
-import ch.admin.seco.service.reference.ReferenceserviceApp;
 import ch.admin.seco.service.reference.domain.*;
 import ch.admin.seco.service.reference.domain.enums.Language;
 import ch.admin.seco.service.reference.domain.enums.ProfessionCodeType;
 import ch.admin.seco.service.reference.service.OccupationLabelService;
 import ch.admin.seco.service.reference.service.impl.ElasticsearchOccupationLabelIndexer;
 import ch.admin.seco.service.reference.service.search.OccupationLabelSearchRepository;
-import ch.admin.seco.service.reference.web.rest.errors.ExceptionTranslator;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
-import org.springframework.format.support.FormattingConversionService;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
 import static ch.admin.seco.service.reference.domain.enums.ProfessionCodeType.*;
 import static ch.admin.seco.service.reference.web.rest.TestUtil.doAsAdmin;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.hasSize;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.awaitility.Awaitility.await;
+import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = ReferenceserviceApp.class)
+@SpringBootTest
+@AutoConfigureMockMvc
+@ActiveProfiles("test")
 public class OccupationLabelResourceIntTest {
 
+    private static final String URL = "/api/occupations/label";
+
+    private static final String URL_SEARCH = "/api/_search/occupations/label";
+
+    @Autowired
     private MockMvc sut;
 
     @Autowired
     private OccupationLabelService occupationLabelService;
-
-    @Autowired
-    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
-
-    @Autowired
-    private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
-
-    @Autowired
-    private ExceptionTranslator exceptionTranslator;
-
-    @Autowired
-    private FormattingConversionService formattingConversionService;
 
     @Autowired
     private OccupationLabelRepository occupationLabelRepository;
@@ -73,50 +65,125 @@ public class OccupationLabelResourceIntTest {
     private OccupationLabelMappingISCORepository occupationLabelMappingISCORepository;
 
     @Before
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-        OccupationLabelResource occupationLabelResource = new OccupationLabelResource(occupationLabelService);
-
-        this.sut = MockMvcBuilders.standaloneSetup(occupationLabelResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setMessageConverters(jacksonMessageConverter)
-            .setConversionService(formattingConversionService).build();
-    }
-
-    @Before
-    public void initTest() {
+    public void setUp() {
         this.occupationLabelRepository.deleteAll();
         this.occupationLabelMappingRepository.deleteAll();
         this.occupationLabelMappingX28Repository.deleteAll();
-        this.occupationLabelSearchRepository.deleteAll();
         this.occupationLabelMappingISCORepository.deleteAll();
 
+        this.occupationLabelSearchRepository.deleteAll();
+
+        await().until(() -> this.occupationLabelSearchRepository.count() == 0);
+
         this.occupationLabelMappingRepository.save(
-            //                         bfs     avam  sbn3  sbn5
             createOccupationMapping("33302009", "68913", "361", "36102", "Java-Programmierer")
         );
         this.occupationLabelMappingRepository.save(
             createOccupationMapping("33302011", "68904", "361", "36102", "Systemprogrammierer EDV")
         );
         this.occupationLabelMappingX28Repository.save(
-            //                              avam      x28
             createOccupationLabelMappingX28("68913", "11002714")
         );
-        doAsAdmin(()-> this.occupationLabelService.save(createAvamOccupationLabel("68913", Language.de, 'm', "Java-Programmierer")));
-        doAsAdmin(()-> this.occupationLabelService.save(createAvamOccupationLabel("68904", Language.en, 'm', "Data programmer")));
+
+        doAsAdmin(()-> this.occupationLabelService.save(createAVAMOccupationLabel("68913", Language.de, 'm', "Java-Programmierer")));
+        doAsAdmin(()-> this.occupationLabelService.save(createAVAMOccupationLabel("68904", Language.en, 'm', "Data programmer")));
+
         doAsAdmin(()-> this.occupationLabelService.save(createX28OccupationLabel("11002714", Language.en, "Javascript Developer")));
         doAsAdmin(()-> this.occupationLabelService.save(createX28OccupationLabel("11002714", Language.de, "Javascript-Entwickler")));
         doAsAdmin(()-> this.occupationLabelService.save(createX28OccupationLabel("11002714", Language.de, "Javascript-Entwicklerin")));
-        doAsAdmin(()-> this.occupationLabelService.save(createSBN5OccupationLabel("36102", Language.de, "Programmierer/innen")));
+
         doAsAdmin(()-> this.occupationLabelService.save(createSBN3OccupationLabel("361", Language.de, "Berufe der Informatik")));
 
+        doAsAdmin(()-> this.occupationLabelService.save(createSBN5OccupationLabel("36102", Language.de, "Programmierer/innen")));
+
         this.elasticsearchOccupationLabelIndexer.reindexOccupationLabel();
+
+        await().until(() -> this.occupationLabelSearchRepository.count() >= 7);
+    }
+
+    @Test
+    public void getOccupationByAVAMId() throws Exception {
+        // given
+        UUID id_AVAM = findByCodeAndType("68913", AVAM);
+
+        // when
+        ResultActions resultActions = this.sut.perform(
+            MockMvcRequestBuilders.get(URL + "/" + id_AVAM.toString())
+                .locale(Locale.GERMAN)
+                .contentType(TestUtil.APPLICATION_JSON_UTF8));
+
+        // then
+        resultActions
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.id").value(equalTo(id_AVAM.toString())));
+
+    }
+
+    @Test
+    public void getOccupationByX28Id() throws Exception {
+        // given
+        UUID id_X28 = findByCodeAndType("11002714", X28);
+
+        // when
+        ResultActions resultActions = this.sut.perform(
+            MockMvcRequestBuilders.get(URL + "/" + id_X28.toString())
+                .locale(Locale.GERMAN)
+                .contentType(TestUtil.APPLICATION_JSON_UTF8));
+
+        // then
+        resultActions
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.id").value(equalTo(id_X28.toString())));
+    }
+
+    @Test
+    public void getOccupationBySBN3Id() throws Exception {
+        // given
+        UUID id_SBN3 = findByCodeAndType("361", SBN3);
+
+        // when
+        ResultActions resultActions = this.sut.perform(
+            MockMvcRequestBuilders.get(URL + "/" + id_SBN3.toString())
+                .locale(Locale.GERMAN)
+                .contentType(TestUtil.APPLICATION_JSON_UTF8));
+
+        // then
+        resultActions
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.id").value(equalTo(id_SBN3.toString())));
+    }
+
+    @Test
+    public void getOccupationBySBN5Id() throws Exception {
+        // given
+        UUID id_SBN5 = findByCodeAndType("36102", SBN5);
+
+        // when
+        ResultActions resultActions = this.sut.perform(
+            MockMvcRequestBuilders.get(URL + "/" + id_SBN5.toString())
+                .locale(Locale.GERMAN)
+                .contentType(TestUtil.APPLICATION_JSON_UTF8));
+
+        // then
+        resultActions
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.id").value(equalTo(id_SBN5.toString())));
     }
 
     @Test
     public void suggestOccupation_X28() throws Exception {
-        sut.perform(get("/api/_search/occupations/label?prefix=jav&types=x28&types=sbn3&types=sbn5&resultSize=5").locale(Locale.GERMAN))
+        // when
+        ResultActions resultActions = this.sut.perform(
+            MockMvcRequestBuilders.get(URL_SEARCH + "?prefix=jav&types=x28&types=sbn3&types=sbn5&resultSize=5")
+                .locale(Locale.GERMAN)
+                .contentType(TestUtil.APPLICATION_JSON_UTF8));
+
+        // then
+        resultActions
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.occupations").value(hasSize(2)))
@@ -135,7 +202,14 @@ public class OccupationLabelResourceIntTest {
 
     @Test
     public void suggestOccupation_AVAM() throws Exception {
-        sut.perform(get("/api/_search/occupations/label?prefix=jav&types=avam,sbn3,sbn5&resultSize=5").locale(Locale.GERMAN))
+        // when
+        ResultActions resultActions = this.sut.perform(
+            MockMvcRequestBuilders.get(URL_SEARCH + "?prefix=jav&types=avam,sbn3,sbn5&resultSize=5")
+                .locale(Locale.GERMAN)
+                .contentType(TestUtil.APPLICATION_JSON_UTF8));
+
+        // then
+        resultActions
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.occupations").value(hasSize(1)))
@@ -154,7 +228,14 @@ public class OccupationLabelResourceIntTest {
 
     @Test
     public void suggestOccupation_X28_AVAM() throws Exception {
-        sut.perform(get("/api/_search/occupations/label?prefix=java&types=avam,x28,sbn3,sbn5&resultSize=5").locale(Locale.GERMAN))
+        // when
+        ResultActions resultActions = this.sut.perform(
+            MockMvcRequestBuilders.get(URL_SEARCH + "?prefix=java&types=avam,x28,sbn3,sbn5&resultSize=5")
+                .locale(Locale.GERMAN)
+                .contentType(TestUtil.APPLICATION_JSON_UTF8));
+
+        // then
+        resultActions
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.occupations").value(hasSize(3)))
@@ -177,7 +258,14 @@ public class OccupationLabelResourceIntTest {
 
     @Test
     public void getOccupationLabelsByCodeAndType_X28() throws Exception {
-        sut.perform(get("/api/occupations/label/x28/11002714").locale(Locale.GERMAN))
+        // when
+        ResultActions resultActions = this.sut.perform(
+            MockMvcRequestBuilders.get(URL + "/x28/11002714")
+                .locale(Locale.GERMAN)
+                .contentType(TestUtil.APPLICATION_JSON_UTF8));
+
+        // then
+        resultActions
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.*").value(hasItem("Javascript-Entwickler")))
@@ -186,7 +274,14 @@ public class OccupationLabelResourceIntTest {
 
     @Test
     public void getOccupationLabelsByCodeAndTypeAndClassifier() throws Exception {
-        sut.perform(get("/api/occupations/label/avam/68913/m").locale(Locale.GERMAN))
+        // when
+        ResultActions resultActions = this.sut.perform(
+            MockMvcRequestBuilders.get(URL + "/avam/68913/m")
+                .locale(Locale.GERMAN)
+                .contentType(TestUtil.APPLICATION_JSON_UTF8));
+
+        // then
+        resultActions
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.label").value("Java-Programmierer"));
@@ -194,7 +289,14 @@ public class OccupationLabelResourceIntTest {
 
     @Test
     public void getOccupationLabelsByKey() throws Exception {
-        sut.perform(get("/api/occupations/label/sbn5/36102").locale(Locale.GERMAN))
+        // when
+        ResultActions resultActions = this.sut.perform(
+            MockMvcRequestBuilders.get(URL + "/sbn5/36102")
+                .locale(Locale.GERMAN)
+                .contentType(TestUtil.APPLICATION_JSON_UTF8));
+
+        // then
+        resultActions
             .andDo(h -> System.out.println(h.getResponse().getContentAsString()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
@@ -202,8 +304,14 @@ public class OccupationLabelResourceIntTest {
     }
 
     @Test
-    public void getOccupationMappingByAvamCode() throws Exception {
-        sut.perform(get("/api/occupations/label/mapping/avam/68913"))
+    public void getOccupationMappingByAVAMCode() throws Exception {
+        // when
+        ResultActions resultActions = this.sut.perform(
+            MockMvcRequestBuilders.get(URL + "/mapping/avam/68913")
+                .contentType(TestUtil.APPLICATION_JSON_UTF8));
+
+        // then
+        resultActions
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.bfsCode").value("33302009"))
@@ -215,9 +323,16 @@ public class OccupationLabelResourceIntTest {
     }
 
     @Test
-    public void getOccupationMappinByBFSCode() throws Exception {
-        occupationLabelMappingISCORepository.save(createOccupationLabelMappingISCO("33302009", "8844"));
-        sut.perform(get("/api/occupations/label/mapping/bfs/33302009"))
+    public void getOccupationMappingByBFSCode() throws Exception {
+        // when
+        this.occupationLabelMappingISCORepository.save(createOccupationLabelMappingISCO("33302009", "8844"));
+        ResultActions resultActions = this.sut.perform(
+            MockMvcRequestBuilders.get(URL + "/mapping/bfs/33302009")
+                .locale(Locale.GERMAN)
+                .contentType(TestUtil.APPLICATION_JSON_UTF8));
+
+        // then
+        resultActions
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.bfsCode").value("33302009"))
@@ -230,7 +345,14 @@ public class OccupationLabelResourceIntTest {
 
     @Test
     public void getOccupationMappingByX28Code() throws Exception {
-        sut.perform(get("/api/occupations/label/mapping/x28/11002714"))
+        // when
+        ResultActions resultActions = this.sut.perform(
+            MockMvcRequestBuilders.get(URL + "/mapping/x28/11002714")
+                .locale(Locale.GERMAN)
+                .contentType(TestUtil.APPLICATION_JSON_UTF8));
+
+        // then
+        resultActions
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.bfsCode").value("33302009"))
@@ -243,7 +365,13 @@ public class OccupationLabelResourceIntTest {
 
     @Test
     public void getOccupationLabelsForSBN3Code() throws Exception {
-        sut.perform(get("/api/occupations/label/mapped-by/sbn3/361"))
+        // when
+        ResultActions resultActions = this.sut.perform(
+            MockMvcRequestBuilders.get(URL + "/mapped-by/sbn3/361")
+                .contentType(TestUtil.APPLICATION_JSON_UTF8));
+
+        // then
+        resultActions
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[0].code").value("68904"))
@@ -253,7 +381,13 @@ public class OccupationLabelResourceIntTest {
 
     @Test
     public void getOccupationLabelsForSBN5Code() throws Exception {
-        sut.perform(get("/api/occupations/label/mapped-by/sbn5/36102"))
+        // when
+        ResultActions resultActions = this.sut.perform(
+            MockMvcRequestBuilders.get(URL + "/mapped-by/sbn5/36102")
+                .contentType(TestUtil.APPLICATION_JSON_UTF8));
+
+        // then
+        resultActions
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[0].code").value("68904"))
@@ -264,12 +398,8 @@ public class OccupationLabelResourceIntTest {
             .andExpect(jsonPath("$.[1].labels.default").value("Java-Programmierer"));
     }
 
-    private OccupationLabel createAvamOccupationLabel(String code, Language lang, char gender, String label) {
+    private OccupationLabel createAVAMOccupationLabel(String code, Language lang, char gender, String label) {
         return createOccupationLabel(code, AVAM, lang, String.valueOf(gender), label);
-    }
-
-    private OccupationLabel createBFSOccupationLabel(String code, Language lang, char gender, String label) {
-        return createOccupationLabel(code, BFS, lang, String.valueOf(gender), label);
     }
 
     private OccupationLabel createSBN3OccupationLabel(String code, Language lang, String label) {
@@ -320,5 +450,13 @@ public class OccupationLabelResourceIntTest {
         occupationLabelMappingISCO.setBfsCode(bfsCode);
         occupationLabelMappingISCO.setIscoCode(iscoCode);
         return occupationLabelMappingISCO;
+    }
+
+    private UUID findByCodeAndType(String code, ProfessionCodeType type) {
+        List<OccupationLabel> labels = this.occupationLabelRepository.findByCodeAndTypeAndLanguage(code, type, Language.de);
+        if (labels.isEmpty()) {
+            return UUID.randomUUID();
+        }
+        return labels.get(0).getId();
     }
 }

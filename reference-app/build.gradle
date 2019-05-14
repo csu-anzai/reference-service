@@ -87,6 +87,7 @@ dependencies {
     testCompile "com.mattbertolini:liquibase-slf4j"
     testCompile "org.hamcrest:hamcrest-library"
     testCompile "com.h2database:h2"
+    testCompile 'org.awaitility:awaitility'
     //jhipster-needle-gradle-dependency - JHipster will add additional dependencies here
 }
 

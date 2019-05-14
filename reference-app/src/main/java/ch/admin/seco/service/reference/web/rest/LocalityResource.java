@@ -27,7 +27,9 @@ import java.util.UUID;
 public class LocalityResource {
 
     private static final String ENTITY_NAME = "locality";
+
     private final Logger log = LoggerFactory.getLogger(LocalityResource.class);
+
     private final LocalityService localityService;
 
     public LocalityResource(LocalityService localityService) {

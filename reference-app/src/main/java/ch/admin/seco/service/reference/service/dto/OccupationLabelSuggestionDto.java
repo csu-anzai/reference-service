@@ -4,12 +4,11 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
-import javax.annotation.Nonnull;
-
 import ch.admin.seco.service.reference.domain.enums.Language;
 import ch.admin.seco.service.reference.domain.enums.ProfessionCodeType;
 
 public class OccupationLabelSuggestionDto {
+
     private UUID id;
 
     private String code;
@@ -28,7 +27,7 @@ public class OccupationLabelSuggestionDto {
         return id;
     }
 
-    public OccupationLabelSuggestionDto id(UUID id) {
+    public OccupationLabelSuggestionDto setId(UUID id) {
         this.id = id;
         return this;
     }
@@ -37,11 +36,7 @@ public class OccupationLabelSuggestionDto {
         return code;
     }
 
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public OccupationLabelSuggestionDto code(String code) {
+    public OccupationLabelSuggestionDto setCode(String code) {
         this.code = code;
         return this;
     }
@@ -50,11 +45,7 @@ public class OccupationLabelSuggestionDto {
         return type;
     }
 
-    public void setType(ProfessionCodeType type) {
-        this.type = type;
-    }
-
-    public OccupationLabelSuggestionDto type(ProfessionCodeType type) {
+    public OccupationLabelSuggestionDto setType(ProfessionCodeType type) {
         this.type = type;
         return this;
     }
@@ -63,11 +54,7 @@ public class OccupationLabelSuggestionDto {
         return language;
     }
 
-    public void setLanguage(Language language) {
-        this.language = language;
-    }
-
-    public OccupationLabelSuggestionDto language(Language language) {
+    public OccupationLabelSuggestionDto setLanguage(Language language) {
         this.language = language;
         return this;
     }
@@ -76,25 +63,16 @@ public class OccupationLabelSuggestionDto {
         return classifier;
     }
 
-    public void setClassifier(String classifier) {
-        this.classifier = classifier;
-    }
-
-    public OccupationLabelSuggestionDto classifier(String classifier) {
+    public OccupationLabelSuggestionDto setClassifier(String classifier) {
         this.classifier = classifier;
         return this;
     }
 
-    @Nonnull
     public String getLabel() {
         return label;
     }
 
-    public void setLabel(@Nonnull String label) {
-        this.label = label;
-    }
-
-    public OccupationLabelSuggestionDto label(String label) {
+    public OccupationLabelSuggestionDto setLabel(String label) {
         this.label = label;
         return this;
     }
@@ -103,18 +81,13 @@ public class OccupationLabelSuggestionDto {
         return mappings;
     }
 
-    public void setMappings(Map<ProfessionCodeType, String> mappings) {
-        this.mappings = mappings;
-    }
-
-    public OccupationLabelSuggestionDto mappings(Map<ProfessionCodeType, String> mappings) {
+    public OccupationLabelSuggestionDto setMappings(Map<ProfessionCodeType, String> mappings) {
         this.mappings = mappings;
         return this;
     }
 
     @Override
     public int hashCode() {
-
         return Objects.hash(getId());
     }
 

@@ -4,6 +4,8 @@ import java.util.Objects;
 
 public class LocalitySuggestionDto {
 
+    private String id;
+
     private String city;
 
     private int communalCode;
@@ -16,15 +18,20 @@ public class LocalitySuggestionDto {
 
     private GeoPointDto geoPoint;
 
+    public String getId() {
+        return id;
+    }
+
+    public LocalitySuggestionDto setId(String id) {
+        this.id = id;
+        return this;
+    }
+
     public String getCity() {
         return city;
     }
 
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public LocalitySuggestionDto city(String city) {
+    public LocalitySuggestionDto setCity(String city) {
         this.city = city;
         return this;
     }
@@ -33,11 +40,7 @@ public class LocalitySuggestionDto {
         return communalCode;
     }
 
-    public void setCommunalCode(int communalCode) {
-        this.communalCode = communalCode;
-    }
-
-    public LocalitySuggestionDto communalCode(int communalCode) {
+    public LocalitySuggestionDto setCommunalCode(int communalCode) {
         this.communalCode = communalCode;
         return this;
     }
@@ -46,11 +49,7 @@ public class LocalitySuggestionDto {
         return cantonCode;
     }
 
-    public void setCantonCode(String cantonCode) {
-        this.cantonCode = cantonCode;
-    }
-
-    public LocalitySuggestionDto cantonCode(String cantonCode) {
+    public LocalitySuggestionDto setCantonCode(String cantonCode) {
         this.cantonCode = cantonCode;
         return this;
     }
@@ -59,11 +58,7 @@ public class LocalitySuggestionDto {
         return regionCode;
     }
 
-    public void setRegionCode(String regionCode) {
-        this.regionCode = regionCode;
-    }
-
-    public LocalitySuggestionDto regionCode(String regionCode) {
+    public LocalitySuggestionDto setRegionCode(String regionCode) {
         this.regionCode = regionCode;
         return this;
     }
@@ -72,11 +67,7 @@ public class LocalitySuggestionDto {
         return zipCode;
     }
 
-    public void setZipCode(String zipCode) {
-        this.zipCode = zipCode;
-    }
-
-    public LocalitySuggestionDto zipCode(String zipCode) {
+    public LocalitySuggestionDto setZipCode(String zipCode) {
         this.zipCode = zipCode;
         return this;
     }
@@ -85,11 +76,7 @@ public class LocalitySuggestionDto {
         return geoPoint;
     }
 
-    public void setGeoPoint(GeoPointDto geoPoint) {
-        this.geoPoint = geoPoint;
-    }
-
-    public LocalitySuggestionDto geoPoint(GeoPointDto geoPoint) {
+    public LocalitySuggestionDto setGeoPoint(GeoPointDto geoPoint) {
         this.geoPoint = geoPoint;
         return this;
     }
@@ -114,4 +101,5 @@ public class LocalitySuggestionDto {
             Objects.equals(zipCode, that.zipCode) &&
             Objects.equals(geoPoint, that.geoPoint);
     }
+
 }
