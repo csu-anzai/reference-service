@@ -34,7 +34,6 @@ jhipster:
                 enabled: false
                 url: http://localhost:8180/hazelcast-mancenter
                 update-interval: 3
-
 # ===================================================================
 # Logging
 # ===================================================================

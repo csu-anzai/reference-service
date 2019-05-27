@@ -1,8 +1,8 @@
 package ch.admin.seco.service.reference.config;
 
+import ch.admin.seco.alv.shared.jwt.JWTFilterConfigurer;
+import ch.admin.seco.alv.shared.jwt.TokenToAuthenticationConverter;
 import ch.admin.seco.service.reference.security.AuthoritiesConstants;
-import ch.admin.seco.service.reference.security.jwt.JWTConfigurer;
-import ch.admin.seco.service.reference.security.jwt.TokenProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -23,18 +23,18 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport;
 
 @Configuration
-@Import(SecurityProblemSupport.class)
+@Import({SecurityProblemSupport.class})
 @EnableWebSecurity
 @EnableJpaAuditing(auditorAwareRef = "springSecurityAuditorAware")
 public class MicroserviceSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private final TokenProvider tokenProvider;
-
     private final SecurityProblemSupport problemSupport;
 
-    public MicroserviceSecurityConfiguration(TokenProvider tokenProvider, SecurityProblemSupport problemSupport) {
-        this.tokenProvider = tokenProvider;
+    private final TokenToAuthenticationConverter tokenToAuthenticationConverter;
+
+    public MicroserviceSecurityConfiguration(SecurityProblemSupport problemSupport, TokenToAuthenticationConverter tokenToAuthenticationConverter) {
         this.problemSupport = problemSupport;
+        this.tokenToAuthenticationConverter = tokenToAuthenticationConverter;
     }
 
     @Override
@@ -77,7 +77,11 @@ public class MicroserviceSecurityConfiguration extends WebSecurityConfigurerAdap
             .antMatchers("/management/**").hasAuthority(AuthoritiesConstants.ADMIN)
             .antMatchers("/swagger-resources/configuration/ui").permitAll()
             .and()
-            .apply(securityConfigurerAdapter());
+        .apply(jwtFilterConfigurer());
+    }
+
+    private JWTFilterConfigurer jwtFilterConfigurer() {
+        return new JWTFilterConfigurer(tokenToAuthenticationConverter);
     }
 
     @Bean
@@ -85,7 +89,5 @@ public class MicroserviceSecurityConfiguration extends WebSecurityConfigurerAdap
         return new SecurityEvaluationContextExtension();
     }
 
-    private JWTConfigurer securityConfigurerAdapter() {
-        return new JWTConfigurer(tokenProvider);
-    }
+
 }
