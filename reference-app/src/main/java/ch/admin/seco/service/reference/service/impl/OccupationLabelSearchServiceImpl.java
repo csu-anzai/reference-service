@@ -1,5 +1,34 @@
 package ch.admin.seco.service.reference.service.impl;
 
+import static java.util.stream.Collectors.toList;
+import static org.elasticsearch.index.query.QueryBuilders.termQuery;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Stream;
+
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.data.elasticsearch.core.query.SearchQuery;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+
 import ch.admin.seco.service.reference.domain.OccupationLabel;
 import ch.admin.seco.service.reference.domain.OccupationLabelRepository;
 import ch.admin.seco.service.reference.domain.enums.Language;
@@ -8,23 +37,6 @@ import ch.admin.seco.service.reference.service.dto.OccupationLabelAutocompleteDt
 import ch.admin.seco.service.reference.service.dto.OccupationLabelSearchRequestDto;
 import ch.admin.seco.service.reference.service.dto.OccupationLabelSuggestionDto;
 import ch.admin.seco.service.reference.service.search.OccupationLabelSuggestion;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
-import org.springframework.data.elasticsearch.core.query.SearchQuery;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
-
-import java.util.*;
-import java.util.stream.Stream;
-
-import static java.util.stream.Collectors.toList;
 
 /**
  * Service Implementation for search Occupation.
@@ -61,6 +73,36 @@ public class OccupationLabelSearchServiceImpl {
             classifications = mapClassifications(suggestResponse, resultSize, occupations, language);
         }
         return new OccupationLabelAutocompleteDto(occupations, classifications);
+    }
+
+    public Optional<OccupationLabelSuggestionDto> findOneByCodeTypeLanguageClassifier(String code, ProfessionCodeType type, Language language, String classifier) {
+        BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery()
+            .filter(termQuery("code", code))
+            .filter(termQuery("type", type.toString()))
+            .filter(termQuery("language", language.toString()))
+            .filter(termQuery("classifier", classifier));
+
+
+        NativeSearchQuery nativeSearchQuery = new NativeSearchQueryBuilder()
+            .withQuery(queryBuilder)
+            .build();
+        Page<OccupationLabelSuggestion> result = this.elasticsearchTemplate.queryForPage(nativeSearchQuery, OccupationLabelSuggestion.class);
+
+        if (result.isEmpty()) {
+            return Optional.empty();
+        }
+
+        OccupationLabelSuggestion occupationLabelSuggestion = result.getContent().get(0);
+        OccupationLabelSuggestionDto occupationLabelSuggestionDto = new OccupationLabelSuggestionDto()
+            .setId(occupationLabelSuggestion.getId())
+            .setCode(occupationLabelSuggestion.getCode())
+            .setType(occupationLabelSuggestion.getType())
+            .setClassifier(occupationLabelSuggestion.getClassifier())
+            .setLanguage(occupationLabelSuggestion.getLanguage())
+            .setMappings(occupationLabelSuggestion.getMappings())
+            .setLabel(occupationLabelSuggestion.getLabel());
+
+        return Optional.of(occupationLabelSuggestionDto);
     }
 
     private List<OccupationLabelSuggestionDto> mapOccupations(SearchResponse suggestResponse, int resultSize) {

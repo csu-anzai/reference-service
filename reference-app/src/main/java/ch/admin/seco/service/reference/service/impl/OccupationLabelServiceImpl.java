@@ -219,6 +219,12 @@ public class OccupationLabelServiceImpl implements OccupationLabelService {
         return Optional.of(occupationLabelSuggestion);
     }
 
+
+    @Override
+    public Optional<OccupationLabelSuggestionDto> findOneByCodeTypeLanguageClassifier(String code, ProfessionCodeType type, Language language, String classifier) {
+        return this.occupationSuggestionImpl.findOneByCodeTypeLanguageClassifier(code, type, language, classifier);
+    }
+
     private List<OccupationLabelMapping> getOccupationLabelMappingsForSbnClassification(ProfessionCodeDTO professionCodeDTO) {
         switch (professionCodeDTO.getCodeType()) {
             case SBN5:

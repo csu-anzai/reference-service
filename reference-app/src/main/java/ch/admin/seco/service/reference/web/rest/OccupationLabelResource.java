@@ -113,6 +113,17 @@ public class OccupationLabelResource {
             occupationService.findOneOccupationMapping(professionCode), createCacheHeader());
     }
 
+    @GetMapping("/occupations/label/suggestion/{code}/{type}/{language}/{classifier}")
+    @Timed
+    public ResponseEntity<OccupationLabelSuggestionDto> findOne(
+        @PathVariable String code,
+        @PathVariable ProfessionCodeType type,
+        @PathVariable Language language,
+        @PathVariable String classifier) {
+
+        return ResponseUtil.wrapOrNotFound(occupationService.findOneByCodeTypeLanguageClassifier(code, type, language, classifier));
+    }
+
     private Language getLanguage() {
         return Language.safeValueOf(getLocale().getLanguage());
     }

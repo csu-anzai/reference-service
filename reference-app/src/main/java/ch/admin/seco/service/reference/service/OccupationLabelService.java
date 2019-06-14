@@ -48,4 +48,6 @@ public interface OccupationLabelService {
     List<OccupationLabelDto> getOccupationLabelsByClassification(ProfessionCodeDTO professionCodeDTO, Language language);
 
     Optional<OccupationLabelSuggestionDto> getOccupationInfoById(UUID id);
+
+    Optional<OccupationLabelSuggestionDto> findOneByCodeTypeLanguageClassifier(String code, ProfessionCodeType type, Language language, String classifier);
 }
