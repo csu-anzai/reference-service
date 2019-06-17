@@ -160,15 +160,19 @@ public class ElasticsearchOccupationLabelIndexer {
             labels.put(DEFAULT_CLASSIFIER, label);
         }
 
+        String id = occupationLabels.size() == 1
+            ? occupationLabels.get(0).getId().toString()
+            : String.format("%s#%s#%s#%s", key.getType(), key.getCode(), key.getLanguage(), DEFAULT_CLASSIFIER);
+
         return Flux.just(new OccupationLabelSuggestion()
-            .id(occupationLabels.size() == 1 ? occupationLabels.get(0).getId().toString() : buildId(key.getType(), key.getCode(), key.getLanguage(), DEFAULT_CLASSIFIER))
+            .id(id)
             .code(key.getCode())
             .type(key.getType())
             .classifier(DEFAULT_CLASSIFIER)
             .language(key.getLanguage())
             .contextKey(String.format("%s:%s", key.getType(), key.getLanguage()))
             .mappings(getOccupationLabelMapping(key.getType(), key.getCode()))
-            .occupationSuggestions(labels.values().stream().flatMap(this::extractSuggestions).filter(StringUtils::hasText).distinct().collect(Collectors.toSet()))
+            .occupationSuggestions(labels.values().stream().flatMap(this::extractSuggestions).filter(StringUtils::hasText).collect(Collectors.toSet()))
             .label(label));
     }
 
@@ -214,9 +218,5 @@ public class ElasticsearchOccupationLabelIndexer {
             suggestions.add(term);
             nextSubTerm(term, suggestions, pattern);
         }
-    }
-
-    private String buildId(ProfessionCodeType codeType, String code, Language language, String classifier) {
-        return String.format("%s#%s#%s#%s", codeType, code, language, classifier);
     }
 }
