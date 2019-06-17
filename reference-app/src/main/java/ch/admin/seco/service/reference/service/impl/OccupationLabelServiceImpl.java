@@ -221,8 +221,8 @@ public class OccupationLabelServiceImpl implements OccupationLabelService {
 
 
     @Override
-    public Optional<OccupationLabelSuggestionDto> findOneByCodeTypeLanguageClassifier(String code, ProfessionCodeType type, Language language, String classifier) {
-        return this.occupationSuggestionImpl.findOneByCodeTypeLanguageClassifier(code, type, language, classifier);
+    public Optional<OccupationLabelSuggestionDto> findOneByCodeTypeLanguageClassifier(ProfessionCodeType codeType, String code, Language language, String classifier) {
+        return this.occupationSuggestionImpl.findOneByCodeTypeLanguageClassifier(codeType, code, language, classifier);
     }
 
     private List<OccupationLabelMapping> getOccupationLabelMappingsForSbnClassification(ProfessionCodeDTO professionCodeDTO) {

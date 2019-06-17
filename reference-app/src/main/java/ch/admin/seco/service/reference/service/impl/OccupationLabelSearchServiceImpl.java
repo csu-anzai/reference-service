@@ -75,10 +75,10 @@ public class OccupationLabelSearchServiceImpl {
         return new OccupationLabelAutocompleteDto(occupations, classifications);
     }
 
-    public Optional<OccupationLabelSuggestionDto> findOneByCodeTypeLanguageClassifier(String code, ProfessionCodeType type, Language language, String classifier) {
+    public Optional<OccupationLabelSuggestionDto> findOneByCodeTypeLanguageClassifier(ProfessionCodeType type, String code, Language language, String classifier) {
         BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery()
-            .filter(termQuery("code", code))
             .filter(termQuery("type", type.toString()))
+            .filter(termQuery("code", code))
             .filter(termQuery("language", language.toString()))
             .filter(termQuery("classifier", classifier));
 

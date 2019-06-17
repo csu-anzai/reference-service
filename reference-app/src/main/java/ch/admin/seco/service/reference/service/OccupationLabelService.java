@@ -49,5 +49,5 @@ public interface OccupationLabelService {
 
     Optional<OccupationLabelSuggestionDto> getOccupationInfoById(UUID id);
 
-    Optional<OccupationLabelSuggestionDto> findOneByCodeTypeLanguageClassifier(String code, ProfessionCodeType type, Language language, String classifier);
+    Optional<OccupationLabelSuggestionDto> findOneByCodeTypeLanguageClassifier(ProfessionCodeType codeType, String code, Language language, String classifier);
 }
