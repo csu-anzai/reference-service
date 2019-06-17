@@ -11,7 +11,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,6 +38,7 @@ import org.springframework.util.StringUtils;
 import ch.admin.seco.service.reference.domain.OccupationLabel;
 import ch.admin.seco.service.reference.domain.OccupationLabelMappingRepository;
 import ch.admin.seco.service.reference.domain.OccupationLabelRepository;
+import ch.admin.seco.service.reference.domain.enums.Language;
 import ch.admin.seco.service.reference.domain.enums.ProfessionCodeType;
 import ch.admin.seco.service.reference.domain.valueobject.OccupationLabelKey;
 import ch.admin.seco.service.reference.service.search.OccupationLabelSearchRepository;
@@ -46,6 +46,7 @@ import ch.admin.seco.service.reference.service.search.OccupationLabelSuggestion;
 
 @Component
 public class ElasticsearchOccupationLabelIndexer {
+    private static final String DEFAULT_CLASSIFIER = "default";
 
     private final Logger log = LoggerFactory.getLogger(ElasticsearchOccupationLabelIndexer.class);
     private final EntityManager entityManager;
@@ -153,17 +154,17 @@ public class ElasticsearchOccupationLabelIndexer {
     private Publisher<? extends OccupationLabelSuggestion> toOccupationLabelPublisher(OccupationLabelKey key) {
         List<OccupationLabel> occupationLabels = occupationLabelRepository.findByCodeAndTypeAndLanguage(key.getCode(), key.getType(), key.getLanguage());
         Map<String, String> labels = occupationLabels.stream().collect(Collectors.toMap(OccupationLabel::getClassifier, OccupationLabel::getLabel));
-        String label = labels.get("default");
+        String label = labels.get(DEFAULT_CLASSIFIER);
         if (!StringUtils.hasText(label)) {
             label = labelGenerator.generate(labels.get("m"), labels.get("f"));
-            labels.put("default", label);
+            labels.put(DEFAULT_CLASSIFIER, label);
         }
 
         return Flux.just(new OccupationLabelSuggestion()
-            .id(occupationLabels.size() == 1 ? occupationLabels.get(0).getId() : UUID.randomUUID())
+            .id(occupationLabels.size() == 1 ? occupationLabels.get(0).getId().toString() : buildId(key.getType(), key.getCode(), key.getLanguage(), DEFAULT_CLASSIFIER))
             .code(key.getCode())
             .type(key.getType())
-            .classifier("default")
+            .classifier(DEFAULT_CLASSIFIER)
             .language(key.getLanguage())
             .contextKey(String.format("%s:%s", key.getType(), key.getLanguage()))
             .mappings(getOccupationLabelMapping(key.getType(), key.getCode()))
@@ -175,7 +176,7 @@ public class ElasticsearchOccupationLabelIndexer {
         List<OccupationLabel> occupationLabels = occupationLabelRepository.findByCodeAndTypeAndLanguage(key.getCode(), key.getType(), key.getLanguage());
         return Flux.fromStream(occupationLabels.stream()
             .map(occupationLabel -> new OccupationLabelSuggestion()
-                .id(occupationLabel.getId())
+                .id(occupationLabel.getId().toString())
                 .code(key.getCode())
                 .type(key.getType())
                 .classifier(occupationLabel.getClassifier())
@@ -213,5 +214,9 @@ public class ElasticsearchOccupationLabelIndexer {
             suggestions.add(term);
             nextSubTerm(term, suggestions, pattern);
         }
+    }
+
+    private String buildId(ProfessionCodeType codeType, String code, Language language, String classifier) {
+        return String.format("%s#%s#%s#%s", codeType, code, language, classifier);
     }
 }

@@ -1,19 +1,17 @@
 package ch.admin.seco.service.reference.service.search;
 
-import ch.admin.seco.service.reference.domain.enums.Language;
-import ch.admin.seco.service.reference.domain.enums.ProfessionCodeType;
-import org.hibernate.annotations.GenericGenerator;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+
+import javax.persistence.Id;
+
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Mapping;
 import org.springframework.data.elasticsearch.annotations.Setting;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import ch.admin.seco.service.reference.domain.enums.Language;
+import ch.admin.seco.service.reference.domain.enums.ProfessionCodeType;
 
 /**
  * A OccupationLabelSuggestion.
@@ -24,9 +22,7 @@ import java.util.UUID;
 public class OccupationLabelSuggestion {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "UUIDGenerator")
-    @GenericGenerator(name = "UUIDGenerator", strategy = "uuid2")
-    private UUID id;
+    private String id;
 
     private String code;
 
@@ -44,15 +40,15 @@ public class OccupationLabelSuggestion {
 
     private Map<ProfessionCodeType, String> mappings;
 
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public OccupationLabelSuggestion id(UUID id) {
+    public OccupationLabelSuggestion id(String id) {
         this.id = id;
         return this;
     }

@@ -5,7 +5,6 @@ import static org.springframework.context.i18n.LocaleContextHolder.getLocale;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import io.github.jhipster.web.util.ResponseUtil;
@@ -80,7 +79,7 @@ public class OccupationLabelResource {
     @GetMapping("/occupations/label/{id}")
     @Timed
     public ResponseEntity<OccupationLabelSuggestionDto> getOccupationInfoById(@PathVariable String id) {
-        return ResponseUtil.wrapOrNotFound(occupationService.getOccupationInfoById(UUID.fromString(id)), createCacheHeader());
+        return ResponseUtil.wrapOrNotFound(occupationService.getOccupationInfoById(id), createCacheHeader());
     }
 
     @GetMapping("/occupations/label/mapped-by/{codeType}/{code}")
@@ -111,17 +110,6 @@ public class OccupationLabelResource {
     public ResponseEntity<OccupationLabelMappingDto> getOccupationMapping(ProfessionCodeDTO professionCode) {
         return ResponseUtil.wrapOrNotFound(
             occupationService.findOneOccupationMapping(professionCode), createCacheHeader());
-    }
-
-    @GetMapping("/occupations/label/suggestion/{codeType}/{code}/{language}/{classifier}")
-    @Timed
-    public ResponseEntity<OccupationLabelSuggestionDto> findOne(
-        @PathVariable ProfessionCodeType codeType,
-        @PathVariable String code,
-        @PathVariable Language language,
-        @PathVariable String classifier) {
-
-        return ResponseUtil.wrapOrNotFound(occupationService.findOneByCodeTypeLanguageClassifier(codeType, code, language, classifier));
     }
 
     private Language getLanguage() {

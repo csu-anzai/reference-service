@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 
@@ -47,7 +46,5 @@ public interface OccupationLabelService {
 
     List<OccupationLabelDto> getOccupationLabelsByClassification(ProfessionCodeDTO professionCodeDTO, Language language);
 
-    Optional<OccupationLabelSuggestionDto> getOccupationInfoById(UUID id);
-
-    Optional<OccupationLabelSuggestionDto> findOneByCodeTypeLanguageClassifier(ProfessionCodeType codeType, String code, Language language, String classifier);
+    Optional<OccupationLabelSuggestionDto> getOccupationInfoById(String id);
 }
