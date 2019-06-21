@@ -11,7 +11,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -46,6 +45,7 @@ import ch.admin.seco.service.reference.service.search.OccupationLabelSuggestion;
 
 @Component
 public class ElasticsearchOccupationLabelIndexer {
+    private static final String DEFAULT_CLASSIFIER = "default";
 
     private final Logger log = LoggerFactory.getLogger(ElasticsearchOccupationLabelIndexer.class);
     private final EntityManager entityManager;
@@ -153,29 +153,35 @@ public class ElasticsearchOccupationLabelIndexer {
     private Publisher<? extends OccupationLabelSuggestion> toOccupationLabelPublisher(OccupationLabelKey key) {
         List<OccupationLabel> occupationLabels = occupationLabelRepository.findByCodeAndTypeAndLanguage(key.getCode(), key.getType(), key.getLanguage());
         Map<String, String> labels = occupationLabels.stream().collect(Collectors.toMap(OccupationLabel::getClassifier, OccupationLabel::getLabel));
-        String label = labels.get("default");
+        String label = labels.get(DEFAULT_CLASSIFIER);
         if (!StringUtils.hasText(label)) {
             label = labelGenerator.generate(labels.get("m"), labels.get("f"));
-            labels.put("default", label);
+            labels.put(DEFAULT_CLASSIFIER, label);
         }
 
         return Flux.just(new OccupationLabelSuggestion()
-            .id(occupationLabels.size() == 1 ? occupationLabels.get(0).getId() : UUID.randomUUID())
+            .id(determineId(occupationLabels, key))
             .code(key.getCode())
             .type(key.getType())
-            .classifier("default")
+            .classifier(DEFAULT_CLASSIFIER)
             .language(key.getLanguage())
             .contextKey(String.format("%s:%s", key.getType(), key.getLanguage()))
             .mappings(getOccupationLabelMapping(key.getType(), key.getCode()))
-            .occupationSuggestions(labels.values().stream().flatMap(this::extractSuggestions).filter(StringUtils::hasText).distinct().collect(Collectors.toSet()))
+            .occupationSuggestions(labels.values().stream().flatMap(this::extractSuggestions).filter(StringUtils::hasText).collect(Collectors.toSet()))
             .label(label));
+    }
+
+    private String determineId(List<OccupationLabel> occupationLabels, OccupationLabelKey key) {
+        return occupationLabels.size() == 1
+            ? occupationLabels.get(0).getId().toString()
+            : String.format("%s#%s#%s#%s", key.getType(), key.getCode(), key.getLanguage(), DEFAULT_CLASSIFIER);
     }
 
     private Publisher<? extends OccupationLabelSuggestion> toX28OccupationLabelPublisher(OccupationLabelKey key) {
         List<OccupationLabel> occupationLabels = occupationLabelRepository.findByCodeAndTypeAndLanguage(key.getCode(), key.getType(), key.getLanguage());
         return Flux.fromStream(occupationLabels.stream()
             .map(occupationLabel -> new OccupationLabelSuggestion()
-                .id(occupationLabel.getId())
+                .id(occupationLabel.getId().toString())
                 .code(key.getCode())
                 .type(key.getType())
                 .classifier(occupationLabel.getClassifier())

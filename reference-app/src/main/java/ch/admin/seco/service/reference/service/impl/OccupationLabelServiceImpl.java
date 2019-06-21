@@ -1,9 +1,5 @@
 package ch.admin.seco.service.reference.service.impl;
 
-import static ch.admin.seco.service.reference.domain.enums.ProfessionCodeType.AVAM;
-import static ch.admin.seco.service.reference.domain.enums.ProfessionCodeType.BFS;
-import static ch.admin.seco.service.reference.domain.enums.ProfessionCodeType.SBN3;
-import static ch.admin.seco.service.reference.domain.enums.ProfessionCodeType.SBN5;
 import static java.util.Objects.isNull;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toMap;
@@ -16,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.ImmutableMap;
@@ -43,6 +38,7 @@ import ch.admin.seco.service.reference.service.dto.OccupationLabelMappingDto;
 import ch.admin.seco.service.reference.service.dto.OccupationLabelSearchRequestDto;
 import ch.admin.seco.service.reference.service.dto.OccupationLabelSuggestionDto;
 import ch.admin.seco.service.reference.service.dto.ProfessionCodeDTO;
+import ch.admin.seco.service.reference.service.search.OccupationLabelSearchRepository;
 
 /**
  * Service Implementation for managing Occupation.
@@ -57,18 +53,21 @@ public class OccupationLabelServiceImpl implements OccupationLabelService {
     private final OccupationLabelSearchServiceImpl occupationSuggestionImpl;
     private final GenderNeutralOccupationLabelGenerator labelGenerator;
     private final OccupationLabelMappingISCORepository occupationLabelMappingISCORepository;
+    private final OccupationLabelSearchRepository occupationLabelSearchRepository;
 
     public OccupationLabelServiceImpl(OccupationLabelMappingRepository occupationMappingRepository,
         OccupationLabelRepository occupationLabelRepository,
         OccupationLabelSearchServiceImpl occupationSuggestion,
         GenderNeutralOccupationLabelGenerator labelGenerator,
-        OccupationLabelMappingISCORepository occupationLabelMappingISCORepository) {
+        OccupationLabelMappingISCORepository occupationLabelMappingISCORepository,
+        OccupationLabelSearchRepository occupationLabelSearchRepository) {
 
         this.occupationMappingRepository = occupationMappingRepository;
         this.occupationLabelRepository = occupationLabelRepository;
         this.occupationSuggestionImpl = occupationSuggestion;
         this.labelGenerator = labelGenerator;
         this.occupationLabelMappingISCORepository = occupationLabelMappingISCORepository;
+        this.occupationLabelSearchRepository = occupationLabelSearchRepository;
     }
 
     @Override
@@ -191,32 +190,17 @@ public class OccupationLabelServiceImpl implements OccupationLabelService {
     }
 
     @Override
-    public Optional<OccupationLabelSuggestionDto> getOccupationInfoById(UUID id) {
-        Optional<OccupationLabel> label = this.occupationLabelRepository.findById(id);
-        if (!label.isPresent()) {
-            return Optional.empty();
-        }
-        OccupationLabel occupationLabel = label.get();
-        OccupationLabelSuggestionDto occupationLabelSuggestion = new OccupationLabelSuggestionDto();
-        occupationLabelSuggestion.setClassifier(occupationLabel.getClassifier());
-        occupationLabelSuggestion.setType(occupationLabel.getType());
-        occupationLabelSuggestion.setCode(occupationLabel.getCode());
-        occupationLabelSuggestion.setId(occupationLabel.getId());
-        occupationLabelSuggestion.setLabel(occupationLabel.getLabel());
-        occupationLabelSuggestion.setLanguage(occupationLabel.getLanguage());
-
-        ProfessionCodeDTO professionCode = new ProfessionCodeDTO();
-        professionCode.setCode(occupationLabel.getCode());
-        professionCode.setCodeType(occupationLabel.getType());
-        this.findOccupationMapping(professionCode)
-            .map(mapping -> ImmutableMap.of(
-                AVAM, mapping.getAvamCode(),
-                BFS, mapping.getBfsCode(),
-                SBN3, mapping.getSbn3Code(),
-                SBN5, mapping.getSbn5Code()
-            ))
-            .ifPresent(occupationLabelSuggestion::setMappings);
-        return Optional.of(occupationLabelSuggestion);
+    public Optional<OccupationLabelSuggestionDto> getOccupationInfoById(String id) {
+        return this.occupationLabelSearchRepository.findById(id)
+            .map(occupationLabelSuggestion -> new OccupationLabelSuggestionDto()
+                .setId(occupationLabelSuggestion.getId())
+                .setCode(occupationLabelSuggestion.getCode())
+                .setType(occupationLabelSuggestion.getType())
+                .setClassifier(occupationLabelSuggestion.getClassifier())
+                .setLanguage(occupationLabelSuggestion.getLanguage())
+                .setMappings(occupationLabelSuggestion.getMappings())
+                .setLabel(occupationLabelSuggestion.getLabel())
+            );
     }
 
     private List<OccupationLabelMapping> getOccupationLabelMappingsForSbnClassification(ProfessionCodeDTO professionCodeDTO) {

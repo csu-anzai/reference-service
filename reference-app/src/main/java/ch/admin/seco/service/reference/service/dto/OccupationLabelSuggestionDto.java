@@ -2,14 +2,13 @@ package ch.admin.seco.service.reference.service.dto;
 
 import java.util.Map;
 import java.util.Objects;
-import java.util.UUID;
 
 import ch.admin.seco.service.reference.domain.enums.Language;
 import ch.admin.seco.service.reference.domain.enums.ProfessionCodeType;
 
 public class OccupationLabelSuggestionDto {
 
-    private UUID id;
+    private String id;
 
     private String code;
 
@@ -23,11 +22,11 @@ public class OccupationLabelSuggestionDto {
 
     private Map<ProfessionCodeType, String> mappings;
 
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 
-    public OccupationLabelSuggestionDto setId(UUID id) {
+    public OccupationLabelSuggestionDto setId(String id) {
         this.id = id;
         return this;
     }
