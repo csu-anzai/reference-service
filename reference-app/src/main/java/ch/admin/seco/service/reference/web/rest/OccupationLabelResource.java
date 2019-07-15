@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import ch.admin.seco.service.reference.domain.OccupationLabel;
 import ch.admin.seco.service.reference.domain.enums.Language;
 import ch.admin.seco.service.reference.domain.enums.ProfessionCodeType;
 import ch.admin.seco.service.reference.service.OccupationLabelService;
@@ -70,7 +69,7 @@ public class OccupationLabelResource {
 
     @GetMapping("/_search/occupations/label/{codeType}")
     @Timed
-    public Page<OccupationLabel> searchOccupation(@PathVariable ProfessionCodeType codeType,
+    public Page<OccupationLabelSuggestionDto> searchOccupation(@PathVariable ProfessionCodeType codeType,
         @RequestParam(required = false) String prefix, Pageable pageable) {
         log.debug("REST request to search {} occupations labels with prefix `{}` and page `{}`", codeType, prefix, pageable);
         return occupationService.search(new OccupationLabelSearchRequestDto(codeType, prefix, pageable), getLanguage());

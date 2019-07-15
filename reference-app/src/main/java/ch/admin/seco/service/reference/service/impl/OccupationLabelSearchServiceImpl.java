@@ -127,11 +127,11 @@ public class OccupationLabelSearchServiceImpl {
             .sorted(Comparator.comparing(OccupationLabelSuggestionDto::getLabel));
     }
 
-    public Page<OccupationLabel> search(OccupationLabelSearchRequestDto searchRequest, Language language) {
+    public Page<OccupationLabelSuggestionDto> search(OccupationLabelSearchRequestDto searchRequest, Language language) {
         final SearchQuery searchQuery = new OccupationLabelSearchQueryBuilder()
             .buildSearchQuery(searchRequest, language);
         return elasticsearchTemplate.queryForPage(searchQuery, OccupationLabelSuggestion.class)
-            .map(occupationLabelSuggestion -> objectMapper.convertValue(occupationLabelSuggestion, OccupationLabel.class));
+            .map(occupationLabelSuggestion -> objectMapper.convertValue(occupationLabelSuggestion, OccupationLabelSuggestionDto.class));
     }
 }
 

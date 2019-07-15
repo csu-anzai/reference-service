@@ -42,7 +42,7 @@ public interface OccupationLabelService {
     Optional<Map<String, String>> getOccupationLabels(ProfessionCodeDTO professionCode, Language language,
         String classifier);
 
-    Page<OccupationLabel> search(OccupationLabelSearchRequestDto searchRequest, Language language);
+    Page<OccupationLabelSuggestionDto> search(OccupationLabelSearchRequestDto searchRequest, Language language);
 
     List<OccupationLabelDto> getOccupationLabelsByClassification(ProfessionCodeDTO professionCodeDTO, Language language);
 
