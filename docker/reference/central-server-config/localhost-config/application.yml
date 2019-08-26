@@ -3,6 +3,10 @@ configserver:
     name: Docker JHipster Registry
     status: Connected to the JHipster Registry running in Docker
 
+
+security:
+      jwt:
+       secret: ${jhipster.security.authentication.jwt.secret}
 # ===================================================================
 # JHipster Config
 # ===================================================================
@@ -10,7 +14,7 @@ jhipster:
     security:
         authentication:
             jwt:
-                secret: my-secret-token-to-change-in-production
+                secret: bXktc2VjcmV0LXRva2VuLXRvLWNoYW5nZS1pbi1wcm9kdWN0aW9u
                 token-validity-in-seconds: 86400
                 token-validity-in-seconds-for-remember-me: 2592000
         client-authorization:
